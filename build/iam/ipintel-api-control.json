@@ -1,0 +1,57 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PipelineState",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:Query",
+        "dynamodb:Scan"
+      ],
+      "Resource": "arn:aws:dynamodb:us-west-2:221490242148:table/ipintel-pipeline-state"
+    },
+    {
+      "Sid": "RunTheTwoJobsAndValidateBaseTables",
+      "Effect": "Allow",
+      "Action": "lambda:InvokeFunction",
+      "Resource": [
+        "arn:aws:lambda:us-west-2:221490242148:function:ipintel-free-daily",
+        "arn:aws:lambda:us-west-2:221490242148:function:ipintel-proxycheck-daily"
+      ]
+    },
+    {
+      "Sid": "SwitchJobSchedulesOnAndOff",
+      "Effect": "Allow",
+      "Action": [
+        "scheduler:GetSchedule",
+        "scheduler:UpdateSchedule"
+      ],
+      "Resource": "arn:aws:scheduler:us-west-2:221490242148:schedule/default/ipintel-*"
+    },
+    {
+      "Sid": "SchedulesKeepTheirRole",
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "arn:aws:iam::221490242148:role/ipintel-scheduler-role",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "scheduler.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "CatalogNamesForBaseTablePickers",
+      "Effect": "Allow",
+      "Action": [
+        "glue:GetDatabases",
+        "glue:GetTables",
+        "glue:GetTable"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

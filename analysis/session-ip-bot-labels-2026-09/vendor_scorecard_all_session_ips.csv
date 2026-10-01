@@ -1,0 +1,6 @@
+source,session_ips,answered,coverage_pct,flagged,TP,FP,TN,FN,no_answer,FPR_pct,accuracy_pct,precision_pct,recall_pct
+fraudlogix_tune,133954,80981,60.5,37653,37577,76,264,43064,52973,22.4,46.7,99.8,46.6
+ip2proxy_px12,133954,687,0.5,687,687,0,0,0,133267,,100.0,100.0,100.0
+proxycheck_io,133954,114499,85.5,9956,9817,139,288,104255,19455,32.6,8.8,98.6,8.6
+session_summary_bot_click,133954,133954,100.0,8881,8859,22,405,124668,0,5.2,6.9,99.8,6.6
+resolved_answer,133954,132907,99.2,9956,9817,139,288,122663,1047,32.6,7.6,98.6,7.4

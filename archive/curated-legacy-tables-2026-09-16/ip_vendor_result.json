@@ -1,0 +1,121 @@
+{
+ "table": {
+  "Name": "ip_vendor_result",
+  "DatabaseName": "ipintel_curated",
+  "Owner": "221490242148",
+  "CreateTime": "2026-09-03 00:23:38+05:30",
+  "UpdateTime": "2026-09-03 00:23:38+05:30",
+  "Retention": 0,
+  "StorageDescriptor": {
+   "Columns": [
+    {
+     "Name": "ip",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "vendor_product_id",
+     "Type": "varchar(16)",
+     "Parameters": {}
+    },
+    {
+     "Name": "has_answer",
+     "Type": "boolean",
+     "Parameters": {}
+    },
+    {
+     "Name": "geo_country",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "geo_state",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "geo_city",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "geo_zip",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "geo_lat",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "geo_lon",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "risk_category",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "risk_score",
+     "Type": "int",
+     "Parameters": {}
+    },
+    {
+     "Name": "vendor_verdict_raw",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "isp",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "asn",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "shared_infrastructure",
+     "Type": "string",
+     "Parameters": {}
+    }
+   ],
+   "Location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/curated/ip_vendor_result/snapshot_date=2026-09-03/",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "Compressed": false,
+   "NumberOfBuckets": 0,
+   "SerdeInfo": {
+    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+    "Parameters": {}
+   },
+   "SortColumns": [],
+   "Parameters": {},
+   "StoredAsSubDirectories": false
+  },
+  "PartitionKeys": [],
+  "TableType": "EXTERNAL_TABLE",
+  "Parameters": {
+   "trino_version": "0.215-24619-g93e00a8",
+   "totalSize": "-1",
+   "has_encrypted_data": "false",
+   "EXTERNAL": "TRUE",
+   "numFiles": "-1",
+   "trino_query_id": "20260902_185331_00124_n9ed9",
+   "auto.purge": "false",
+   "parquet.compression": "SNAPPY",
+   "transactional": "false"
+  },
+  "CreatedBy": "arn:aws:iam::221490242148:user/source_creation_tool_user",
+  "IsRegisteredWithLakeFormation": false,
+  "CatalogId": "221490242148",
+  "VersionId": "0",
+  "IsMultiDialectView": false,
+  "IsMaterializedView": false
+ },
+ "partitions": []
+}

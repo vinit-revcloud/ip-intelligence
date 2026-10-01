@@ -1,0 +1,762 @@
+<title>IP Intelligence Data Layer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#FAFBFA;
+  --surface:#FFFFFF;
+  --surface-2:#F1F4F2;
+  --ink:#12191A;
+  --ink-2:#3D4A4B;
+  --ink-3:#6B7A79;
+  --rule:#DDE4E1;
+  --rule-strong:#C3CEC9;
+  --accent:#1F6F5C;
+  --accent-soft:#E4F0EB;
+  --amber:#9A5B14;
+  --amber-soft:#FBF0DF;
+  --crit:#9E3524;
+  --crit-soft:#FAE7E3;
+  --code-bg:#F3F6F4;
+  --shadow:0 1px 2px rgba(18,25,26,.05), 0 8px 24px -18px rgba(18,25,26,.35);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1413;
+    --surface:#141C1B;
+    --surface-2:#1B2524;
+    --ink:#E8EFEC;
+    --ink-2:#B3C2BE;
+    --ink-3:#7F918D;
+    --rule:#26312F;
+    --rule-strong:#36443F;
+    --accent:#5FBFA3;
+    --accent-soft:#16302A;
+    --amber:#D9A25C;
+    --amber-soft:#2E2317;
+    --crit:#E08373;
+    --crit-soft:#311D18;
+    --code-bg:#101817;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -20px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1413;
+  --surface:#141C1B;
+  --surface-2:#1B2524;
+  --ink:#E8EFEC;
+  --ink-2:#B3C2BE;
+  --ink-3:#7F918D;
+  --rule:#26312F;
+  --rule-strong:#36443F;
+  --accent:#5FBFA3;
+  --accent-soft:#16302A;
+  --amber:#D9A25C;
+  --amber-soft:#2E2317;
+  --crit:#E08373;
+  --crit-soft:#311D18;
+  --code-bg:#101817;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -20px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px 96px}
+@media(max-width:700px){.wrap{padding:0 18px 64px}}
+
+/* ---------- masthead ---------- */
+.masthead{padding:64px 0 28px;border-bottom:2px solid var(--ink);}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin-bottom:18px;
+}
+h1{
+  font-family:Archivo,"IBM Plex Sans",sans-serif;
+  font-weight:800;font-size:clamp(34px,5.4vw,56px);line-height:1.02;
+  letter-spacing:-.024em;margin:0 0 18px;text-wrap:balance;
+}
+.standfirst{font-size:18px;line-height:1.5;color:var(--ink-2);max-width:62ch;margin:0}
+.meta{
+  display:flex;flex-wrap:wrap;gap:0 28px;margin-top:26px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;color:var(--ink-3);
+}
+.meta b{color:var(--ink-2);font-weight:500}
+
+/* ---------- sections ---------- */
+section{padding-top:52px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;flex-wrap:wrap}
+.sec-num{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:600;
+  color:var(--accent);letter-spacing:.1em;padding-top:6px;
+}
+h2{
+  font-family:Archivo,sans-serif;font-weight:700;font-size:clamp(23px,3vw,30px);
+  letter-spacing:-.018em;line-height:1.15;margin:0;text-wrap:balance;
+}
+h3{
+  font-family:Archivo,sans-serif;font-weight:700;font-size:16.5px;letter-spacing:-.008em;
+  margin:34px 0 10px;
+}
+h4{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:26px 0 8px;
+}
+.lede{color:var(--ink-2);font-size:16.5px;max-width:66ch;margin:0 0 4px}
+p{max-width:70ch;margin:14px 0}
+ul,ol{max-width:70ch;padding-left:20px;margin:14px 0}
+li{margin:7px 0}
+li::marker{color:var(--ink-3)}
+strong{font-weight:600}
+em{color:var(--ink-2)}
+a{color:var(--accent)}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.87em}
+p code,li code,td code{background:var(--code-bg);border:1px solid var(--rule);border-radius:4px;padding:1px 5px;white-space:nowrap}
+
+/* ---------- cards, callouts ---------- */
+.card{
+  background:var(--surface);border:1px solid var(--rule);border-radius:10px;
+  padding:22px 24px;box-shadow:var(--shadow);margin:22px 0;
+}
+.note{
+  border-left:3px solid var(--accent);background:var(--accent-soft);
+  border-radius:0 8px 8px 0;padding:14px 18px;margin:20px 0;font-size:14.5px;
+}
+.note.warn{border-left-color:var(--amber);background:var(--amber-soft)}
+.note.stop{border-left-color:var(--crit);background:var(--crit-soft)}
+.note p{margin:6px 0;max-width:74ch}
+.note p:first-child{margin-top:0}
+.note p:last-child{margin-bottom:0}
+.note .tag{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:5px;color:var(--accent);
+}
+.note.warn .tag{color:var(--amber)}
+.note.stop .tag{color:var(--crit)}
+
+/* ---------- data strip ---------- */
+.facts{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;
+  overflow:hidden;margin:24px 0;
+}
+.fact{background:var(--surface);padding:16px 18px}
+.fact .n{
+  font-family:Archivo,sans-serif;font-weight:700;font-size:25px;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;line-height:1.1;
+}
+.fact .l{font-size:12px;color:var(--ink-3);margin-top:4px;line-height:1.35}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:20px 0;border:1px solid var(--rule);border-radius:10px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th{
+  text-align:left;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:600;padding:11px 16px;border-bottom:1px solid var(--rule-strong);
+  background:var(--surface-2);white-space:nowrap;
+}
+td{padding:11px 16px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--ink);font-weight:500}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+table code{background:none;border:0;padding:0;color:var(--ink);white-space:nowrap}
+
+/* ---------- code / tree ---------- */
+pre{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;line-height:1.7;
+  background:var(--code-bg);border:1px solid var(--rule);border-radius:10px;
+  padding:18px 20px;overflow-x:auto;margin:20px 0;color:var(--ink-2);
+}
+pre b{color:var(--ink);font-weight:600}
+pre i{color:var(--ink-3);font-style:normal}
+pre u{text-decoration:none;color:var(--accent)}
+
+/* ---------- flow diagram ---------- */
+.flow{display:flex;flex-direction:column;gap:0;margin:26px 0}
+.tier{
+  display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;
+}
+.node{
+  flex:1 1 150px;background:var(--surface);border:1px solid var(--rule-strong);
+  border-radius:9px;padding:13px 15px;min-width:0;
+}
+.node.owned{border-color:var(--accent);background:var(--accent-soft)}
+.node .t{font-weight:600;font-size:14px;line-height:1.3}
+.node .d{font-size:11.5px;color:var(--ink-3);margin-top:3px;line-height:1.4}
+.arrow{
+  display:flex;align-items:center;justify-content:center;height:26px;color:var(--ink-3);
+  font-family:"IBM Plex Mono",monospace;font-size:13px;
+}
+.band{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin:22px 0 8px;display:flex;
+  align-items:center;gap:10px;
+}
+.band::after{content:"";flex:1;height:1px;background:var(--rule)}
+
+/* ---------- phases ---------- */
+.phase{
+  display:grid;grid-template-columns:78px 1fr;gap:0 20px;
+  border-top:1px solid var(--rule);padding:20px 0;
+}
+.phase:last-of-type{border-bottom:1px solid var(--rule)}
+.pid{
+  font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12px;color:var(--accent);
+  letter-spacing:.06em;padding-top:3px;
+}
+.phase h3{margin:0 0 6px;font-size:16px}
+.phase p{margin:0 0 8px;max-width:66ch;font-size:14.5px;color:var(--ink-2)}
+.gate{
+  font-size:13px;background:var(--surface-2);border:1px solid var(--rule);
+  border-radius:7px;padding:9px 13px;max-width:66ch;
+}
+.gate b{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-right:7px}
+@media(max-width:620px){
+  .phase{grid-template-columns:1fr;gap:8px}
+  .pid{padding-top:0}
+}
+
+/* ---------- q list ---------- */
+.q{border-top:1px solid var(--rule);padding:16px 0;display:grid;
+   grid-template-columns:26px 1fr;gap:0 16px}
+.q:last-child{border-bottom:1px solid var(--rule)}
+.q .i{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);padding-top:2px}
+.q p{margin:0;font-size:14.5px}
+.q .why{color:var(--ink-3);font-size:13px;margin-top:5px}
+
+footer{margin-top:64px;padding-top:22px;border-top:2px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <div class="kicker">Implementation plan · verified against the live account · 2 Sep 2026</div>
+  <h1>The IP Intelligence Data Layer</h1>
+  <p class="standfirst">How the AWS side gets built so the Lovable console stops rendering constants and starts rendering measurements — and what the account actually looks like today, which is not what the handover documents describe.</p>
+  <div class="meta">
+    <span>Account <b>221490242148</b></span>
+    <span>Region <b>us-west-2</b></span>
+    <span>Build user <b>source_creation_tool_user</b></span>
+    <span>Status <b>read-only audit done · nothing created</b></span>
+  </div>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>What the account actually contains</h2></div>
+  <p class="lede">I queried it rather than trusting the documents. The gap between the two is the most important thing in this plan.</p>
+
+  <p>The profiling work in <code>athena_table_setup.txt</code> and <code>athena_tables_fixes.txt</code> established the numbers the console is meant to display, and the reasoning behind them is sound. But <strong>most of the tables that produced those numbers now return zero rows.</strong> Here is every table in <code>ip-database</code>, counted live:</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Table</th><th class="num">Rows now</th><th>Location</th><th>State</th></tr></thead>
+    <tbody>
+      <tr><td><code>ip_analytics</code></td><td class="num">1,990,844</td><td>ip-intelligence/analytics/</td><td>Business truth intact · <strong>vendor columns all null</strong></td></tr>
+      <tr><td><code>db11_parquet</code></td><td class="num">2,984,119</td><td>ip-intelligence/curated/</td><td>Intact</td></tr>
+      <tr><td><code>px12_parquet</code></td><td class="num">2,690,046</td><td>ip-intelligence/curated/</td><td>Intact</td></tr>
+      <tr><td><code>db11_csv</code> · <code>px12_csv</code></td><td class="num">—</td><td>ip-intelligence/reference/</td><td>Source files present, 779 MiB</td></tr>
+      <tr><td><code>dashboard_summary</code></td><td class="num">1</td><td>ip-intelligence/analytics/</td><td>Stale single row</td></tr>
+      <tr><td><code>ip_dim</code></td><td class="num">0</td><td>ip-intelligence/analytics/</td><td>Empty prefix</td></tr>
+      <tr><td><code>isp_value_analysis</code></td><td class="num">0</td><td>ip-intelligence/analytics/</td><td>Empty prefix</td></tr>
+      <tr><td><code>ip_list</code> · <code>ip_flags</code> · <code>ip_business_truth</code></td><td class="num">0</td><td><code>Unsaved/…</code></td><td><strong>Data gone</strong></td></tr>
+      <tr><td><code>db11_bucketed</code> · <code>px12_bucketed</code></td><td class="num">0</td><td><code>Unsaved/…</code></td><td><strong>Data gone</strong></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note stop">
+    <span class="tag">The predicted failure has already happened</span>
+    <p>Five tables were built with bare <code>CREATE TABLE … AS SELECT</code>, so Athena chose their storage: <code>s3://vinit-cdp-experimentation/Unsaved/2026/09/02/tables/…</code>. Those prefixes are now <strong>empty — zero objects</strong>. The Glue entries survive and still describe columns, so the tables look present in the console and quietly return nothing. There is no lifecycle rule on that bucket, so this was not automated cleanup; the data was removed or never durably committed.</p>
+    <p>This is not a hypothetical risk to design around any more. It is an observed loss, and it is why <code>ip_dim</code> is empty, which is why the next finding is what it is.</p>
+  </div>
+
+  <h3>The most valuable table has its vendor half missing</h3>
+  <p><code>ip_analytics</code> is the join of business outcomes to vendor intelligence, one row per session IP. It survived, and its <em>business</em> side is rich and real:</p>
+
+  <div class="facts">
+    <div class="fact"><div class="n">1,990,844</div><div class="l">session IPs</div></div>
+    <div class="fact"><div class="n">11.33M</div><div class="l">sessions</div></div>
+    <div class="fact"><div class="n">$15.94M</div><div class="l">attributed revenue</div></div>
+    <div class="fact"><div class="n">305,919</div><div class="l">lead sessions</div></div>
+    <div class="fact"><div class="n">67.7%</div><div class="l">of IPs have truth-state geo</div></div>
+  </div>
+
+  <p>And its <em>vendor</em> side is entirely empty. <code>db11_state</code>, <code>db11_city</code>, <code>px12_isp</code>, <code>px12_fraud_score</code> — null on every one of the 1,990,844 rows. <code>found_db11</code> and <code>found_px12</code> are null rather than even <code>false</code>. It was built by joining to <code>ip_dim</code>, and <code>ip_dim</code> was already empty when it ran.</p>
+
+  <p>So the single table the whole console would read is <strong>100% business truth and 0% IP intelligence</strong>. Every geolocation, proxy and vendor-comparison figure it could serve is null. That inverts the priority: the enrichment join is not a later refinement, it is the first thing P1 has to produce.</p>
+
+  <div class="note">
+    <span class="tag">Recovered</span>
+    <p><code>ip_analytics</code> is the only surviving copy of the business-truth aggregation, and the SQL that built it appears in none of the handover documents — but <code>unified.unified_session_summary</code> carries <code>expected_revenue</code>, <code>has_revenue</code>, <code>has_lead</code>, <code>is_bot_click</code>, <code>ip_is_proxy</code>, <code>ip_is_vpn</code> and the <code>ip_*</code> geo columns, which map one-to-one onto <code>ip_business_truth</code>'s twelve columns. The derivation is a <code>GROUP BY session_ip</code> over that table and can be rebuilt with confidence. It still gets checked into version control in P0, because $15.94M of attributed revenue should not exist as one unversioned Parquet file.</p>
+  </div>
+
+  <div class="note stop">
+    <span class="tag">But the truth table is contaminated</span>
+    <p><code>proxy_sessions</code> and <code>vpn_sessions</code> come from <code>ip_is_proxy</code> / <code>ip_is_vpn</code> on the session table — which are <em>already some vendor's opinion</em>, carried in by the existing pipeline. They are sitting in a table called business truth.</p>
+    <p>That breaks the product's own rule: never treat one vendor as ground truth for another. Score a vendor's proxy detection against these columns and you are measuring agreement with an unnamed incumbent, not accuracy. Business truth is sessions, leads, verified leads and revenue — things that actually happened. Proxy and VPN claims belong in <code>ip_vendor_result</code> under whatever source produced them, and that source needs identifying before P1 writes anything.</p>
+  </div>
+
+  <div class="note warn">
+    <span class="tag">Fix carried over from the broken script</span>
+    <p>The <code>ip_flags</code> CTAS in <code>athena_tables_fixes.txt</code> failed with <code>COLUMN_NOT_FOUND: 'created_at'</code>. That column does not exist on <code>raw.raw_tune_clicks</code> — the real ones are <code>datetime</code> and <code>date_pst</code>. Substituting those makes the script run as written.</p>
+  </div>
+
+  <h3>The numbers that are still worth chasing</h3>
+  <p>These come from the profiling documents and could not be re-verified today, because the tables behind them are the empty ones. Reproducing them exactly is the P1 gate:</p>
+
+  <div class="facts">
+    <div class="fact"><div class="n">4,939,723</div><div class="l">unique IPs across TUNE clicks + sessions</div></div>
+    <div class="fact"><div class="n">99.97%</div><div class="l">DB11 state/city fill, after the <code>'-'</code> sentinel fix</div></div>
+    <div class="fact"><div class="n">0.34%</div><div class="l">of those IPs appear in IP2Proxy PX12 at all</div></div>
+    <div class="fact"><div class="n">644,539</div><div class="l">session IPs with no geo today that DB11 can fill</div></div>
+    <div class="fact"><div class="n">0.98%</div><div class="l">of FraudLogix-flagged IPs that PX12 independently confirms</div></div>
+  </div>
+
+  <p>Two of these are the entire commercial argument. <strong>644,539 IPs</strong> — 32.4% of session IPs — have missing state/city/ZIP that a free IP2Location file fills immediately, and today's live measurement is consistent with it: only 67.7% of IPs in <code>ip_analytics</code> carry a truth state. And <strong>0.98%</strong> corroboration means the second opinion we have cannot audit FraudLogix at all — which is precisely the gap the QA workbench exists to close.</p>
+
+  <h3>The product's thesis, sitting in the data already</h3>
+  <p>The highest-revenue rows in <code>ip_analytics</code> are not individual customers. I put the top one through the live ProxyCheck API, and it came back:</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>IP</th><th class="num">Sessions</th><th class="num">Revenue</th><th>ProxyCheck verdict</th><th>What it actually is</th></tr></thead>
+    <tbody>
+      <tr><td><code>104.28.97.18</code></td><td class="num">10,079</td><td class="num">$154,356</td><td><code>proxy: yes · type: VPN · risk: 83</code></td><td><strong>iCloud Private Relay</strong> (Cloudflare AS13335)</td></tr>
+      <tr><td><code>146.75.164.0</code></td><td class="num">53,967</td><td class="num">$90,697</td><td>—</td><td>Fastly edge</td></tr>
+      <tr><td><code>172.56.92.233</code></td><td class="num">37</td><td class="num">$104,346</td><td>—</td><td>T-Mobile CGNAT</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Stop on the first row. It is a proxy — ProxyCheck is not wrong, and neither would FraudLogix be. It is also <strong>$154,356 of real revenue from Apple customers</strong> whose traffic is relayed by design, on a single address, with 323 devices observed on the subnet. Enforce the verdict and you delete the revenue. Ignore it and you have no proxy policy.</p>
+
+  <p>This is the entire argument for the console, and it is not a hypothetical from the mock data — it is the top row of the only real table in the account. It should replace the invented <code>73.***.***.21</code> as the canonical IP Explorer example, because a demo built on a genuine $154K iCloud Private Relay dispute lands in a way the fabricated AT&amp;T one cannot.</p>
+
+  <p>Two consequences for the build. The schema needs a <code>shared_infrastructure</code> classification — CDN, CGNAT, relay, cloud egress — and ProxyCheck hands us the signal directly in <code>devices.subnet</code> and <code>operator</code>, alongside PX12's <code>usage_type</code> and ASN. And every revenue-at-risk figure gets reported twice, including and excluding it, because one number cannot answer both "what would we lose" and "what should we block."</p>
+
+  <h3>The measurement rules already learned the hard way</h3>
+  <p>These are worth encoding once, centrally, because each produced a confidently wrong dashboard:</p>
+  <ul>
+    <li><strong>Missing means three things.</strong> IP2Location writes <code>'-'</code>, the session table writes <code>NULL</code>, and exports write <code>''</code>. One shared expression — <code>nullif(nullif(x,''),'-')</code> — everywhere, or fill rates read 100% when they are 99.83%.</li>
+    <li><strong>Absence from PX12 is not a clean verdict.</strong> DB11 covers all 4.29B IPv4 addresses; PX12 is a sparse list of known proxy ranges. A miss means <em>unknown</em>, never <em>clean</em>. This is a schema-level distinction (<code>has_answer</code>), not a query-level one.</li>
+    <li><strong>A null join result is not a measurement.</strong> <code>ip_analytics</code> is the cautionary case: it ran, it succeeded, it wrote 1.99M rows, and every vendor column was null. Coverage assertions have to run inside the job — a row count alone would have passed this.</li>
+  </ul>
+
+  <h3>One view is a landmine</h3>
+  <p><code>v_ip_intelligence</code> joins <code>db11_parquet</code> to <code>px12_parquet</code> on overlapping ranges — <code>p.ip_from &lt;= d.ip_to AND p.ip_to &gt;= d.ip_from</code> — with no bucketing key. That is a range join across 2.98M × 2.69M rows with nothing to partition on. It will either run for a very long time or fail expensively, and it duplicates rows wherever ranges overlap partially. The <code>prefix16</code> bucketing technique already proven in the profiling work exists precisely to avoid this. The view should be dropped rather than fixed, because the tall table replaces it.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>Where the line between Lovable and AWS falls</h2></div>
+  <p class="lede">Lovable owns pixels and session state. AWS owns every number, every credential, and every long-running thing.</p>
+
+  <div class="flow">
+    <div class="band">Presentation — Lovable</div>
+    <div class="tier">
+      <div class="node"><div class="t">Browser</div><div class="d">TanStack Start · 11 routes · never sees a vendor key</div></div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="tier">
+      <div class="node"><div class="t">Server functions</div><div class="d"><code>createServerFn</code> on Cloudflare Workers · signs requests, enforces app auth, shapes the response</div></div>
+    </div>
+
+    <div class="band">Data plane — AWS</div>
+    <div class="arrow">↓</div>
+    <div class="tier">
+      <div class="node owned"><div class="t">API Gateway</div><div class="d">HTTP API · IAM auth · WAF rate limit</div></div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="tier">
+      <div class="node owned"><div class="t">Read Lambdas</div><div class="d">one per screen · &lt;150 ms</div></div>
+      <div class="node owned"><div class="t">Job Lambdas</div><div class="d">submit · plan check · status</div></div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="tier">
+      <div class="node"><div class="t">RDS Postgres</div><div class="d">serving tables + app metadata (jobs, tasks, vendors, plans)</div></div>
+      <div class="node"><div class="t">SQS → workers</div><div class="d">vendor API calls, batched and rate-limited</div></div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="tier">
+      <div class="node"><div class="t">Athena + Glue</div><div class="d">batch computation only · EventBridge-scheduled</div></div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="tier">
+      <div class="node"><div class="t">S3 data lake</div><div class="d">raw → processed → analytics</div></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="tag">The non-obvious call</span>
+    <p><strong>Athena is not allowed on the request path.</strong> A dashboard query returns in two to twenty seconds and bills per terabyte scanned; a Cloudflare Worker has a hard CPU budget and the user has a two-second patience budget. If the API queries Athena live, every screen feels broken and every page refresh costs money.</p>
+    <p>So Athena runs on a schedule and writes small, already-aggregated results; those get loaded into Postgres; the API reads Postgres and answers in milliseconds. Athena appears on the request path in exactly one place — an explicitly asynchronous "deep dive" that returns a job id, never a rendered screen.</p>
+  </div>
+
+  <h3>Why RDS is in the picture at all</h3>
+  <p>The architecture doc already calls for it, and it is genuinely needed regardless of serving strategy: jobs, tasks, vendor registry, plan limits and usage counters are transactional, small, and updated by users — none of that belongs in a data lake. Once Postgres exists for that, using it for the serving tables too is the smallest system that works. A single <code>db.t4g.small</code> handles both; <code>ip_dim</code> at ~5M rows with a b-tree on the IP is a couple of gigabytes and answers IP Explorer point lookups instantly.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>S3 layout</h2></div>
+  <p class="lede">Keep the prefix that already exists. Add the three layers it is missing and the discipline none of it has.</p>
+
+  <p>There is already a sensible convention in the account: <code>s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/</code> with <code>reference/</code>, <code>curated/</code> and <code>analytics/</code> beneath it, and <code>reference/</code> is even versioned (<code>version=2026-09</code>). <strong>My recommendation is to keep it</strong> rather than stand up a dedicated bucket. Moving costs a day of re-pointing and buys nothing measurable; the failure here was never the bucket, it was five tables that bypassed the convention entirely.</p>
+
+  <p>What it is missing: a raw layer, a control plane, a quarantine, a pinned query-output prefix, and partitioning anywhere below <code>reference/</code>.</p>
+
+  <pre><b>s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/</b>
+
+  <u>raw/</u>                              <i>NEW · immutable vendor drops · never edited, never deleted</i>
+    vendor=ip2location/product=lite_db11/snapshot_date=2026-09-01/DB11.CSV.gz
+    vendor=ip2location/product=lite_px12/snapshot_date=2026-09-01/PX12.CSV.gz
+    vendor=proxycheck/product=api_v2/dt=2026-09-01/job=<i>…</i>/part-*.json.gz
+    vendor=maxmind/product=geolite2_city/snapshot_date=<i>…</i>/
+    vendor=spur/product=teams/dt=<i>…</i>/
+
+  <u>reference/</u>                        <i>EXISTS · vendor source files, already versioned</i>
+    ip2location_lite_db11/version=2026-09/DB11.csv      <i>330.6 MiB</i>
+    ip2proxy_lite_px12/version=2026-09/PX12.csv         <i>448.6 MiB</i>
+
+  <u>curated/</u>                          <i>EXISTS · add snapshot partitioning + the bucketed range tables</i>
+    db11/snapshot_date=<i>…</i>/
+    px12/snapshot_date=<i>…</i>/
+    ref_ip_range/vendor_product=<i>…</i>/snapshot_date=<i>…</i>/prefix16_bucket=<i>NN</i>/
+    ip_master/snapshot_date=<i>…</i>/
+    ip_vendor_result/vendor_product=<i>…</i>/dt=<i>…</i>/      <i>← the tall table. one row per (ip, source)</i>
+    ip_business_outcome/dt=<i>…</i>/
+
+  <u>analytics/</u>                        <i>EXISTS · add as_of_date so history is queryable, not overwritten</i>
+    ip_analytics/as_of_date=<i>…</i>/
+    vendor_scorecard/as_of_date=<i>…</i>/
+    comparable_population/run_id=<i>…</i>/
+    disagreement_queue/as_of_date=<i>…</i>/
+    location_accuracy/as_of_date=<i>…</i>/
+    isp_value/as_of_date=<i>…</i>/
+    overlap_matrix/as_of_date=<i>…</i>/
+    kpi_snapshot/as_of_date=<i>…</i>/
+
+  <u>ctl/</u>                              <i>NEW · control plane</i>
+    run_log/ · watermark/ · vendor_verdict_map/ · dq_results/
+
+  <u>quarantine/</u>                       <i>NEW · rows that failed validation, with the rule that rejected them</i>
+    <i>table</i>/dt=<i>…</i>/
+
+  <u>athena-results/</u>                   <i>NEW · query output ONLY · 30-day expiry · never a table location</i>
+  <u>artifacts/</u>                        <i>NEW · lambda + glue bundles, keyed by git sha</i>
+    builds/<i>{git_sha}</i>/</pre>
+
+  <h3>The four rules that make the layout hold</h3>
+  <ol>
+    <li><strong>Every table declares its own location.</strong> Every CTAS carries <code>external_location = 's3://…/processed/&lt;table&gt;/…'</code>. No exceptions, so Athena never picks a path again.</li>
+    <li><strong>Snapshot date is the rollback mechanism.</strong> A bad DB11 load writes a new <code>snapshot_date</code> partition; the previous one is untouched. Rolling back is repointing the current-snapshot view, not restoring from backup.</li>
+    <li><strong>Raw is append-only and never reshaped.</strong> If a normalization rule turns out to be wrong, it is rerun from raw. This is the only thing that makes vendor comparisons defensible six months later.</li>
+    <li><strong>Query output lives outside the data.</strong> <code>athena-results/</code> has a lifecycle rule and is not addressable by any table — which is exactly the failure that exists today.</li>
+  </ol>
+
+  <h4>Catalog</h4>
+  <p>Keeping <code>ip-database</code> means quoting it in every statement forever, and it currently mixes reference data, curated tables, analytics and six empty shells. Three databases — <code>ipintel_reference</code>, <code>ipintel_curated</code>, <code>ipintel_analytics</code> — separate the layers and drop the hyphen. The existing warehouse databases <code>raw</code> (TUNE clicks) and <code>unified</code> (sessions) are read, never written. The empty tables and the seven views in <code>ip-database</code> get dropped once their replacements pass P1's gate, not before — a broken table that still describes its columns is the only remaining documentation of what was intended.</p>
+
+  <div class="note">
+    <span class="tag">Structural guardrail — confirmed necessary</span>
+    <p>I checked the <code>primary</code> workgroup this runs under: <code>OutputLocation</code> is <strong>null</strong>, <code>EnforceWorkGroupConfiguration</code> is <strong>false</strong>, and there is no bytes-scanned cutoff. That is the whole mechanism by which CTAS output ended up in <code>Unsaved/</code> — nothing in the account prevented it, and nothing prevents it happening again tomorrow.</p>
+    <p>So: a dedicated <code>ipintel</code> workgroup with output pinned to <code>athena-results/</code>, <strong>client-side settings override enforced</strong>, and a per-query scan cutoff. Enforcement is what makes the failure impossible rather than merely discouraged, and the cutoff kills a runaway range join — like the one in <code>v_ip_intelligence</code> — before it bills.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>The schema, and why it never changes per vendor</h2></div>
+  <p class="lede">Adding Spur, or MaxMind, or a vendor that does not exist yet, must be rows and configuration — never a migration.</p>
+
+  <p>Everything hangs off one tall table. One row per IP per source, with the union of what any source can say. A source that has no opinion on geography leaves those columns null; it does not get its own table or its own column.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Column group</th><th>Columns</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>Key</td><td><code>ip</code>, <code>ip_num</code>, <code>prefix16</code>, <code>vendor_product_id</code>, <code>observed_date</code></td><td><code>prefix16</code> is the /16 bucket that makes range joins tractable — already proven, 1.009× row explosion</td></tr>
+      <tr><td>Answer</td><td><code>has_answer</code></td><td>The PX12 lesson. False ≠ clean, and every comparable-population query keys off this</td></tr>
+      <tr><td>Geo claim</td><td><code>country</code>, <code>state</code>, <code>metro</code>, <code>county</code>, <code>city</code>, <code>zip</code>, <code>lat</code>, <code>lon</code>, <code>geo_confidence</code></td><td>Metro and county are derived, not vendor-supplied — needs a ZIP→CBSA/county crosswalk</td></tr>
+      <tr><td>Risk claim</td><td><code>risk_category</code>, <code>risk_score</code>, <code>vendor_verdict_raw</code>, <code>vendor_confidence</code></td><td><code>risk_category</code> is the normalized enum; <code>vendor_verdict_raw</code> is kept verbatim so a mapping change is re-runnable</td></tr>
+      <tr><td>Network</td><td><code>isp</code>, <code>asn</code>, <code>as_name</code>, <code>usage_type</code></td><td>Feeds ISP Intelligence</td></tr>
+      <tr><td>Provenance</td><td><code>raw_payload</code>, <code>source_snapshot_date</code>, <code>job_id</code></td><td>What IP Explorer's "view raw responses" drawer actually shows</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Around it sit three small tables: <code>vendor_product</code> (the registry the Sources and Costs screens read — company, product, delivery, purpose, owner), <code>vendor_plan</code> (limits and cost model, driving CPM and plan-impact math), and <code>ip_business_outcome</code> (sessions, leads, verified leads, revenue, customers, refunds, per IP per day — the ground truth that makes false-positive revenue computable at all).</p>
+
+  <h3>Normalization is data, not code</h3>
+  <p>The mapping from a vendor's native verdict to the canonical vocabulary — <code>residential_proxy · datacenter · vpn · tor · bot · crawler · clean · unknown</code> — has to run in two very different places: Athena SQL for five million rows, and Python for a live API lookup. Written twice, it drifts, and the two halves of the console disagree.</p>
+
+  <p>So it lives in <code>ctl/vendor_verdict_map/</code> as rows: <code>(vendor_product_id, source_field, raw_value, risk_category, default_confidence)</code>. Batch SQL joins to it. The Lambda reads it. Adding a vendor's vocabulary is an insert, which is the same rule as adding the vendor.</p>
+
+  <div class="note warn">
+    <span class="tag">Fail loud, not clean</span>
+    <p>An unmapped verdict resolves to <code>unknown</code> and is written to a daily unmapped-values report. It must never fall through to <code>clean</code> — that is how a proxy silently becomes a customer. The FraudLogix reason codes already include undocumented numeric values (<code>"10"</code> at 82,092 IPs, <code>"9"</code>, <code>"8"</code>) that no one has yet interpreted; they will hit this path on day one.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>ProxyCheck, and what 1,000 lookups a day buys</h2></div>
+  <p class="lede">The third source is live and tested. Its daily limit is not a limitation so much as the reason the Jobs screen exists.</p>
+
+  <p>The free key works, including batch <code>POST</code> (up to 100 IPs per request, each IP counted separately against the quota). One response carries a proxy verdict, a risk score, full geolocation, ASN, operator detail and device counts — so ProxyCheck is a <em>geo</em> source and a <em>risk</em> source and a shared-infrastructure signal, all three, and it registers as one vendor product with all three capability flags set.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>ProxyCheck field</th><th>Example</th><th>Maps to</th></tr></thead>
+    <tbody>
+      <tr><td><code>proxy</code> + <code>type</code></td><td><code>yes</code> · <code>VPN</code></td><td><code>risk_category</code> via the verdict map</td></tr>
+      <tr><td><code>risk</code></td><td><code>83</code></td><td><code>risk_score</code> (already 0–100)</td></tr>
+      <tr><td><code>region</code> · <code>city</code> · <code>postcode</code> · <code>latitude</code>/<code>longitude</code></td><td>Illinois · Chicago · 60666</td><td>the geo claim columns</td></tr>
+      <tr><td><code>asn</code> · <code>provider</code> · <code>organisation</code></td><td>AS13335 · Cloudflare · iCloud Private Relay</td><td><code>asn</code>, <code>isp</code>, <code>as_name</code></td></tr>
+      <tr><td><code>operator</code> · <code>devices.subnet</code></td><td>iCloud · 323</td><td><code>shared_infrastructure</code> signal</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><code>type</code> is the vocabulary that needs mapping — <code>VPN</code>, <code>Residential</code>, <code>Business</code>, <code>Tor</code>, <code>Public Proxy</code>, <code>Compromised Server</code> and others. Those become rows in <code>vendor_verdict_map</code>, and anything unseen resolves to <code>unknown</code> and shows up in the unmapped report.</p>
+
+  <div class="note warn">
+    <span class="tag">The quota reframes the roadmap</span>
+    <p>The free tier is <strong>1,000 lookups a day</strong>. The console's mock data claims an 80K/day ProxyCheck plan; that number is fiction and every figure derived from it is too. At 1,000/day, enriching all 4.9M IPs takes thirteen years, and even the 16,771 IPs that PX12 covers takes seventeen days.</p>
+    <p>So ProxyCheck is never a bulk enrichment source. It is a <em>sampling instrument</em>, and the daily budget gets spent on the IPs where the answer is worth the most: highest revenue at stake, flagged by FraudLogix, no corroboration. That is exactly what the Jobs &amp; Sampling screen was designed to do — the constraint makes the feature necessary rather than decorative. A daily scheduled sampler that spends precisely 1,000 lookups on the top of that queue builds a defensible comparison set of ~30,000 adjudicated IPs a month, which is more than enough to rank three vendors.</p>
+  </div>
+
+  <p>Practically: the key goes into Secrets Manager as <code>ipintel/proxycheck</code> and is read at call time by the worker Lambda. It should not be in a repo, a Lovable env var, or a browser bundle — and since it has been pasted into chat, <strong>rotate it in the ProxyCheck dashboard once the secret is in place.</strong></p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>The API, screen by screen</h2></div>
+  <p class="lede">One endpoint per screen, each accepting the same global filter, each returning a shape that already matches the console's types.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Endpoint</th><th>Serves</th><th>Reads</th></tr></thead>
+    <tbody>
+      <tr><td><code>GET /kpi/overview</code></td><td>Overview</td><td><code>kpi_snapshot</code></td></tr>
+      <tr><td><code>GET /health/sources</code></td><td>Data Health</td><td><code>run_log</code>, <code>dq_results</code></td></tr>
+      <tr><td><code>GET /compare</code></td><td>Compare</td><td><code>comparable_population</code>, <code>vendor_scorecard</code></td></tr>
+      <tr><td><code>GET /classification</code></td><td>Bot &amp; Proxy</td><td><code>vendor_scorecard</code>, <code>isp_value</code></td></tr>
+      <tr><td><code>GET /disagreements</code></td><td>Disagreement queue</td><td><code>disagreement_queue</code></td></tr>
+      <tr><td><code>GET /location/accuracy</code></td><td>Location Accuracy</td><td><code>location_accuracy</code></td></tr>
+      <tr><td><code>GET /revenue/false-positives</code></td><td>Revenue &amp; FP</td><td><code>vendor_scorecard</code>, publisher rollup</td></tr>
+      <tr><td><code>GET /overlap</code></td><td>Overlap Explorer</td><td><code>overlap_matrix</code></td></tr>
+      <tr><td><code>GET /ip/{ip}</code></td><td>IP Explorer</td><td><code>ip_dim</code> + <code>ip_vendor_result</code> + outcomes</td></tr>
+      <tr><td><code>GET /sources</code> · <code>GET /costs</code></td><td>Sources, Costs &amp; Plans</td><td><code>vendor_product</code>, <code>vendor_plan</code>, usage</td></tr>
+      <tr><td><code>POST /jobs/estimate</code></td><td>Plan impact preview</td><td>plan limits + live usage counters</td></tr>
+      <tr><td><code>POST /jobs</code> · <code>GET /jobs</code></td><td>Jobs &amp; Sampling</td><td>job table; enqueues to SQS</td></tr>
+      <tr><td><code>GET/POST /tasks</code></td><td>Task Center</td><td>task table</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Authentication</h3>
+  <p>The only client is Lovable's server, never a browser. So the API uses <strong>IAM auth with SigV4</strong>, signed inside <code>createServerFn</code> with credentials held in Lovable's secret store. No API key is ever shipped to the client bundle, and a leaked page source exposes nothing. Per-user identity and roles come later, in the app's own auth layer, forwarded as a signed claim the API checks against a <code>user_roles</code> table — never a role column on a profile.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">07</span><h2>How the UI work gets unblocked immediately</h2></div>
+  <p class="lede">The frontend does not wait for AWS. It waits for the response shapes — and those can be frozen this week.</p>
+
+  <p>The console today reads every figure from <code>src/lib/console-data.ts</code>. The migration is not a rewrite; it is inserting one seam:</p>
+
+  <ol>
+    <li><strong>Freeze the contract.</strong> Write the per-screen response types once, derived from the existing <code>src/lib/types.ts</code>, and publish them as OpenAPI. Both sides generate from it, so a shape change is a compile error rather than a runtime surprise.</li>
+    <li><strong>Add a server function per screen</strong> under <code>src/lib/*.functions.ts</code>. On day one every handler returns the matching <code>console-data.ts</code> constant. The screens now consume an async contract while still rendering exactly what they render now.</li>
+    <li><strong>Convert routes to <code>loader</code> + <code>useSuspenseQuery</code></strong>, per the repo's own stated pattern. Still no backend involved. This is where loading and empty states get built — the work that is otherwise discovered late and rushed.</li>
+    <li><strong>Flip one env var per screen.</strong> When <code>/kpi/overview</code> goes live, the Overview handler proxies to AWS; the other ten keep serving fixtures. Screens go live independently, and every one of them can be reverted in a deploy.</li>
+  </ol>
+
+  <p>The practical effect: filter-bar state, the disagreement-queue interactions, the drawers, the job form, loading and error states — all of that is real frontend work that can proceed in parallel with P0–P2 below, against fixtures, with zero rework when the data arrives.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">08</span><h2>Sequence</h2></div>
+  <p class="lede">Each phase has a gate. If the gate does not pass, the next phase does not start.</p>
+
+  <div class="phase">
+    <div class="pid">P0</div>
+    <div>
+      <h3>Guardrails, and rescue what survived</h3>
+      <p>The <code>ipintel</code> Athena workgroup with enforced output and a scan cutoff; the three Glue databases; lifecycle and versioning on the project prefix. Then the rescue: copy <code>ip_analytics</code> to a dated snapshot before anything else runs against it, and reconstruct the business-truth derivation from <code>unified.unified_session_summary</code> into checked-in SQL. Everything as CloudFormation from the first resource — no console clicking, so a second environment is a parameter, not a re-run of this audit.</p>
+      <div class="gate"><b>Gate</b> A query with no output location set is refused by the workgroup, and $15.94M of attributed revenue has a versioned copy and a recipe that reproduces it.</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pid">P1</div>
+    <div>
+      <h3>Rebuild the enrichment join</h3>
+      <p>This is the critical path, because it is what is actually missing. The <code>prefix16</code> bucketed range tables come back from the intact <code>curated/</code> Parquet; <code>ip_list</code>, <code>ip_dim</code> and <code>ip_flags</code> are rebuilt from the SQL in <code>athena_table_setup.txt</code> at declared locations, with the missing-value rule applied centrally; the result is written as the tall <code>ip_vendor_result</code> rather than a wide per-vendor table. Then <code>ip_analytics</code> is rebuilt so its vendor columns are populated for the first time. Coverage and null-rate assertions run <em>inside</em> the job — the whole point of §01's third lesson.</p>
+      <div class="gate"><b>Gate</b> The five numbers in §01 reproduce exactly, and <code>found_db11</code> is true on ≥99.9% of rows. A job that writes 1.99M rows of nulls fails instead of succeeding.</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pid">P2</div>
+    <div>
+      <h3>Analytics and serving</h3>
+      <p>Comparable population computed as a genuine set intersection over <code>has_answer</code>. Scorecards, location accuracy against truth sources, false-positive revenue, ISP value, overlap matrix, KPI snapshot. Results materialize to Postgres on an EventBridge schedule.</p>
+      <div class="gate"><b>Gate</b> Every figure on every screen has a query behind it, or is explicitly marked as not-yet-measurable.</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pid">P3</div>
+    <div>
+      <h3>API</h3>
+      <p>API Gateway plus the read Lambdas, contract-first against the OpenAPI spec from §06. Structured logs, per-endpoint alarms, p95 tracked from the first deploy since the Data Health screen reports it.</p>
+      <div class="gate"><b>Gate</b> Every endpoint answers under 300 ms p95, signed with SigV4, with no credential reachable from a browser.</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pid">P4</div>
+    <div>
+      <h3>Console cutover</h3>
+      <p>Screen by screen, fixture handler to live proxy. Overview and Sources first — they are the least ambiguous. IP Explorer next, because it is the one screen where a wrong number is immediately visible against a known IP.</p>
+      <div class="gate"><b>Gate</b> A screen is live only when its numbers survive a manual spot-check against Athena.</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pid">P5</div>
+    <div>
+      <h3>Vendor QA jobs</h3>
+      <p>The SQS pipeline and the real adapters. Submit → plan-impact check against live usage counters → enqueue → workers call ProxyCheck / MaxMind / Spur in batches → responses land in <code>raw/</code> → normalize → analytics refresh. Hard stop at the plan limit, enforced in the worker, not just previewed in the form.</p>
+      <div class="gate"><b>Gate</b> A 10% sample job on the coverage gap runs end to end and <em>refuses</em> to exceed the daily limit.</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pid">P6</div>
+    <div>
+      <h3>Operations</h3>
+      <p>Health incidents generate tasks automatically; task actions persist; scheduled refreshes with freshness SLAs; user auth and roles; cost alarms.</p>
+      <div class="gate"><b>Gate</b> A deliberately broken vendor credential produces an incident, a task, and an accurate Data Health row without anyone touching a query.</div>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="tag">Sequencing consequence worth naming</span>
+    <p>Compare, Bot &amp; Proxy, Overlap and most of Revenue &amp; False Positives are <strong>vendor-comparison screens, and there is nothing to compare yet</strong>. Today there are two usable sources: FraudLogix via TUNE, and IP2Location. PX12 answers 0.34% of our IPs. ProxyCheck, MaxMind and Spur have zero rows in the account.</p>
+    <p>That means P5 is not a late nice-to-have — it is what makes half the console real. Until a QA job actually calls a third-party API, those screens can show coverage and disagreement between the two sources we have, and no more. Worth deciding now whether P5 moves ahead of P4.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">09</span><h2>Getting to the prompting phase</h2></div>
+  <p class="lede">The question is what has to be true before Cursor or Lovable can be pointed at this and produce something that works. The answer is smaller than it looks.</p>
+
+  <p>A coding agent cannot invent the shape of your data, and it will confidently hallucinate one if you do not give it the real thing. Everything below is about producing the three artifacts that make the prompting phase deterministic instead of a negotiation.</p>
+
+  <h3>What has to exist first</h3>
+  <ol>
+    <li><strong>The workgroup and the databases</strong> — half a day. Without enforcement, the next agent-run CTAS lands in <code>Unsaved/</code> exactly like the last five did, and this audit gets repeated in a month.</li>
+    <li><strong>One rebuilt end-to-end table</strong> — <code>ip_vendor_result</code> populated for DB11, PX12 and FraudLogix, with the enrichment join actually landing. This is P1 and it is the real work. Until it exists there is nothing for a backend to serve.</li>
+    <li><strong>The OpenAPI contract</strong> — generated from the tables, not from the mock. This is the single artifact that unblocks every downstream prompt.</li>
+  </ol>
+
+  <h3>Then the prompting phase splits in two</h3>
+
+  <div class="tw"><table>
+    <thead><tr><th>Track</th><th>Tool</th><th>Given</th><th>Produces</th></tr></thead>
+    <tbody>
+      <tr><td>Backend</td><td>Cursor, on a new repo</td><td>OpenAPI spec · the table DDL · the verdict map</td><td>CDK or SAM stack, read Lambdas, the SQS sampler, tests</td></tr>
+      <tr><td>Frontend</td><td>Lovable, on the existing project</td><td>The same OpenAPI spec · generated TS types</td><td>Server functions per screen, wired to the contract</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Both tracks consume the same spec, which is what keeps them from drifting. Lovable never learns an AWS detail; Cursor never learns a component name.</p>
+
+  <div class="note">
+    <span class="tag">Do this in Lovable before AWS is ready</span>
+    <p>Ask it for one change only: <em>replace every direct <code>console-data.ts</code> import with an async server function that returns the same constant, and convert each route to <code>loader</code> + <code>useSuspenseQuery</code>.</em> No visual change, no new data. It is a mechanical refactor that Lovable does well, and it is the seam every later prompt depends on. Do it now and the eventual cutover is one handler body per screen; skip it and you are asking an agent to restructure data flow and integrate an API in the same prompt, which is where these projects break.</p>
+  </div>
+
+  <h3>Download the codebase, then keep Lovable</h3>
+  <p>Your step 4 — export to Cursor — is right for the backend and worth being careful about for the frontend. The repo has hard constraints an agent will violate by default: no <code>react-router-dom</code>, never edit <code>routeTree.gen.ts</code>, no <code>tailwind.config.js</code> under Tailwind v4, no hardcoded colours, no duplicate Vite plugins. <code>PROJECT_CONTEXT.md</code> §10 already lists them. That file, or a <code>CLAUDE.md</code>/<code>.cursorrules</code> derived from it, has to be in the repo root before the first prompt, or the first refactor quietly breaks the build.</p>
+
+  <p>Keep the UI work in Lovable for as long as the changes are UI changes — it knows its own conventions. Move to Cursor for the AWS stack and the contract plumbing, where Lovable has no advantage.</p>
+
+  <div class="note warn">
+    <span class="tag">One correction to the sequence you sketched</span>
+    <p>Your step 3 is "make the UI as per brand guidelines" — that is already done, and the Lovable console is considerably further along than the <code>preview.html</code> and <code>index.html</code> prototypes. Those two are not a design target any more; the eleven-route console is. The only reason to open the prototypes again is Bill's original intent for a screen the console does not yet cover.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">10</span><h2>Access</h2></div>
+  <p class="lede">Not a blocker. If anything, the opposite problem.</p>
+
+  <p>The <code>source-creation-tool</code> profile resolves to <code>arn:aws:iam::221490242148:user/source_creation_tool_user</code> — underscores, not hyphens, which matters when writing policies against it. I simulated the actions this build needs and every one came back <strong>allowed</strong>: bucket and lifecycle management, Glue database and table creation, Athena workgroup administration, Lambda, API Gateway, SQS, EventBridge, RDS, Secrets Manager, CloudFormation, and <code>iam:CreateRole</code> / <code>iam:PassRole</code>.</p>
+
+  <p>That reach comes from group membership — <code>data_platform</code>, <code>app_team</code>, <code>data_science</code> — and includes <strong><code>IAMFullAccess</code></strong> and <code>AmazonAthenaFullAccess</code>. The user's own inline policies are narrow and belong to other projects entirely (<code>csv_upload/</code>, a Lovable backup prefix, a PitchPrfct repair grant).</p>
+
+  <div class="note warn">
+    <span class="tag">Worth raising, not worth blocking on</span>
+    <p>Building a data platform from a human user that carries <code>IAMFullAccess</code> means every resource is created by a principal that could also rewrite its own permissions, and nothing distinguishes this project's footprint from anything else those groups touch. The cleaner arrangement is a dedicated <code>IpIntelDeployRole</code> scoped to the <code>ip-intelligence/</code> prefix and <code>ipintel-*</code> resources, which <code>source_creation_tool_user</code> assumes — the same pattern already used for <code>SourcesRawWriterRole</code>. It costs about an hour in P0 and makes the blast radius legible.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">11</span><h2>Open questions</h2></div>
+  <p class="lede">Ordered by how much they block. The first three change the plan; the rest change the details.</p>
+
+  <div class="q"><div class="i">01</div><div>
+    <p><strong>What produces <code>ip_is_proxy</code> and <code>ip_is_vpn</code> on the session table?</strong></p>
+    <p class="why">Blocking for every accuracy metric. These columns are already in <code>ip_business_truth</code> as <code>proxy_sessions</code> / <code>vpn_sessions</code>, so an unnamed vendor is currently sitting inside the truth table. Until the source is identified it becomes its own row in <code>ip_vendor_result</code> and comes out of business truth — scoring vendors against it would measure agreement with the incumbent, not accuracy.</p>
+  </div></div>
+
+  <div class="q"><div class="i">02</div><div>
+    <p><strong>How should revenue on shared infrastructure be counted?</strong> Cloudflare, Fastly and CGNAT addresses dominate the top of the revenue ranking.</p>
+    <p class="why">It changes the product's headline metric, not just a chart. Options are to exclude shared infrastructure from false-positive revenue, to report it as a separate band, or to attribute at a coarser grain than IP. Deciding after the numbers are published is much worse than deciding now.</p>
+  </div></div>
+
+  <div class="q"><div class="i">03</div><div>
+    <p><strong>Do MaxMind and Spur credentials exist?</strong> ProxyCheck is answered — the free key is live and tested.</p>
+    <p class="why">With ProxyCheck in hand there are three comparable sources, which is enough to make Compare and Bot &amp; Proxy real. MaxMind and Spur decide whether it becomes five. Lower priority than it was yesterday, but it still shapes the Sources and Costs screens, which currently list vendors we cannot call.</p>
+  </div></div>
+
+  <div class="q"><div class="i">04</div><div>
+    <p><strong>What is the monthly AWS budget?</strong></p>
+    <p class="why">It picks the serving layer. A always-on Postgres is roughly $25–45/month; if that is unwelcome, the serving layer becomes DynamoDB and the design shifts before anything is built, not after.</p>
+  </div></div>
+
+  <div class="q"><div class="i">05</div><div>
+    <p><strong>Metro and county — where do they come from?</strong> No vendor in the current set supplies them, but four screens display accuracy at those levels.</p>
+    <p class="why">Needs a ZIP→CBSA/county crosswalk as a reference dataset, or those rows come out of the accuracy tables.</p>
+  </div></div>
+
+  <div class="q"><div class="i">06</div><div>
+    <p><strong>IPv6.</strong> Every regex and integer conversion in the existing work is IPv4-only, so IPv6 traffic is currently invisible rather than counted as uncovered.</p>
+    <p class="why">Either a stated out-of-scope decision with an explicit "IPv6 excluded" count on the coverage screens, or a second pipeline. Silence is the one option that produces wrong numbers.</p>
+  </div></div>
+
+  <div class="q"><div class="i">07</div><div>
+    <p><strong>Is IP masking presentational or structural?</strong> The UI shows <code>73.***.***.21</code>.</p>
+    <p class="why">If IPs are treated as personal data, masking has to happen in the API and full IPs need a separate authorization path — which affects the schema, not just the component.</p>
+  </div></div>
+
+  <div class="q"><div class="i">08</div><div>
+    <p><strong>Renew or retire the IP2Location Historical Commercial DB?</strong></p>
+    <p class="why">It is the difference between historical location accuracy being measurable and being an empty state. A procurement decision the console is meant to inform, but which also gates the console.</p>
+  </div></div>
+
+  <div class="q"><div class="i">09</div><div>
+    <p><strong>Does anyone know what removed the <code>Unsaved/</code> data?</strong></p>
+    <p class="why">Not blocking — the derivations are all recoverable — but worth five minutes with Ahsan. There is no lifecycle rule on that bucket, so something or someone deleted it, and if that mechanism is still running it will do the same to the next set of tables.</p>
+  </div></div>
+
+  <div class="q"><div class="i">10</div><div>
+    <p><strong>Are <code>dev</code> and <code>prod</code> separate, or is there one environment?</strong></p>
+    <p class="why">Cheap to decide now, expensive later — it is baked into every bucket name and stack parameter.</p>
+  </div></div>
+</section>
+
+<footer>
+  Plan for review · nothing has been created in AWS · sources: 01–03 onboarding docs, PROJECT_CONTEXT.md, preview.html, athena_table_setup.txt, athena_tables_fixes.txt, IP_Data_Source_Analysis.md, ATHENA_PROFILING_RUNBOOK.md, database.md
+</footer>
+
+</div>

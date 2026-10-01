@@ -1,0 +1,3 @@
+s1_session_overview.sql                  SUCCEEDED  0.15 GB read  9s
+   sessions | ips | first_day | last_day | no_ip | bot_click_true | bot_click_false | bot_click_null | bot_click_first_day | ip_is_proxy_values | ip_is_vpn_values | has_lead_values | has_revenue_values | device_type_values | ua_botlike | no_agent | duration_p10_p50_p90 | events_p10_p50_p90 | zero_duration | one_event
+   11442523 | 2014277 | 2022-08-19 | 2026-09-17 | 1 | 2237493 | 9205030 | 0 | 2022-08-19 | {false=4743958, true=3979872} |  | {off=11136574, on=305949} | {off=10287984, on=1154539} | {Desktop=19545, Mobile/Tablet=162266} | 32368 | 3 | [0, 0, 53] | [1, 1, 5] | 8367616 | 7772194

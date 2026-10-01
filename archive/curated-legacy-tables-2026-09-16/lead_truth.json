@@ -1,0 +1,209 @@
+{
+ "table": {
+  "Name": "lead_truth",
+  "DatabaseName": "ipintel_curated",
+  "Owner": "hadoop",
+  "CreateTime": "2026-09-03 19:08:41+05:30",
+  "UpdateTime": "2026-09-03 19:08:41+05:30",
+  "LastAccessTime": "1970-01-01 05:30:00+05:30",
+  "Retention": 0,
+  "StorageDescriptor": {
+   "Columns": [
+    {
+     "Name": "ip",
+     "Type": "string"
+    },
+    {
+     "Name": "truth_state",
+     "Type": "string"
+    },
+    {
+     "Name": "truth_zip",
+     "Type": "string"
+    },
+    {
+     "Name": "truth_city",
+     "Type": "string"
+    },
+    {
+     "Name": "truth_msa",
+     "Type": "string"
+    },
+    {
+     "Name": "truth_address",
+     "Type": "string"
+    },
+    {
+     "Name": "leads",
+     "Type": "bigint"
+    },
+    {
+     "Name": "phone_verified",
+     "Type": "boolean"
+    },
+    {
+     "Name": "intro_qualified",
+     "Type": "boolean"
+    },
+    {
+     "Name": "talked_to_client",
+     "Type": "boolean"
+    },
+    {
+     "Name": "is_deal",
+     "Type": "boolean"
+    },
+    {
+     "Name": "lead_expected_revenue",
+     "Type": "double"
+    },
+    {
+     "Name": "first_lead_date",
+     "Type": "date"
+    },
+    {
+     "Name": "last_lead_date",
+     "Type": "date"
+    },
+    {
+     "Name": "has_full_address",
+     "Type": "boolean"
+    }
+   ],
+   "Location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/curated/lead_truth",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "Compressed": false,
+   "NumberOfBuckets": -1,
+   "SerdeInfo": {
+    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+    "Parameters": {
+     "serialization.format": "1"
+    }
+   },
+   "BucketColumns": [],
+   "SortColumns": [],
+   "Parameters": {},
+   "SkewedInfo": {
+    "SkewedColumnNames": [],
+    "SkewedColumnValues": [],
+    "SkewedColumnValueLocationMaps": {}
+   },
+   "StoredAsSubDirectories": false
+  },
+  "PartitionKeys": [
+   {
+    "Name": "snapshot_date",
+    "Type": "string"
+   }
+  ],
+  "TableType": "EXTERNAL_TABLE",
+  "Parameters": {
+   "EXTERNAL": "TRUE",
+   "transient_lastDdlTime": "1788442721",
+   "parquet.compression": "SNAPPY"
+  },
+  "CreatedBy": "arn:aws:iam::221490242148:user/source_creation_tool_user",
+  "IsRegisteredWithLakeFormation": false,
+  "CatalogId": "221490242148",
+  "VersionId": "0",
+  "IsMultiDialectView": false,
+  "IsMaterializedView": false
+ },
+ "partitions": [
+  {
+   "Values": [
+    "2026-09-04"
+   ],
+   "DatabaseName": "ipintel_curated",
+   "TableName": "lead_truth",
+   "CreationTime": "2026-09-03 19:09:06+05:30",
+   "LastAccessTime": "1970-01-01 05:30:00+05:30",
+   "StorageDescriptor": {
+    "Columns": [
+     {
+      "Name": "ip",
+      "Type": "string"
+     },
+     {
+      "Name": "truth_state",
+      "Type": "string"
+     },
+     {
+      "Name": "truth_zip",
+      "Type": "string"
+     },
+     {
+      "Name": "truth_city",
+      "Type": "string"
+     },
+     {
+      "Name": "truth_msa",
+      "Type": "string"
+     },
+     {
+      "Name": "truth_address",
+      "Type": "string"
+     },
+     {
+      "Name": "leads",
+      "Type": "bigint"
+     },
+     {
+      "Name": "phone_verified",
+      "Type": "boolean"
+     },
+     {
+      "Name": "intro_qualified",
+      "Type": "boolean"
+     },
+     {
+      "Name": "talked_to_client",
+      "Type": "boolean"
+     },
+     {
+      "Name": "is_deal",
+      "Type": "boolean"
+     },
+     {
+      "Name": "lead_expected_revenue",
+      "Type": "double"
+     },
+     {
+      "Name": "first_lead_date",
+      "Type": "date"
+     },
+     {
+      "Name": "last_lead_date",
+      "Type": "date"
+     },
+     {
+      "Name": "has_full_address",
+      "Type": "boolean"
+     }
+    ],
+    "Location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/curated/lead_truth/snapshot_date=2026-09-04",
+    "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+    "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+    "Compressed": false,
+    "NumberOfBuckets": -1,
+    "SerdeInfo": {
+     "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+     "Parameters": {
+      "serialization.format": "1"
+     }
+    },
+    "BucketColumns": [],
+    "SortColumns": [],
+    "Parameters": {},
+    "SkewedInfo": {
+     "SkewedColumnNames": [],
+     "SkewedColumnValues": [],
+     "SkewedColumnValueLocationMaps": {}
+    },
+    "StoredAsSubDirectories": false
+   },
+   "CatalogId": "221490242148"
+  }
+ ]
+}

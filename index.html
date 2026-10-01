@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IP Intelligence Console</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+<aside>
+<h2>IP Intelligence Console</h2>
+<p>Vendor Quality & Fraud QA</p>
+<nav>
+<button data-page="dashboard">Dashboard</button>
+<button data-page="compare">Compare Vendors</button>
+<button data-page="tasks">Tasks & Errors</button>
+<button data-page="sources">Sources & Plans</button>
+<button data-page="ip">IP Explorer</button>
+</nav>
+</aside>
+
+<main>
+<header>
+<h1 id="title">Dashboard</h1>
+<div>
+<select><option>Last 90 Days</option></select>
+<select><option>All Publishers</option></select>
+</div>
+</header>
+
+<section id="dashboard" class="page">
+<div class="cards">
+<div class="card"><label>IP Events</label><b>6.2M</b></div>
+<div class="card"><label>Coverage</label><b>93.7%</b></div>
+<div class="card"><label>Proxy Rate</label><b>38.4%</b></div>
+<div class="card"><label>Revenue Risk</label><b>7.3%</b></div>
+</div>
+<div class="panel">
+<h3>Vendor Health</h3>
+<table>
+<tr><th>Source</th><th>Status</th><th>Coverage</th></tr>
+<tr><td>Fraudlogix TUNE</td><td class="good">Healthy</td><td>76%</td></tr>
+<tr><td>IP2Location</td><td class="warn">Stale</td><td>31%</td></tr>
+<tr><td>MaxMind</td><td class="bad">Error</td><td>0%</td></tr>
+</table>
+</div>
+</section>
+
+<section id="compare" class="page hidden">
+<div class="panel">
+<h2>Vendor Comparison</h2>
+<p>Compare only overlapping IP observations.</p>
+<table>
+<tr><th>Metric</th><th>Fraudlogix</th><th>ProxyCheck</th><th>MaxMind</th></tr>
+<tr><td>Proxy Detection</td><td>38%</td><td>31%</td><td>28%</td></tr>
+<tr><td>State Accuracy</td><td>98%</td><td>97%</td><td>99%</td></tr>
+<tr><td>Revenue False Positive</td><td>8.1%</td><td>4%</td><td>2.7%</td></tr>
+</table>
+</div>
+</section>
+
+<section id="tasks" class="page hidden">
+<div class="panel">
+<h2>Tasks & Errors</h2>
+<ul>
+<li>Fix MaxMind API failure</li>
+<li>Review Fraudlogix classification drift</li>
+<li>Refresh IP2Location database</li>
+</ul>
+</div>
+</section>
+
+<section id="sources" class="page hidden">
+<div class="panel">
+<h2>Sources & Plans</h2>
+<table>
+<tr><th>Company</th><th>Product</th><th>Cost</th><th>Usage</th></tr>
+<tr><td>Fraudlogix</td><td>TUNE Feed</td><td>Included</td><td>4.7M</td></tr>
+<tr><td>ProxyCheck</td><td>API</td><td>$110/year</td><td>218K</td></tr>
+<tr><td>MaxMind</td><td>Anonymous IP</td><td>Trial</td><td>Failed</td></tr>
+</table>
+</div>
+</section>
+
+<section id="ip" class="page hidden">
+<div class="panel">
+<h2>IP Explorer</h2>
+<h3>73.xxx.xxx.21</h3>
+<p>ISP: AT&T</p>
+<p>Revenue: $184</p>
+<p>Proxy Confidence: 18%</p>
+<p>Location Confidence: 96%</p>
+</div>
+</section>
+
+</main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

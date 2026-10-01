@@ -1,0 +1,696 @@
+<title>IP Intelligence System Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #f5f7f8; --surface: #ffffff; --ink: #14212b; --ink-2: #3c4b55; --muted: #66757f;
+  --rule: #d8dfe3; --rule-soft: #e7ecef; --accent: #1d6a86; --accent-soft: #dcebf1; --code-bg: #eef3f5;
+  --good: #25734a; --good-soft: #e1f0e7; --warn: #9a6212; --warn-soft: #f7ecd9; --crit: #a8322a; --crit-soft: #f6e1df;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --cond: "IBM Plex Sans Condensed", "IBM Plex Sans", "Arial Narrow", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0e151a; --surface: #151f26; --ink: #e3eaee; --ink-2: #bac6cd; --muted: #8d9ca5;
+    --rule: #2a3843; --rule-soft: #1f2b33; --accent: #5fb0cc; --accent-soft: #1b3440; --code-bg: #111b21;
+    --good: #6cc494; --good-soft: #17301f; --warn: #e0a64e; --warn-soft: #33270f; --crit: #ec8a80; --crit-soft: #3a1a17;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0e151a; --surface: #151f26; --ink: #e3eaee; --ink-2: #bac6cd; --muted: #8d9ca5;
+  --rule: #2a3843; --rule-soft: #1f2b33; --accent: #5fb0cc; --accent-soft: #1b3440; --code-bg: #111b21;
+  --good: #6cc494; --good-soft: #17301f; --warn: #e0a64e; --warn-soft: #33270f; --crit: #ec8a80; --crit-soft: #3a1a17;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink); font: 400 15.5px/1.62 var(--sans); padding-inline: 20px; padding-block: 0 80px; }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+@media (max-width: 900px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+nav.toc { position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto; padding-block: 44px 20px; font-size: 13.5px; }
+nav.toc b { display: block; font: 500 11.5px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+nav.toc a { display: block; color: var(--ink-2); text-decoration: none; padding: 5px 0 5px 10px; border-left: 2px solid var(--rule-soft); }
+nav.toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+@media (max-width: 900px) { nav.toc { position: static; max-height: none; padding-block: 20px 0; columns: 2; } nav.toc b { column-span: all; } }
+main { min-width: 0; }
+.mast { padding-block: 44px 26px; border-bottom: 1px solid var(--rule); display: grid; gap: 14px; }
+.eyebrow { font: 500 12px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 600 clamp(30px, 4.4vw, 42px)/1.08 var(--cond); margin: 0; text-wrap: balance; }
+.lede { font-size: 17px; color: var(--ink-2); margin: 0; max-width: 66ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 26px; font: 400 13px/1.4 var(--mono); color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 500; }
+section { padding-block: 38px 6px; border-top: 1px solid var(--rule-soft); scroll-margin-top: 12px; }
+section:first-of-type { border-top: 0; }
+h2 { font: 600 26px/1.2 var(--cond); margin: 0 0 8px; text-wrap: balance; }
+h3 { font: 600 18px/1.3 var(--cond); margin: 28px 0 8px; }
+h4 { font: 600 15px/1.35 var(--sans); margin: 20px 0 6px; }
+p, ul, ol { margin: 0 0 14px; max-width: 74ch; }
+li { margin-bottom: 5px; }
+.answer { font-size: 17px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .88em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; overflow-x: auto; font: 400 13px/1.55 var(--mono); margin: 8px 0 16px; max-width: 100%; }
+pre code { background: none; padding: 0; font-size: 1em; }
+pre.mermaid { background: var(--surface); font-family: var(--sans); text-align: center; }
+.scroll { overflow-x: auto; margin: 8px 0 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { text-align: left; font: 500 11.5px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+td.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.k { white-space: nowrap; }
+.note { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 16px; margin: 12px 0 18px; max-width: 74ch; }
+.note.warn { background: var(--warn-soft); border-color: transparent; }
+.note b:first-child { display: block; font: 600 13px/1.4 var(--sans); margin-bottom: 2px; }
+.chip { display: inline-block; font: 500 11.5px/1 var(--mono); padding: 4px 7px; border-radius: 99px; white-space: nowrap; }
+.chip.good { background: var(--good-soft); color: var(--good); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.crit { background: var(--crit-soft); color: var(--crit); }
+.chip.neutral { background: var(--rule-soft); color: var(--ink-2); }
+.timeline { list-style: none; padding: 0; margin: 12px 0; max-width: 820px; border-left: 2px solid var(--rule); }
+.timeline li { position: relative; padding: 0 0 18px 20px; }
+.timeline li::before { content: ""; position: absolute; left: -6px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--surface); border: 2px solid var(--accent); }
+.timeline time { display: block; font: 500 12.5px/1.4 var(--mono); color: var(--accent); }
+dl.gloss { display: grid; grid-template-columns: minmax(9rem, 14rem) 1fr; margin: 12px 0 0; max-width: 860px; }
+dl.gloss dt, dl.gloss dd { padding: 9px 0; border-bottom: 1px solid var(--rule-soft); margin: 0; font-size: 14.5px; }
+dl.gloss dt { font-family: var(--mono); font-size: 13px; color: var(--accent); padding-right: 14px; }
+@media (max-width: 560px) { dl.gloss { grid-template-columns: 1fr; } dl.gloss dt { border-bottom: 0; padding-bottom: 0; } }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+
+.flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 28px; margin: 16px 0 20px; position: relative; }
+.flow .col { display: grid; gap: 8px; align-content: start; }
+.flow .col > b { font: 500 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.flow .box { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 9px 12px; font-size: 13.5px; line-height: 1.4; }
+.flow .box code { font-size: .85em; }
+.flow .box small { display: block; color: var(--muted); font-size: 12px; }
+.flow .box.hl { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+.flow .arrow { grid-column: 1 / -1; font: 400 13px/1.5 var(--sans); color: var(--ink-2); background: var(--accent-soft); border-radius: 6px; padding: 8px 12px; }
+@media (max-width: 700px) { .flow { grid-template-columns: minmax(0, 1fr); } }
+@media print {
+  body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+  .wrap { display: block; max-width: none; }
+  nav.toc { display: none; }
+  section { break-inside: auto; padding-block: 18px 4px; }
+  h2, h3, h4 { break-after: avoid; }
+  table, pre, .note, .box, .way, tr { break-inside: avoid; }
+  pre { white-space: pre-wrap; word-break: break-word; overflow: visible; }
+  .scroll { overflow: visible; }
+  a { color: inherit; text-decoration: none; }
+}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <b>Contents</b>
+  <a href="#summary">Summary</a>
+  <a href="#requirements">Requirements and how they are met</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#daily">The daily cycle</a>
+  <a href="#rule">When proxycheck.io is asked</a>
+  <a href="#resolve">How the answer is resolved</a>
+  <a href="#tables">The tables</a>
+  <a href="#publish">Refreshing the unified tables</a>
+  <a href="#reports">Reports</a>
+  <a href="#vendors">Vendors and mappings</a>
+  <a href="#proxycheck">proxycheck.io in detail</a>
+  <a href="#api">The API</a>
+  <a href="#safety">Production safety</a>
+  <a href="#aws">AWS resources</a>
+  <a href="#ops">Operations and runbooks</a>
+  <a href="#state">State on 15 Sep 2026</a>
+  <a href="#history">What was done, in order</a>
+  <a href="#limits">Limitations and open items</a>
+  <a href="#files">Files in the project</a>
+  <a href="#gloss">Glossary</a>
+</nav>
+
+<main>
+<header class="mast">
+  <div class="eyebrow">Complete reference · as built and verified 16 Sep 2026</div>
+  <h1>IP Intelligence System Guide</h1>
+  <p class="lede">Everything about the company IP source: what it is for, how every part works, why each decision was made, the evidence that it works, what was done along the way, and what is still open.</p>
+  <div class="meta"><span>AWS account <b>221490242148</b> · <b>us-west-2</b></span><span>Database <b>ipintel_curated</b></span><span>Status <b>live</b></span></div>
+</header>
+
+<section id="summary">
+  <h2>Summary</h2>
+  <p class="answer">The system gives every IP address the company sees a location and a proxy/VPN/bot verdict, keeps both current every day, and lets anyone look up any address, one or a thousand at a time.</p>
+  <ul>
+    <li><b>Sources of addresses:</b> the production tables <code>raw.raw_tune_clicks</code> (ad clicks) and <code>unified.unified_session_summary</code> (website sessions). They are only ever read.</li>
+    <li><b>Answers from:</b> IP2Location DB11 and IP2Proxy PX12 (downloaded databases), FraudLogix decisions carried on tune clicks, ipinfo.io and ipwho.is (free APIs), and proxycheck.io (paid, $9.99 a month, 80,000 queries a day).</li>
+    <li><b>Kept in:</b> nine Iceberg tables in <code>ipintel_curated</code>, the main one being <code>ip_resolved</code>, one row per address with the answer to use.</li>
+    <li><b>Kept current by:</b> a daily load at 07:30 UTC for new addresses, a proxycheck.io run straight after (new-row addresses first, then the backfill, together up to 50,000; 30,000 a day stay free for API lookups), a 22:00 UTC top-up that finishes the 50,000 if the morning run stopped early, and weekly maintenance.</li>
+    <li><b>Shared with another team:</b> after every proxycheck.io run that passes its checks, <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> are refreshed with checked copies of the <code>ipintel_curated</code> tables (files only, no catalog change).</li>
+    <li><b>Reported by:</b> a Location Accuracy report (vendors against customer postal addresses) and an Enrichment Coverage report, rebuilt at the end of both daily jobs.</li>
+    <li><b>Used through:</b> a Lovable app, an HTTPS API (<code>GET /lookup/{ip}</code>, <code>POST /lookup</code> for up to 1,000, table and control endpoints), and Athena.</li>
+    <li><b>Safety:</b> every project role sits inside a permissions boundary that makes writing to any production table, bucket or workgroup impossible; every run proves it and reviews its own AWS activity.</li>
+  </ul>
+</section>
+
+<section id="requirements">
+  <h2>Requirements and how they are met</h2>
+  <p class="answer">Each requirement the owner set, in the owner's terms, with where it lives. Evidence for every row is in <code>IP_PROJECT_VERIFICATION.md</code>.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Requirement</th><th>How it is met</th></tr></thead>
+    <tbody>
+      <tr><td>Do not touch <code>raw.raw_tune_clicks</code> or <code>unified.unified_session_summary</code>; nothing in production modified, added or deleted</td><td>Read-only access enforced by AWS (permissions boundary); IAM simulator check before every run; CloudTrail review after every run</td></tr>
+      <tr><td>New rows in those tables drive the process</td><td>Job A reads each base table at a pinned version, detects change, finds new addresses and addresses whose rows changed</td></tr>
+      <tr><td>Look up our IP tables first; call proxycheck.io if the address is missing or the information is bad</td><td>One rule, shared by the API and the pipeline (<a href="#rule">below</a>); the pipeline queues addresses and sends them first the same day</td></tr>
+      <tr><td>Daily job: new IPs to each vendor, compare, update vendor overview and unified tables</td><td>Job A: IP2Location, IP2Proxy, FraudLogix, ipinfo.io, ipwho.is; analytics, scorecards, <code>ip_resolved</code>. Since 15 Sep, Job B refreshes <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> after each passed run (<a href="#publish">publish</a>)</td></tr>
+      <tr><td>Unique IPs; existing appended, new inserted</td><td>MERGE on (address, vendor): inserted, added, updated; duplicate check every run</td></tr>
+      <tr><td>Separate daily job: 50,000 addresses with no proxycheck.io decision; bulk; self-loop; no data loss, no downtime, valid calls, no key exhaustion, no timeouts</td><td>Job B: 1,000 per request, responses saved before use, shared reservation counter, hand-over to a fresh copy, Iceberg snapshots so readers never see half a write. Budget raised to 70,000 on 15 Sep morning, then set back to 50,000 at the owner's request (15 Sep 13:00 UTC)</td></tr>
+      <tr><td>Use the full 80,000 queries a day</td><td>Superseded by the owner on 15 Sep 13:00 UTC: 50,000 for enrichment (queue + backfill, top-up finishes it if the morning run stopped early) and 30,000 always kept free for API lookups. Lookup queries not used in a day are not spent</td></tr>      <tr><td>Base tables controllable from the UI</td><td><code>/input-tables</code> endpoints and the Base Tables page, with validation</td></tr>
+      <tr><td>API usable directly, for one or many IPs, with geo and proxy</td><td><code>GET /lookup/{ip}</code> and <code>POST /lookup</code></td></tr>
+      <tr><td>Where does the IP occur</td><td><code>ip_occurrences</code>, returned by every lookup</td></tr>
+      <tr><td>Correct information every time, without modifying vendor data</td><td>Vendor rows are kept as answered; <code>ip_resolved</code> and every lookup apply the same resolution rules</td></tr>
+      <tr><td>Nothing dummy or benchmark</td><td>Benchmark-only vendors and the old sample endpoints removed; every row comes from a vendor the system runs</td></tr>
+      <tr><td>Most safety options</td><td>Boundary, emergency stop, automatic pause, alarms and email alerts, one copy of each job, dead-letter queue, scan caps, audit log</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="architecture">
+  <h2>Architecture</h2>
+  <p class="answer">Three Lambda functions do all the work; everything they write lives in one Glue database and one S3 folder that belong to the project. The two <code>unified</code> tables they refresh keep their files in that same folder.</p>
+  <div class="flow" role="img" aria-label="Production tables feed Job A, Job A feeds the tables and starts Job B, Job B talks to proxycheck.io and then publishes the unified tables, both jobs rebuild the report files, the API and app read the tables and reports">
+    <div class="col"><b>1 · Where addresses come from</b>
+      <div class="box"><code>raw.raw_tune_clicks</code><small>ad clicks, every 6 h · read only</small></div>
+      <div class="box"><code>unified.unified_session_summary</code><small>website sessions, daily · read only</small></div>
+      <div class="box">IP2Location · IP2Proxy · FraudLogix · ipinfo.io · ipwho.is<small>free answers</small></div>
+    </div>
+    <div class="col"><b>2 · Scheduled jobs</b>
+      <div class="box hl"><code>ipintel-free-daily</code> — Job A<small>07:30 UTC · new addresses, every free vendor, analytics, occurrences, resolved answers, queue</small></div>
+      <div class="box hl"><code>ipintel-proxycheck-daily</code> — Job B<small>after Job A · 10:00 fallback · 22:00 top-up · queue first, then backfill · up to 50,000</small></div>
+      <div class="box">proxycheck.io<small>paid · 80,000 queries a day · 30,000 kept for lookups · 1,000 per request</small></div>
+      <div class="box hl">Publish — Job B <code>{"action":"publish"}</code><small>after every passed Job B run · build, check, swap files · no catalog change</small></div>
+    </div>
+    <div class="col"><b>3 · Tables and use</b>
+      <div class="box"><code>ipintel_curated</code><small>ip_geo · ip_intelligence · analytics · scorecards · ip_occurrences · <b>ip_resolved</b> · proxycheck_queue</small></div>
+      <div class="box"><code>unified.ip_geo</code> · <code>unified.ip_intelligence</code><small>checked copies · files in <code>ip-intelligence/unified/</code> · read by the other team's <code>ip-lookup-api</code></small></div>
+      <div class="box">Report files<small><code>geo_accuracy.json</code> · <code>enrichment_coverage.json</code> · rebuilt by both jobs</small></div>
+      <div class="box hl"><code>ipintel-findings-api</code><small>/lookup (one or 1,000) · /tables · /accuracy/geo · /coverage · /publish · control endpoints · asks proxycheck.io when needed</small></div>
+      <div class="box">Lovable app · Athena · other systems</div>
+    </div>
+    <div class="arrow">Flow: base tables → Job A → tables, and Job A starts Job B → proxycheck.io → tables → publish to the two <code>unified</code> tables. Both jobs rebuild the report files at the end. The API reads the tables and reports, asks proxycheck.io for addresses that need it, and saves the answer for Job B to add to the tables.</div>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th>Component</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>ipintel-free-daily</code></td><td>Job A: new addresses, free vendors, analytics, scorecards, occurrences, resolved answers, queue. Also validates base tables and runs weekly maintenance. Python 3.12, 15 min, 1 GB, one copy at a time</td></tr>
+      <tr><td class="k"><code>ipintel-proxycheck-daily</code></td><td>Job B: queue, backfill and top-up batches to proxycheck.io; folds saved live answers into the tables; after a passed run, invokes itself with <code>{"action":"publish"}</code> to refresh the <code>unified</code> copies. Same limits</td></tr>
+      <tr><td class="k"><code>ipintel-findings-api</code></td><td>The HTTPS API behind the app and other systems. 60 s, 512 MB, bearer token</td></tr>
+      <tr><td class="k"><code>ipintel-pipeline-state</code> (DynamoDB)</td><td>Settings and run history: safety state, job settings, base tables, the daily query counter, run logs, audit log</td></tr>
+      <tr><td class="k"><code>ipintel-sources</code> (DynamoDB)</td><td>The vendor registry shown on Vendor Sources</td></tr>
+      <tr><td class="k">S3 <code>…/ip-intelligence/</code></td><td>Iceberg table files, proxycheck.io plans and responses, saved live answers, staging, exports and report files, the files behind <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code>, their rollback copy, archives</td></tr>
+      <tr><td class="k">Athena workgroups</td><td><code>ipintel_etl</code> for jobs (10 GB per query cap), <code>ipintel</code> for the API (20 GB cap)</td></tr>
+      <tr><td class="k">EventBridge Scheduler</td><td>Four schedules (<a href="#ops">operations</a>)</td></tr>
+      <tr><td class="k">SNS <code>ipintel-alerts</code> + CloudWatch</td><td>Email alerts and six alarms</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="daily">
+  <h2>The daily cycle</h2>
+  <h3>Job A — the incremental load (07:30 UTC)</h3>
+  <ol>
+    <li>Stops if the pipeline is paused or the job is switched off (a manual run ignores the switch).</li>
+    <li>Removes staging tables older than 3 hours left by any crashed run.</li>
+    <li>Asks the IAM simulator whether its role could write to production. Any "yes" fails the run and pauses the pipeline.</li>
+    <li>Takes the enabled, validated base tables and records the latest Iceberg snapshot of each. If none changed since the last successful run, it stops ("skipped").</li>
+    <li><b>New addresses:</b> every valid IPv4 in any base table, at the pinned snapshot, that IP2Location has not answered yet. A full comparison is used, so rows that arrive late or are rewritten are never missed.</li>
+    <li><b>FraudLogix targets:</b> new addresses plus addresses with clicks in the last 3 days, because a FraudLogix decision can change.</li>
+    <li>Looks up IP2Location DB11 and IP2Proxy PX12 (range joins on the downloaded databases) and FraudLogix (latest decision per address from tune clicks).</li>
+    <li>Asks ipinfo.io and ipwho.is about addresses new since 14 Sep that they have not answered, up to 500 each per run, paced.</li>
+    <li>Counts what will change (inserted / added / updated / unchanged), then MERGEs into <code>ip_geo</code> and <code>ip_intelligence</code>. <code>created_at</code> is never overwritten.</li>
+    <li>Refreshes <code>ip_intelligence_analytics</code> and <code>ip_geo_analytics</code> for the affected addresses.</li>
+    <li>Recomputes <code>ip_occurrences</code> from every base table and merges it (first seen only moves earlier, last seen only later).</li>
+    <li>Recalculates both vendor scorecards over addresses asked of every running vendor (at least 1,000) and exports them for the app.</li>
+    <li>Recomputes <code>ip_resolved</code> for every address and merges only rows that changed.</li>
+    <li><b>Queue:</b> every address new or touched since the last successful run that needs proxycheck.io goes into <code>proxycheck_queue</code> with its reason.</li>
+    <li>Rebuilds the Location Accuracy and Enrichment Coverage reports (<a href="#reports">reports</a>).</li>
+    <li>Runs the checks below and a CloudTrail review. If any fails, progress is not recorded, so the next run repeats the same work.</li>
+    <li>Records each base table's new snapshot as its watermark and starts Job B.</li>
+  </ol>
+  <p><b>Job A checks:</b> pipeline cannot write to production · no address twice for a vendor · no table shrank · every new address is in <code>ip_geo</code> · IP2Location has every new address · IP2Proxy has every new address · updated geo rows kept <code>created_at</code> · updated intelligence rows kept <code>created_at</code> · every address has exactly one resolved answer · every new address has an occurrence row · every address needing proxycheck.io is queued · location accuracy per vendor exported · enrichment coverage exported · nothing outside the project was touched in 24 hours.</p>
+
+  <h3>Job B — proxycheck.io (after Job A; 10:00 fallback; 22:00 top-up)</h3>
+  <ol>
+    <li>Same pause, switch and permission checks. Reads the key from Secrets Manager and proxycheck.io's own usage page (plan, limit, queries used).</li>
+    <li><b>Plans the day once:</b> picks up to 50,000 × 99% addresses without a proxycheck.io answer (<code>job_proxycheck._selection_sql</code>), in this order:
+      <ul>
+        <li><b>0</b> queued from base tables;</li>
+        <li><b>1</b> first seen today;</li>
+        <li><b>1b</b> (new, 15 Sep) every address seen in the base tables in the last 30 days that proxycheck.io has not answered, even if the other vendors agree it is clean, because proxycheck.io confirms the proxy answer and adds a second location vote;</li>
+        <li><b>2</b> no conclusion (<code>no_answer</code>, <code>vendors_disagree</code>, <code>flagged_unconfirmed</code>), seen in the last 90 days first, then by class rank and most recently seen.</li>
+      </ul>
+      Private and reserved addresses are never picked. Saves the list as batch files of 1,000 and a manifest.</li>
+    <li><b>Queue batches:</b> on every run, queued addresses not in today's batches become extra batches sent first, so addresses queued after the plan still go out the same day. They count inside the 50,000 (<code>queue_extra</code> 0) and never borrow from the lookup reserve.</li>
+    <li><b>Top-up batches (22:00 run only):</b> the next addresses in the same order, sized to what is left of today's 80,000 minus 30,000 (<code>topup_keep</code>), judged by the larger of our counter and proxycheck.io's. In practice it only finishes the 50,000 enrichment budget when the morning run stopped early; it never uses lookup queries.</li>
+    <li>For each batch without a saved response: reserve its queries atomically, send 1,000 addresses in one request, save the response file immediately, then account for addresses charged twice.</li>
+    <li>With under 3 minutes left, or under 10 minutes when the merge is still to do, it starts a fresh copy of itself and stops (at most 30 hand-overs a day; a failed hand-over lands in the dead-letter queue with an alarm).</li>
+    <li>Merges every saved response not yet applied, plus every answer saved by API lookups in the last 7 days, into <code>ip_intelligence</code> and <code>ip_geo</code>; refreshes analytics, scorecards, exports and <code>ip_resolved</code>. Writes an "applied" marker per file only if every check passes.</li>
+    <li>Closes queue rows whose answer is now in the tables (or that proxycheck.io had no record for), rebuilds the two reports, then runs its checks and the CloudTrail review.</li>
+    <li><b>Publish:</b> only when every check passed and <code>publish_unified</code> is true on <code>job/proxycheck-daily</code>, invokes itself with <code>{"action":"publish"}</code> to refresh <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> (<a href="#publish">below</a>).</li>
+  </ol>
+  <p><b>Job B checks:</b> pipeline cannot write to production · no duplicates · no table shrank · <code>created_at</code> kept (geo and intelligence) · one resolved answer per address · every queued base-table address was sent · location accuracy per vendor exported · enrichment coverage exported · nothing outside the project touched.</p>
+  <p><b>16 Sep plan (dry run of the new order):</b> 49,504 addresses selected. The first 20,597 are every remaining address seen in the last 30 days (8,719 <code>no_answer</code> and 11,878 <code>clean_by_vendors</code>); the other 28,907 are older <code>no_answer</code> addresses last seen 31–90 days ago. After the 16 Sep run, every address seen in the last 30 days has a proxycheck.io answer, except those proxycheck.io has no record of.</p>
+
+  <h3>Why it cannot lose data or overspend</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Failure</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td>Crash after a response is saved</td><td>The next copy skips that batch and merges the file</td></tr>
+      <tr><td>Crash between answer and save</td><td>That batch is sent again; up to 1,000 queries wasted, no answer lost</td></tr>
+      <tr><td>Two copies at once</td><td>Impossible: each function allows one running copy</td></tr>
+      <tr><td>Budget reached</td><td>Stops; tomorrow's plan continues from the same order</td></tr>
+      <tr><td>Key rejected</td><td>Stops, marks the key invalid, emails</td></tr>
+      <tr><td>A check fails</td><td>Nothing is marked done; the next run repeats the work</td></tr>
+      <tr><td>Readers during a write</td><td>Iceberg serves the last complete version until the new one commits</td></tr>
+      <tr><td>A publish check fails</td><td>Before the swap: the unified table is not touched. During or after the swap: the previous files are put back automatically</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="rule">
+  <h2>When proxycheck.io is asked</h2>
+  <p class="answer">One rule, written twice in the same order: <code>lookup.needs_proxycheck</code> in the API and <code>pcqueue.reason_sql</code> in the pipeline.</p>
+  <ol>
+    <li>Not a public address (0/8, 10/8, 100.64/10, 127/8, 169.254/16, 172.16/12, 192.0.0/24, 192.0.2/24, 192.168/16, 198.18/15, 198.51.100/24, 203.0.113/24, 224/3) → never.</li>
+    <li>Refresh requested (API only) → yes, <code>refresh</code>.</li>
+    <li>proxycheck.io has already answered → no.</li>
+    <li>Not in the IP tables → yes, <code>new_address</code>.</li>
+    <li>No location → yes, <code>no_location</code>.</li>
+    <li>Proxy status <code>no_answer</code>, <code>vendors_disagree</code> or <code>flagged_unconfirmed</code> → yes, that status.</li>
+    <li>Location vendors disagree → yes, <code>location_disagree</code>.</li>
+    <li>Otherwise → no.</li>
+  </ol>
+  <p>Tested 15 Sep: 9 of 9 offline cases; through the live API 4 of 4 should-call cases called, 3 of 3 must-not cases not called, 2 of 2 repeats not charged again; bulk endpoint the same.</p>
+</section>
+
+<section id="resolve">
+  <h2>How the answer is resolved</h2>
+  <p class="answer">Vendor rows are never changed to make them agree. The answer to use is worked out from them by fixed rules, identically in <code>resolved.py</code> (SQL, for <code>ip_resolved</code>) and <code>lookup.py</code> (Python, for lookups). A comparison of 1,000 addresses found 0 differences.</p>
+  <h3>Location</h3>
+  <ul>
+    <li>A vendor "answered" if it gave a state, a city or coordinates. GeoJS never votes (it repeats MaxMind); it is also no longer running.</li>
+    <li>Answers are grouped by lower-cased state and the first word of the city.</li>
+    <li>The group with the most vendors wins; ties go to the group holding the best location-scorecard score, then to the group whose first vendor id sorts first.</li>
+    <li>The best-scoring vendor in the winning group supplies every field.</li>
+    <li>Status: <code>agreed</code> if the group has 2+ vendors; <code>single_source</code> if only one vendor votes; otherwise <code>vendors_disagree</code>.</li>
+  </ul>
+  <h3>Proxy</h3>
+  <ul>
+    <li>A vendor "answered" if <code>is_proxy</code> is not empty. It is "flagged" if any of proxy, VPN, Tor, datacenter, bot, compromised, scraper is true.</li>
+    <li>If proxycheck.io answered, its flags are used: <code>confirmed</code> when another answering vendor has the same flagged/clean verdict, <code>proxycheck_only</code> when no other vendor answered, <code>proxycheck_overrides</code> when all others disagree.</li>
+    <li>Without proxycheck.io: <code>clean_by_vendors</code> when every answering vendor says clean (all flags false); <code>vendors_disagree</code> when some flag and some do not; <code>confirmed_by_published_range</code> when all flag and a published range agrees (no range data is loaded now); otherwise <code>flagged_unconfirmed</code>. No answers at all is <code>no_answer</code>.</li>
+    <li>ISP and ASN come from proxycheck.io when present, otherwise the first answering vendor by id.</li>
+  </ul>
+</section>
+
+<section id="tables">
+  <h2>The tables</h2>
+  <p class="answer">All in <code>ipintel_curated</code>, Iceberg format, partitioned by <code>bucket(ip_address, 64)</code> (the queue by 16), stored under <code>s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/iceberg/</code>.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Table</th><th>One row per</th><th class="n">Rows 15 Sep</th><th>Written by</th><th>Holds</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>ip_resolved</code></td><td>address</td><td class="n">4,956,914</td><td>A, B</td><td>The answer to use: location fields, <code>geo_status</code>, <code>geo_decided_by</code>, <code>geo_agreeing_vendors</code>; <code>proxy_status</code>, <code>flagged</code>, eight flags, <code>proxy_decided_by</code>, <code>proxy_agreeing_vendors</code>; ISP, ASN, <code>proxycheck_risk_score</code>; <code>seen_in_base_tables</code>, first/last seen; <code>updated_at</code></td></tr>
+      <tr><td class="k"><code>ip_geo</code></td><td>address + vendor</td><td class="n">5,039,539</td><td>A, B</td><td>state, city, zip_code, latitude, longitude, timezone, created_at, updated_at</td></tr>
+      <tr><td class="k"><code>ip_intelligence</code></td><td>address + vendor</td><td class="n">9,567,985</td><td>A, B</td><td>is_proxy, is_vpn, is_tor, is_datacenter, is_bot, is_compromised, is_scraper, is_anonymous, isp, asn, created_at, updated_at</td></tr>
+      <tr><td class="k"><code>ip_intelligence_analytics</code></td><td>address + vendor</td><td class="n">= intelligence</td><td>A, B</td><td>has_answer, flagged, fraud_reason, is_masked_device, risk_score, known_infrastructure, infrastructure_list, verdict_class</td></tr>
+      <tr><td class="k"><code>ip_geo_analytics</code></td><td>address + vendor</td><td class="n">106,938 before the top-up; grows daily</td><td>A, B</td><td>Only where 2+ vendors answered: consensus state/city/zip, votes, matches-consensus per field, customer-address truth and matches, row agreement %</td></tr>
+      <tr><td class="k"><code>ip_occurrences</code></td><td>address + base table</td><td class="n">6,543,790</td><td>A</td><td>source_table, first_seen, last_seen, days_seen, rows_seen</td></tr>
+      <tr><td class="k"><code>proxycheck_queue</code></td><td>address</td><td class="n">grows daily</td><td>A queues, B closes</td><td>reason, source, queued_at, queued_by_run, answered_at, outcome (answered / no_record_from_proxycheck)</td></tr>
+      <tr><td class="k"><code>vendor_overview_geo</code></td><td>vendor</td><td class="n">4</td><td>A, B</td><td>ips_tested, fill_rate_pct, agreement_pct, state/city/zip truth %, score (agreement × fill)</td></tr>
+      <tr><td class="k"><code>vendor_overview_proxy</code></td><td>vendor</td><td class="n">3</td><td>A, B</td><td>ips_tested, answered, fill, flagged, bot counts, false_positive_rate_pct (bot flags on confirmed humans), precision/recall, score</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Supporting tables</b> in the same database: <code>db11_bucketed</code> and <code>px12_bucketed</code> (the downloaded IP2Location and IP2Proxy databases, bucketed by /16 prefix for fast range joins), <code>qualified_lead_ips</code> (customer addresses and confirmed humans, used as truth for location and false positives). Older tables from earlier phases (<code>ip_pool</code>, <code>pc_live</code>, <code>ip_dim</code> and similar) are not used by the running system.</p>
+  <p><b>Conventions:</b> every yes/no is three-state (true, false, empty = no answer). Every timestamp is UTC <code>YYYY-MM-DDTHH:MM:SSZ</code>; FraudLogix times were converted from Pacific time on 15 Sep.</p>
+  <h3>S3 folder layout</h3>
+  <pre><code>ip-intelligence/
+  iceberg/<i>table</i>/                        table data and metadata
+  proxycheck/plan/dt=<i>date</i>/               manifest.json, batch-NNNNN (backfill), batch-q… (queue), batch-t… (top-up)
+  proxycheck/responses/dt=<i>date</i>/          raw proxycheck.io response per batch, saved before use
+  proxycheck/applied/dt=<i>date</i>/            marker once a batch is merged and checked
+  proxycheck/live/dt=<i>date</i>/               answers from API lookups (single and bulk), folded in by Job B
+  proxycheck/live/by-ip/<i>ip</i>.json          latest API answer per address, so a repeat lookup is free
+  proxycheck/live-applied/                  markers for folded live answers
+  staging/<i>run</i>/                           short-lived working tables, removed after each run
+  serving/ipintel_curated/                  scorecard exports, geo_accuracy.json, enrichment_coverage.json
+  unified/<i>table</i>/d=2026-09-11/            files behind unified.ip_geo and unified.ip_intelligence (replaced by each publish)
+  publish-previous/<i>table</i>/                rollback copy: the files the last publish replaced
+  archive/                                  backups: removed benchmark vendors, FraudLogix timestamps before UTC
+  archive/unified-2026-09-11/<i>table</i>/      the original 11 Sep unified files, kept forever
+  athena-results/                           query output</code></pre>
+  <p><b>The <code>unified</code> copies.</b> This project built <code>unified.ip_geo</code>, <code>unified.ip_intelligence</code>, <code>unified.ip_geo_analytics</code>, <code>unified.ip_intelligence_analytics</code>, <code>unified.vendor_overview_geo</code> and <code>unified.vendor_overview_proxy</code> on 11 Sep. Since 15 Sep, <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> are refreshed after every passed Job B run, because another team's API (<code>ip-lookup-api</code>) reads them (<a href="#publish">next section</a>). The other four are still the 11 Sep copies and nothing reads them.</p>
+</section>
+
+<section id="publish">
+  <h2>Refreshing the unified tables</h2>
+  <p class="answer">After every Job B run that passes all its checks, Job B replaces the files behind <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> with a checked copy of the matching <code>ipintel_curated</code> table. It never changes the Glue catalog.</p>
+  <p>Another team's API, <code>ip-lookup-api</code>, reads these two tables. They are Hive tables, Parquet, bucketed into 64 by <code>ip_address</code>, with files in the project's own folder <code>s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/unified/<i>table</i>/d=2026-09-11/</code>. Because the files are ours, the refresh can swap them without any catalog write. Code: <code>build/pipeline/src/publish.py</code>. Switch: <code>publish_unified</code> on <code>job/proxycheck-daily</code> (true).</p>
+  <h3>Steps, per table</h3>
+  <ol>
+    <li><b>Guard.</b> The unified table still has the expected S3 location, exactly the same columns as <code>ipintel_curated.<i>table</i></code>, 64 buckets on <code>ip_address</code>, and Parquet. Anything else stops the publish.</li>
+    <li><b>Archive (first publish only).</b> Copy the 11 Sep files to <code>ip-intelligence/archive/unified-2026-09-11/<i>table</i>/</code>, kept forever.</li>
+    <li><b>Build.</b> CTAS a bucketed Parquet copy of <code>ipintel_curated.<i>table</i></code> into staging.</li>
+    <li><b>Check the copy.</b> Same row count as the source; no duplicate (<code>ip_address</code>, <code>vendor</code>); 64 bucket files; about 200 sample addresses (the newest per vendor plus random ones) return identical rows through the bucketed lookup path.</li>
+    <li><b>Swap.</b> Copy the current files to <code>ip-intelligence/publish-previous/<i>table</i>/</code> (the rollback copy), copy the new files in, then delete the old ones. For a few seconds readers may see old and new rows together; they never see an empty table.</li>
+    <li><b>Re-check.</b> Run the same checks on <code>unified.<i>table</i></code>. On any failure, the previous files are put back automatically.</li>
+  </ol>
+  <div class="scroll"><table>
+    <thead><tr><th>Item</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Trigger</td><td>Job B invokes itself with <code>{"action":"publish"}</code> after a passed run. Dry run: <code>{"action":"publish","dry_run":true}</code> builds and checks without swapping</td></tr>
+      <tr><td>Run log</td><td>DynamoDB <code>run#publish-unified</code>; state item <code>publish/unified</code> (<code>last_published_at</code>, <code>tables</code>)</td></tr>
+      <tr><td>API</td><td><code>GET /publish</code> (read only): <code>tables</code>, <code>last_published_at</code>, <code>last_run_id</code>, <code>last_tables</code>, <code>runs</code></td></tr>
+      <tr><td>Catalog</td><td>No Glue change. The table definitions' <code>UpdateTime</code> stays 2026-09-11</td></tr>
+      <tr><td>First real publish</td><td>15 Sep 13:09 UTC, passed: <code>unified.ip_geo</code> 5,039,539 rows, <code>unified.ip_intelligence</code> 9,567,985 rows, 64 files each. <code>proxycheck_io</code> rows in <code>unified.ip_intelligence</code> went from 1 to 77,710. The benchmark vendors (<code>maxmind_geolite2</code>, <code>dbip_combined</code>, <code>geojs_io</code>, <code>authoritative_lists</code>) are no longer in the unified copies</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note warn"><b>The other team's API rarely uses the new proxycheck.io answers</b><code>ip-lookup-api</code> prefers <code>fraudlogix_tune</code>, then <code>authoritative_lists</code>, then <code>ip2proxy_px12</code>, and calls proxycheck.io live only when none of them is decisive. <code>ip2proxy_px12</code> answers every address, so the proxycheck.io answers now in the table are seldom reached. That code is not ours; a recommendation is pending with the owner.</div>
+</section>
+
+<section id="reports">
+  <h2>Reports</h2>
+  <p class="answer">Two JSON reports are rebuilt at the end of both daily jobs, saved under <code>ip-intelligence/serving/ipintel_curated/</code> and served by the API. Each has its own check in both jobs.</p>
+
+  <h3>Location Accuracy</h3>
+  <p>Code <code>build/pipeline/src/accuracy.py</code>; file <code>geo_accuracy.json</code>; API <code>GET /accuracy/geo</code>; check "Location accuracy per vendor exported".</p>
+  <ul>
+    <li><b>Truth:</b> <code>ipintel_curated.qualified_lead_ips</code> rows with a full postal address: 2,105 customers, full state names, 5-digit ZIP.</li>
+    <li><b>Compared:</b> every location vendor in <code>ip_geo</code>, plus our resolved answer from <code>ip_resolved</code> ("Our answer (resolved)").</li>
+    <li><b>Match rules:</b> state = same name, case ignored; city = same name, letters only, case ignored (stricter than the resolver's vote key, which uses only the first word); ZIP = same first five digits; state + city = both.</li>
+    <li><b>Pools:</b> "every address each vendor answered", and "same addresses" (the 1,049 addresses every location vendor answered).</li>
+    <li><b>By customer state:</b> states with fewer than 20 tested addresses are flagged <code>small_sample</code>.</li>
+    <li>Only totals are exported, never lead data.</li>
+  </ul>
+  <div class="scroll"><table>
+    <thead><tr><th>15 Sep</th><th class="n">Tested (all)</th><th class="n">State / city / ZIP % (all answered)</th><th class="n">State / city / ZIP % (same 1,049)</th></tr></thead>
+    <tbody>
+      <tr><td>IP2Location DB11</td><td class="n">2,105</td><td class="n">59.0 / 14.5 / 3.4</td><td class="n">47.0 / 9.5 / 2.2</td></tr>
+      <tr><td>proxycheck.io</td><td class="n">2,105</td><td class="n">59.7 / 11.9 / 5.4</td><td class="n">51.6 / 7.2 / 2.9</td></tr>
+      <tr><td>ipinfo.io</td><td class="n">1,050</td><td class="n">54.3 / 11.1 / 4.0</td><td class="n">54.2 / 11.1 / 4.0</td></tr>
+      <tr><td>ipwho.is</td><td class="n">1,050</td><td class="n">53.7 / 10.5 / 1.8</td><td class="n">53.7 / 10.5 / 1.8</td></tr>
+      <tr><td>Our answer (resolved)</td><td class="n">2,105</td><td class="n">62.5 / 15.2 / 4.1</td><td class="n">54.1 / 10.9 / 3.5</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>Why no vendor reaches 100%</b>A postal address is where the customer lives, not always where the connection is (mobile carriers, work networks). The numbers compare vendors with each other; they are not the chance that one answer is right.</div>
+  <p><b>Wording rule (changed 15 Sep).</b> "Agreement" means vendors against each other, on the vendor overview scorecards. "Accuracy" means a vendor against customer postal addresses, and is used only on the Location Accuracy page.</p>
+
+  <h3>Enrichment Coverage</h3>
+  <p>Code <code>build/pipeline/src/coverage.py</code>; file <code>enrichment_coverage.json</code>; API <code>GET /coverage</code>; check "Enrichment coverage exported".</p>
+  <ul>
+    <li><b>Totals</b> for the last 30 days (by last seen) and for all addresses: <code>addresses</code>, <code>proxycheck_answered</code>, <code>proxy_concluded</code>, <code>proxy_no_conclusion</code>, <code>geo_agreed</code>, <code>geo_single_source</code>, <code>geo_disagree_or_missing</code>, with percentages.</li>
+    <li><code>inserted_by_day</code>: <code>geo_rows</code> and <code>intel_rows</code> by <code>created_at</code>; <code>new_addresses</code> by first seen.</li>
+    <li><code>window_by_last_seen_day</code>: the 30-day window split by last-seen day.</li>
+  </ul>
+  <div class="scroll"><table>
+    <thead><tr><th>Snapshot 15 Sep 19:00 UTC</th><th class="n">Last 30 days (last seen 16 Aug–14 Sep)</th><th class="n">All addresses</th></tr></thead>
+    <tbody>
+      <tr><td>Addresses</td><td class="n">39,508</td><td class="n">4,956,914</td></tr>
+      <tr><td>Answered by proxycheck.io</td><td class="n">18,034 (45.6%)</td><td class="n">77,710 (1.6%)</td></tr>
+      <tr><td>Proxy decided</td><td class="n">30,208 (76.5%)</td><td class="n">82.9%</td></tr>
+      <tr><td>Proxy undecided</td><td class="n">9,300 (all last seen 16–30 Aug; 0 from 31 Aug)</td><td class="n">848,403</td></tr>
+      <tr><td>Location agreed</td><td class="n">8,443 (21.4%)</td><td class="n">—</td></tr>
+      <tr><td>Location from one vendor only</td><td class="n">21,000</td><td class="n">—</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>What the daily counts show.</b> New addresses ran at about 500–1,500 a day through 10 Sep, then about 80–170 a day on 11–14 Sep, because <code>unified.unified_session_summary</code> held session data only up to 11 Sep. Its owner's job rewrote it at 15 Sep 14:20 UTC, so the 16 Sep 07:30 run should pick up 12–15 Sep. <code>raw.raw_tune_clicks</code> keeps adding about 50–220 new addresses a day. Bulk load days: 11 Sep (about 4.96 million rows in each table) and 15 Sep (77,215 geo and 76,964 intelligence rows from the proxycheck.io backfill).</p>
+</section>
+
+<section id="vendors">
+  <h2>Vendors and mappings</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Vendor</th><th>Kind</th><th>Gives</th><th>Coverage</th></tr></thead>
+    <tbody>
+      <tr><td>IP2Location DB11</td><td>downloaded database</td><td>location</td><td>every address</td></tr>
+      <tr><td>IP2Proxy PX12</td><td>downloaded database</td><td>proxy (only listed proxies answer)</td><td>every address asked; only listed proxies answer (0.3% of all addresses)</td></tr>
+      <tr><td>FraudLogix</td><td>decisions on tune clicks</td><td>proxy, VPN, Tor, datacenter, bot</td><td>tune-click addresses only</td></tr>
+      <tr><td>ipinfo.io, ipwho.is</td><td>free APIs</td><td>location</td><td>addresses new since 14 Sep, up to 500 each a day</td></tr>
+      <tr><td>proxycheck.io</td><td>paid API, 80,000/day</td><td>location and proxy, risk score, ISP, ASN</td><td>queue, backfill, top-up and lookups</td></tr>
+    </tbody>
+  </table></div>
+  <h3>FraudLogix mapping</h3>
+  <p>Latest decision per address. Not <code>FLAGGED</code> → every flag false, reason <code>ACCEPTED</code>. <code>FLAGGED</code> with reason <code>PROXY</code> or <code>MOBILE_PROXY_SIGNALS</code> → proxy; <code>VPN</code> → VPN; <code>TOR</code> or <code>TOR_EXIT_NODE</code> → Tor; <code>DATA_CENTER</code> → datacenter; <code>BOT_GENERATED</code> or <code>NON_HUMAN_SCRIPT</code> → bot; <code>MASKED_DEVICES</code> → no flag, <code>is_masked_device</code> true (a device fingerprint signal, not a bot signal). Clicks with no decision → no answer.</p>
+  <h3>proxycheck.io mapping</h3>
+  <p><code>proxy: yes</code> → proxy; <code>vpn: yes</code> → VPN; type Tor → Tor; type <b>Hosting</b> → datacenter; type Compromised Server → compromised; type Scraper → scraper; operator anonymity, proxy or VPN → anonymous; bot is always empty. <b>Business is not datacenter:</b> in a test of 400 real addresses, 112 were Business, mostly Charter, Cox, AT&amp;T, CenturyLink and Verizon Business home and office broadband. <code>last seen unix</code> becomes <code>updated_at</code>.</p>
+  <h3>Removed vendors</h3>
+  <p>MaxMind GeoLite2, DB-IP, GeoJS and the published cloud ranges ran only in the 8–10 Sep benchmark on 2,105 addresses. Removed on 14 Sep with the owner's approval and switched off in the registry; every removed row is in <code>archive/benchmark-vendors-2026-09-14/</code>. They can be reintroduced as real monthly loads, which would need downloads (and a free MaxMind licence key).</p>
+</section>
+
+<section id="proxycheck">
+  <h2>proxycheck.io in detail</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Item</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Plan</td><td>$9.99 a month, tier "Subscription", 80,000 queries a day, 5 burst tokens</td></tr>
+      <tr><td>Key</td><td>Secrets Manager <code>ipintel/proxycheck-paid</code> (the free key <code>ipintel/proxycheck</code> was used for testing). Never shown or accepted by the app</td></tr>
+      <tr><td>Request</td><td><code>POST https://proxycheck.io/v2/?key=…&amp;vpn=3&amp;asn=1&amp;risk=1&amp;seen=1&amp;days=90</code>, body <code>ips=a,b,c</code>, up to 1,000 addresses</td></tr>
+      <tr><td>Why those flags</td><td><code>vpn=3</code> is the only setting that returns proxy and VPN separately; <code>seen=1</code> returns last-seen time; <code>asn=1</code> and <code>risk=1</code> return network and risk</td></tr>
+      <tr><td>Cost quirk</td><td>An address that is both proxy and VPN is charged twice (504 queries measured for 500 addresses); 1% is reserved extra and topped up afterwards</td></tr>
+      <tr><td>Firewall quirk</td><td>Python's default User-Agent is refused; every request sends its own</td></tr>
+      <tr><td>Status "warning"</td><td>Still carries full answers; treated as success</td></tr>
+      <tr><td>Usage page</td><td><code>/dashboard/export/usage/</code> gives plan, limit and queries today; it lags 1–14 minutes, so our own counter is the one that decides</td></tr>
+      <tr><td>Counter</td><td>DynamoDB item <code>quota / <i>date</i></code>: <code>reserved</code> (everything), <code>batch_reserved</code> (jobs), <code>live_reserved</code> (API). Each reservation is a conditional update that fails if it would pass the cap</td></tr>
+      <tr><td>Split (since 15 Sep 13:00 UTC, owner request)</td><td>On <code>job/proxycheck-daily</code>: enrichment (queue + backfill) 50,000 (<code>daily_budget</code> 50000); queued addresses do not borrow from the reserve (<code>queue_extra</code> 0); 30,000 always kept for API lookups (<code>live_reserve</code> 30000); top-up at 22:00 fills only to 80,000 − 30,000 (<code>topup_keep</code> 30000), so it only finishes the 50,000 if the morning run stopped early. API lookups reserve against the 80,000 plan limit. The app's budget cap is <code>daily_limit</code> − <code>live_reserve</code> = 50,000</td></tr>
+      <tr><td>Earlier splits</td><td>Before 15 Sep 10:33 UTC: backfill 50,000. 10:33–13:00 UTC: backfill 70,000, reserve 10,000, queue could use half the reserve, top-up keeping 2,000</td></tr>
+      <tr><td>Throughput</td><td>1,000 addresses in about 1–2 s; the 50-batch backfill and its merge fit in one Lambda run on 15 Sep; the 28-batch top-up ran separately</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="api">
+  <h2>The API</h2>
+  <p class="answer">One Lambda function behind a Function URL, authenticated by a bearer token (Lambda environment variable <code>API_TOKEN</code>; the app holds it as <code>IPINTEL_API_TOKEN</code>).</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Endpoint</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>GET /health</code></td><td>Up and which mode</td></tr>
+      <tr><td class="k"><code>GET /lookup/{ip}</code> · <code>?refresh=true</code></td><td>One address, with proxycheck.io when the rule says so</td></tr>
+      <tr><td class="k"><code>POST /lookup</code></td><td>Up to 1,000 addresses; <code>proxycheck</code>, <code>refresh</code>, <code>detail</code> options</td></tr>
+      <tr><td class="k"><code>GET /tables/{name}</code></td><td>ip-resolved, ip-geo, ip-intelligence, ip-geo-analytics, ip-intelligence-analytics, ip-occurrences, proxycheck-queue, vendor-overview-geo, vendor-overview-proxy</td></tr>
+      <tr><td class="k"><code>/safety</code>, <code>/safety/pause</code>, <code>/safety/resume</code></td><td>Emergency stop and safety state</td></tr>
+      <tr><td class="k"><code>/input-tables</code> (+ <code>/{id}</code>, <code>/{id}/validate</code>)</td><td>Base tables: list, add, change, remove, validate</td></tr>
+      <tr><td class="k"><code>/catalog/databases|tables|columns</code></td><td>Pickers for adding a base table</td></tr>
+      <tr><td class="k"><code>/jobs</code>, <code>/jobs/{id}</code>, <code>/jobs/{id}/run</code>, <code>/jobs/{id}/runs</code></td><td>Job settings, run now, history</td></tr>
+      <tr><td class="k"><code>/quota</code></td><td>Today's queries, limit, key status</td></tr>
+      <tr><td class="k"><code>GET /publish</code></td><td>Unified tables refresh, read only: <code>tables</code>, <code>last_published_at</code>, <code>last_run_id</code>, <code>last_tables</code>, <code>runs</code></td></tr>
+      <tr><td class="k"><code>GET /accuracy/geo</code></td><td>Location Accuracy report (<code>geo_accuracy.json</code>)</td></tr>
+      <tr><td class="k"><code>GET /coverage</code></td><td>Enrichment Coverage report (<code>enrichment_coverage.json</code>)</td></tr>
+      <tr><td class="k"><code>/sources</code>, <code>/sources/{id}</code>, <code>/diagnose</code></td><td>Vendor registry</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Rules the server enforces:</b> every route needs the bearer token, the budget cap (at most 50,000, the 80,000 limit minus the 30,000 lookup reserve), a reason for pause and resume, no resume while a check fails, no removing the last enabled base table, the pipeline's own database cannot be a base table, no run while paused, the key can never be set through the API, mode has no endpoint. Every change through the API is written to the audit log for 400 days.</p>
+  <p><b>Mode.</b> The safety item's <code>mode</code> is <code>live</code> (owner-approved 15 Sep): table pages read <code>ipintel_curated</code>. Setting it to <code>shadow</code> points the four per-vendor table pages back at the <code>unified</code> copies (<code>ip_geo</code> and <code>ip_intelligence</code> refreshed by publish; the two analytics tables still from 11 Sep). Lookups always read <code>ipintel_curated</code>.</p>
+</section>
+
+<section id="safety">
+  <h2>Production safety</h2>
+  <p class="answer">The pipeline cannot harm production because AWS will not let it, and every run proves that before it starts.</p>
+  <h3>The fence</h3>
+  <p>Every project role has the permissions boundary <code>ipintel-boundary</code>. Whatever a role's own policy says, the boundary explicitly denies:</p>
+  <ul>
+    <li>any Glue write outside <code>ipintel_curated</code>;</li>
+    <li>any S3 write outside <code>datalake-landingzone-221490242148-us-west-2/ip-intelligence/*</code>, and every bucket-settings change;</li>
+    <li>queries in any Athena workgroup other than <code>ipintel</code> and <code>ipintel_etl</code>;</li>
+    <li>any Lambda outside <code>ipintel-*</code>;</li>
+    <li>loosening the boundary itself, and deleting the project's own safety resources.</li>
+  </ul>
+  <div class="scroll"><table>
+    <thead><tr><th>Role</th><th>Used by</th><th>Proof</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>ipintel-builder-role</code></td><td>Every build step (profile <code>ipintel-builder</code>)</td><td>IAM simulator 61 / 61 refusals</td></tr>
+      <tr><td class="k"><code>ipintel-pipeline-role</code></td><td>Both jobs</td><td>IAM simulator 64 / 64 refusals; re-checked at the start of every run</td></tr>
+      <tr><td class="k"><code>ipintel-api-role</code></td><td>The API</td><td>Hardened: its old write access to every <code>unified</code> table was removed</td></tr>
+      <tr><td class="k"><code>ipintel-scheduler-role</code></td><td>Schedules</td><td>Can only start the two job functions</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Every run</h3>
+  <ul>
+    <li>Before: the IAM simulator is asked whether the pipeline role could update or delete the production tables, write their buckets, change bucket notifications or lifecycle, or query in <code>primary</code>. Any "allowed" fails the run and pauses everything.</li>
+    <li>After: CloudTrail is read for every call the job functions made in 24 hours; any write aimed outside the project is a failed check and an automatic pause.</li>
+  </ul>
+  <h3>Publishing to the unified tables</h3>
+  <p>The refresh of <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> stays inside the fence. It only copies and deletes files under <code>ip-intelligence/</code> (the tables' own files, staging, the rollback copy and the archive), which the boundary already allows. It makes no Glue change at all: <code>ipintel-boundary</code> denies Glue writes in the <code>unified</code> database, and the builder role cannot loosen the boundary. The before-run IAM simulator check and the after-run CloudTrail review are unchanged, and publish runs only after both have passed for that Job B run.</p>
+  <h3>Found during the audit</h3>
+  <p>A review of the shared login's history found that this project ran only 3 read queries in the <code>primary</code> workgroup. Two production changes in that period came from other users of the shared login (the console and a separate assistant session): an <code>UPDATE</code> of <code>unified.lu_connector</code> and a <code>DROP</code> of <code>de_temp.klaviyo_uct_events</code>. They were reported to the owner and are unrelated to this project. Also noted: the <code>BounceEvents</code> EventBridge rule matches every S3 write in the account but has no target today.</p>
+</section>
+
+<section id="aws">
+  <h2>AWS resources</h2>
+  <p>All created for this project and tagged <code>project=ipintel</code> unless noted.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Type</th><th>Name</th></tr></thead>
+    <tbody>
+      <tr><td>IAM</td><td><code>ipintel-boundary</code> (policy); roles <code>ipintel-builder-role</code>, <code>ipintel-pipeline-role</code>, <code>ipintel-scheduler-role</code>; existing <code>ipintel-api-role</code> hardened</td></tr>
+      <tr><td>Lambda</td><td><code>ipintel-free-daily</code>, <code>ipintel-proxycheck-daily</code>, <code>ipintel-findings-api</code></td></tr>
+      <tr><td>Scheduler</td><td><code>ipintel-free-daily</code> 07:30 · <code>ipintel-proxycheck-daily</code> 10:00 · <code>ipintel-proxycheck-topup</code> 22:00 · <code>ipintel-weekly-maintenance</code> Sun 03:00 (all UTC)</td></tr>
+      <tr><td>DynamoDB</td><td><code>ipintel-pipeline-state</code>, <code>ipintel-sources</code></td></tr>
+      <tr><td>SQS / SNS</td><td><code>ipintel-proxycheck-dlq</code> / <code>ipintel-alerts</code> (one confirmed email subscription)</td></tr>
+      <tr><td>CloudWatch alarms</td><td><code>ipintel-free-daily-run-failed</code>, <code>ipintel-proxycheck-daily-run-failed</code>, <code>ipintel-free-daily-no-run-26h</code>, <code>ipintel-proxycheck-dlq-not-empty</code>, <code>ipintel-proxycheck-quota-90pct</code>, <code>ipintel-maintenance-run-failed</code></td></tr>
+      <tr><td>Athena</td><td>workgroups <code>ipintel</code> (20 GB cap), <code>ipintel_etl</code> (10 GB cap)</td></tr>
+      <tr><td>Glue</td><td>database <code>ipintel_curated</code></td></tr>
+      <tr><td>S3</td><td>folder <code>ip-intelligence/</code> in <code>datalake-landingzone-221490242148-us-west-2</code> (versioning on; Intelligent-Tiering after 30 days; nothing auto-deleted). Prefixes added 15 Sep: <code>unified/<i>table</i>/d=2026-09-11/</code> (live files of the two unified tables), <code>publish-previous/<i>table</i>/</code> (rollback copy), <code>archive/unified-2026-09-11/<i>table</i>/</code> (original files, kept forever), <code>serving/ipintel_curated/geo_accuracy.json</code> and <code>enrichment_coverage.json</code></td></tr>
+      <tr><td>Glue (not ours to change)</td><td><code>unified.ip_geo</code>, <code>unified.ip_intelligence</code>: created by this project on 11 Sep, files refreshed by publish, definitions never changed (<code>UpdateTime</code> 2026-09-11)</td></tr>
+      <tr><td>Secrets Manager</td><td><code>ipintel/proxycheck-paid</code>, <code>ipintel/proxycheck</code></td></tr>
+    </tbody>
+  </table></div>
+  <p><b>DynamoDB items in <code>ipintel-pipeline-state</code>:</b> <code>safety/state</code> (paused, mode, checks, last audit), <code>job/free-daily</code> and <code>job/proxycheck-daily</code> (enabled, schedule, budget, key secret, top-up settings; on the proxycheck job <code>daily_budget</code> 50000, <code>live_reserve</code> 30000, <code>queue_extra</code> 0, <code>topup_keep</code> 30000, <code>publish_unified</code> true), <code>base_table/*</code> (table, columns, validation, watermark), <code>quota/<i>date</i></code> (counter), <code>run#<i>job</i>/<i>time</i></code> (every run's counts and checks), <code>run#publish-unified/<i>time</i></code> (every publish run and its checks), <code>publish/unified</code> (<code>last_published_at</code>, <code>tables</code>), <code>audit/<i>time</i></code> (every UI change).</p>
+  <p><b>Cost.</b> proxycheck.io $9.99 a month. AWS usage is small: the jobs read a few GB in Athena a day (Athena charges $5 per TB, so cents a day) <i>(projection)</i>; Lambda, DynamoDB, SQS, SNS and S3 are within cents to a few dollars a month <i>(projection)</i>.</p>
+</section>
+
+<section id="ops">
+  <h2>Operations and runbooks</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>When (UTC)</th><th>What</th></tr></thead>
+    <tbody>
+      <tr><td class="n">07:30 daily</td><td>Job A, then Job B, then publish to the unified tables if Job B passed; both jobs rebuild the reports</td></tr>
+      <tr><td class="n">10:00 daily</td><td>Job B fallback (does nothing if already done)</td></tr>
+      <tr><td class="n">22:00 daily</td><td>Job B top-up (finishes the 50,000 only if the morning run stopped early)</td></tr>
+      <tr><td class="n">Sun 03:00</td><td>Maintenance: <code>OPTIMIZE … REWRITE DATA USING BIN_PACK</code> and <code>VACUUM</code> on the 8 main tables (table names must be unquoted)</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Runbooks</h3>
+  <h4>A job failed</h4>
+  <p>Read the run's message and checks on Daily Jobs (or <code>GET /jobs/{id}/runs</code>). Nothing half-done is recorded as done. Fix the cause, then Run now. Answers already saved to S3 are merged on the next run.</p>
+  <h4>A safety check failed and the pipeline paused itself</h4>
+  <p>Do not resume. Compare the role and boundary policies with the copies in <code>build/iam/</code>; find what granted access; restore; run the job by hand to re-check; then resume with a reason.</p>
+  <h4>The key was rejected</h4>
+  <p>Renew the plan or put the new key in <code>ipintel/proxycheck-paid</code> (Secrets Manager, us-west-2). Run the proxycheck job by hand; the budget page should show "Key working".</p>
+  <h4>Something in the dead-letter queue</h4>
+  <p>A hand-over did not start. Run the proxycheck job by hand; it continues from the saved batches. Then clear the message from the queue.</p>
+  <h4>Switch the table pages back to the unified copy</h4>
+  <p>Set <code>mode</code> to <code>shadow</code> on the <code>safety/state</code> item. The API picks it up within a minute. Nothing else changes.</p>
+  <h4>Check the last publish of the unified tables</h4>
+  <p>Call <code>GET /publish</code>, or read the Unified tables card on Daily Jobs, or read DynamoDB <code>publish/unified</code> and the newest <code>run#publish-unified</code> item. <code>last_published_at</code> should be after today's Job B run; each table lists its row count and checks.</p>
+  <h4>Roll back a publish</h4>
+  <p>Copy the files in <code>ip-intelligence/publish-previous/<i>table</i>/</code> back into <code>ip-intelligence/unified/<i>table</i>/d=2026-09-11/</code>, then delete every other file in that live folder. To go back to the original copy instead, use <code>ip-intelligence/archive/unified-2026-09-11/<i>table</i>/</code>. Use the <code>ipintel-builder</code> profile. Stop publishing first (below), or the next passed Job B run replaces the files again.</p>
+  <h4>Stop publishing</h4>
+  <p>Set <code>publish_unified</code> to false on the <code>job/proxycheck-daily</code> item. Job B keeps running; the unified tables keep their last copy.</p>
+  <h4>Dry-run a publish</h4>
+  <p>Invoke <code>ipintel-proxycheck-daily</code> with <code>{"action":"publish","dry_run":true}</code>. It builds and checks the copies without swapping, and logs the run under <code>run#publish-unified</code>.</p>
+  <h4>A report is missing or stale</h4>
+  <p>The app shows "appears after the next daily run" until the file exists. Check the "Location accuracy per vendor exported" and "Enrichment coverage exported" checks on the last run, then Run now on either job.</p>
+  <h4>Undo a data correction</h4>
+  <p>Removed benchmark rows: <code>archive/benchmark-vendors-2026-09-14/</code> (JSON). FraudLogix timestamps before conversion: <code>archive/fraudlogix-timestamps-before-utc-2026-09-15/</code> (Parquet). Recent table versions can also be read with Iceberg time travel for 5 days (maintenance removes older ones).</p>
+  <h4>Add a vendor back as a real source</h4>
+  <p>Load its database into <code>ipintel_curated</code> under the table name in <code>vendors.OPTIONAL_*_DATABASES</code>, switch it on in the registry, and the daily job starts asking it about new addresses and scoring it.</p>
+  <h4>Deploying code</h4>
+  <p>Pipeline: zip <code>build/pipeline/src/*.py</code> (common, vendors, apply, resolved, pcqueue, accuracy, coverage, publish, job_free, job_proxycheck) and update both job functions. API: zip <code>build/api/src/*.py</code> (app, athena_tables, bulk, control, lookup) and update <code>ipintel-findings-api</code>. Always with the <code>ipintel-builder</code> profile, never the default profile.</p>
+</section>
+
+<section id="state">
+  <h2>State on 15 Sep 2026</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Measure</th><th class="n">Value</th></tr></thead>
+    <tbody>
+      <tr><td>Addresses (from 4,956,909 in the base tables, plus live lookups)</td><td class="n">4,956,914</td></tr>
+      <tr><td>Missing any expected vendor, duplicates, rows without analytics</td><td class="n">0</td></tr>
+      <tr><td>proxycheck.io answers</td><td class="n">77,710</td></tr>
+      <tr><td>Clean by every vendor</td><td class="n">4,030,801</td></tr>
+      <tr><td>No conclusion yet (of which seen in 90 days)</td><td class="n">848,403 (44,775)</td></tr>
+      <tr><td>Flagged</td><td class="n">5,688</td></tr>
+      <tr><td>Location agreed by 2+ vendors</td><td class="n">33,744</td></tr>
+      <tr><td>Queries used by late morning, before the 13:00 budget split</td><td class="n">about 78,000 of 80,000</td></tr>
+      <tr><td>Last 30 days, 19:00 UTC: addresses · proxycheck.io answered · proxy decided</td><td class="n">39,508 · 18,034 (45.6%) · 30,208 (76.5%)</td></tr>
+      <tr><td><code>unified.ip_geo</code> · <code>unified.ip_intelligence</code> after the first publish (13:09 UTC)</td><td class="n">5,039,539 · 9,567,985</td></tr>
+      <tr><td>Days until every no-conclusion address is asked, at about 50,000 a day <i>(projection)</i></td><td class="n">about 17</td></tr>
+    </tbody>
+  </table></div>
+  <p>Findings from the review report (<i>IP Intelligence Table Review</i>, 15 Sep): proxycheck.io judged 95% of the FraudLogix flags in the first backfill clean; most location disagreements are the same state and a nearby city; the busiest VPN-flagged addresses are Cloudflare privacy-relay exits; FraudLogix flags 6 of 210 confirmed humans as bots (2.9%).</p>
+</section>
+
+<section id="history">
+  <h2>What was done, in order</h2>
+  <ul class="timeline">
+    <li><time>8–10 Sep 2026</time>Benchmark of location and proxy vendors on real addresses: MaxMind GeoLite2, DB-IP, GeoJS, IP2Location, IP2Proxy, ipinfo.io, ipwho.is, proxycheck.io (free key) and published cloud ranges. Scoring settled on "Agreement", not "Accuracy", with customer addresses as truth for location (on 15 Sep "Accuracy" returned, only for the Location Accuracy report against customer postal addresses).</li>
+    <li><time>11 Sep</time>All 4.96 million addresses loaded into six <code>unified.*</code> tables from IP2Location, IP2Proxy and FraudLogix; Athena-backed table API and a first live lookup built. Found and fixed: proxycheck "warning" treated as failure, cursor tokens breaking in URLs, INSERT not allowed on bucketed tables.</li>
+    <li><time>11–14 Sep</time>Plans revised with the owner into <code>IP_PROJECT_FINAL_PLAN.md</code>: new tables in <code>ipintel_curated</code>, <code>unified</code> untouched, two daily jobs, UI control. proxycheck.io paid plan bought; key stored as <code>ipintel/proxycheck-paid</code>. Found: proxycheck "Business" type is home broadband, not datacenter.</li>
+    <li><time>14 Sep</time>Audit of the shared login's workgroup history. Permissions boundary and builder, pipeline and scheduler roles created and proven. Six Iceberg tables built. Job A and Job B built; first runs failed on a SQL detail (a WITH clause inside UNION ALL) before any write, then passed. Control API, schedules, alarms, paid key switch. Added <code>ip_occurrences</code> and <code>ip_resolved</code>; weekly maintenance; benchmark-only vendors removed with approval; staging sweep; private addresses excluded.</li>
+    <li><time>15 Sep 07:30</time>First scheduled runs: 108 new addresses, all 11 checks; first 50,000-address backfill in one run, all checks.</li>
+    <li><time>15 Sep morning</time>Table pages switched to the live tables (owner approval). Old benchmark endpoints removed. Review report on all tables. FraudLogix timestamps converted from Pacific to UTC; <code>false_positive_rate_pct</code> set to the approved confirmed-human definition. One proxycheck.io rule for API and base-table inserts, with <code>proxycheck_queue</code>.</li>
+    <li><time>15 Sep late morning (10:33 UTC)</time>Full 80,000 a day: backfill 70,000, lookup reserve 10,000 and a 22:00 top-up keeping 2,000 (first top-up sent 28 batches; its final CloudTrail review hit a rate limit after the merge, and the review is now paced). Bulk <code>POST /lookup</code> built and tested (1,000 addresses, 0 differences from <code>ip_resolved</code>). Alert email subscribed and confirmed.</li>
+    <li><time>15 Sep 13:00 UTC</time>Budget split at the owner's request: 50,000 a day for enrichment (<code>daily_budget</code> 50000, <code>queue_extra</code> 0) and 30,000 always kept for API lookups (<code>live_reserve</code> 30000, <code>topup_keep</code> 30000). App budget cap now 50,000.</li>
+    <li><time>15 Sep 13:09 UTC</time>First real publish of <code>unified.ip_geo</code> (5,039,539 rows) and <code>unified.ip_intelligence</code> (9,567,985 rows), 64 files each, all checks passed, no catalog change. The 11 Sep files archived to <code>archive/unified-2026-09-11/</code>. <code>proxycheck_io</code> rows in <code>unified.ip_intelligence</code> went from 1 to 77,710; benchmark vendors no longer in the unified copies. Publishing now follows every passed Job B run.</li>
+    <li><time>15 Sep 14:20 UTC</time>Production side: <code>unified.unified_session_summary</code> rewritten by its own job, after holding sessions only up to 11 Sep.</li>
+    <li><time>15 Sep afternoon</time>Location Accuracy report (<code>accuracy.py</code>, <code>GET /accuracy/geo</code>) and Enrichment Coverage report (<code>coverage.py</code>, <code>GET /coverage</code>) added to both daily jobs, each with its own check. Wording rule changed: "Agreement" for vendors against each other, "Accuracy" only for vendors against customer postal addresses. Backfill order gained step 1b: every last-30-day address without a proxycheck.io answer, even if clean by vendors.</li>
+    <li><time>15–16 Sep</time><code>LOVABLE_PROMPT_FINAL_APP.md</code> extended to four parts (Part 4: Reports section with Location Accuracy and Enrichment Coverage pages, and a read-only Unified tables card on Daily Jobs). Delta prompts <code>LOVABLE_PROMPT_UNIFIED_PUBLISH.md</code> and <code>LOVABLE_PROMPT_ACCURACY_COVERAGE.md</code> for an app that already has the final prompt.</li>
+    <li><time>16 Sep</time>Dry run of the 16 Sep backfill plan: 49,504 addresses, the first 20,597 being every remaining last-30-day address (8,719 <code>no_answer</code>, 11,878 <code>clean_by_vendors</code>), then 28,907 older <code>no_answer</code> addresses from 31–90 days.</li>
+  </ul>
+</section>
+
+<section id="limits">
+  <h2>Limitations and open items</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Item</th><th>Effect</th><th>What would change it</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip warn">Open</span> Base-table queue path not yet seen end to end on a real new row</td><td>Its first real use is the next 07:30 run; both jobs' checks fail loudly if an address is missed</td><td>Read the Daily Jobs cards after that run</td></tr>
+      <tr><td><span class="chip warn">Open</span> Lovable prompt not yet applied</td><td>The app still has pages built on removed endpoints, and no Reports pages or Unified tables card</td><td>Paste all four parts of <code>LOVABLE_PROMPT_FINAL_APP.md</code>; an app that already has it needs only <code>LOVABLE_PROMPT_UNIFIED_PUBLISH.md</code> and <code>LOVABLE_PROMPT_ACCURACY_COVERAGE.md</code></td></tr>
+      <tr><td><span class="chip warn">Open</span> The other team's <code>ip-lookup-api</code> seldom uses proxycheck.io answers</td><td>It prefers <code>fraudlogix_tune</code> → <code>authoritative_lists</code> → <code>ip2proxy_px12</code> and calls proxycheck.io live only when none is decisive; <code>ip2proxy_px12</code> answers every address, so the 77,710 published proxycheck.io answers are rarely reached</td><td>Not our code; recommendation pending with the owner</td></tr>
+      <tr><td><span class="chip warn">Open</span> Location Accuracy truth pool is only 2,105 addresses</td><td>Only 1,049 are answered by every vendor; many states fall under 20 tested</td><td>More qualified leads with full postal addresses</td></tr>
+      <tr><td><span class="chip warn">Production side</span> <code>unified_session_summary</code> held sessions only up to 11 Sep until its rewrite on 15 Sep 14:20 UTC</td><td>New addresses fell to about 80–170 a day on 11–14 Sep</td><td>Confirm the 16 Sep 07:30 run picked up 12–15 Sep (new addresses per day on Enrichment Coverage); if it stalls again, that table's owner</td></tr>
+      <tr><td>Tables update daily</td><td>An address can take up to about a day to appear</td><td>API lookup, or Run now</td></tr>
+      <tr><td>Bot flags from one vendor</td><td>No second opinion on bots</td><td>A vendor with bot classification, or a bot-labelled pool for precision and recall</td></tr>
+      <tr><td>Most locations from IP2Location alone</td><td>City approximate</td><td>The backfill adds proxycheck.io locations; reloading GeoLite2 or DB-IP as real sources</td></tr>
+      <tr><td>Proxy scorecard sample skewed toward FraudLogix flags, and its score rewards not flagging</td><td>Use it to compare vendors, not as accuracy</td><td>The sample widens as the backfill reaches clean addresses</td></tr>
+      <tr><td>proxycheck.io answers are not re-checked</td><td>An answer can age</td><td>A re-check policy once every no-conclusion address has one (about 17 days at 50,000 a day, <i>projection</i>)</td></tr>
+      <tr><td>proxycheck.io's daily reset time is not published</td><td>Our counter resets at midnight UTC</td><td>The counter also respects proxycheck.io's own usage, so it cannot overspend</td></tr>
+      <tr><td>90% alert most days</td><td>Expected email</td><td>Switch that alarm off if unwanted</td></tr>
+      <tr><td>30,000 queries a day kept for lookups (owner's choice)</td><td>Lookup queries not used in a day are not spent, so enrichment is slower than the full 80,000 would allow</td><td>Lower <code>live_reserve</code> and <code>topup_keep</code> on <code>job/proxycheck-daily</code></td></tr>
+      <tr><td>A publish swap is not atomic</td><td>For a few seconds readers of the unified tables may see old and new rows together (never an empty table)</td><td>Accepted; no catalog change is allowed</td></tr>
+      <tr><td>Monthly database reloads (IP2Location, IP2Proxy) not automated</td><td>Databases age month by month</td><td>Needs download approval; a monthly load job</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="files">
+  <h2>Files in the project</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Path</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>docs/ip-intelligence-user-manual.html</code></td><td>How to use everything</td></tr>
+      <tr><td class="k"><code>docs/ip-intelligence-system-guide.html</code></td><td>This guide</td></tr>
+      <tr><td class="k"><code>IP_PROJECT_FINAL_PLAN.md</code></td><td>The agreed plan</td></tr>
+      <tr><td class="k"><code>IP_PROJECT_VERIFICATION.md</code></td><td>Requirement-by-requirement proof</td></tr>
+      <tr><td class="k"><code>ATHENA_REVIEW_QUERIES_LIVE.md</code></td><td>Ready-made queries and column meanings</td></tr>
+      <tr><td class="k"><code>LOVABLE_PROMPT_FINAL_APP.md</code></td><td>The one prompt for the app, in four parts (Part 4: Reports and the Unified tables card)</td></tr>
+      <tr><td class="k"><code>LOVABLE_PROMPT_UNIFIED_PUBLISH.md</code>, <code>LOVABLE_PROMPT_ACCURACY_COVERAGE.md</code></td><td>Delta prompts for an app that already has the final prompt applied</td></tr>
+      <tr><td class="k"><code>build/pipeline/src/</code></td><td><code>common.py</code> (AWS helpers, safety, run log), <code>vendors.py</code> (vendor lookups and mappings), <code>apply.py</code> (merges, analytics, scorecards, checks), <code>resolved.py</code>, <code>pcqueue.py</code>, <code>accuracy.py</code> (Location Accuracy report), <code>coverage.py</code> (Enrichment Coverage report), <code>publish.py</code> (unified tables refresh), <code>job_free.py</code>, <code>job_proxycheck.py</code></td></tr>
+      <tr><td class="k"><code>build/pipeline/sql/</code></td><td>Table definitions (10–19) and <code>checks/</code> (every verification query)</td></tr>
+      <tr><td class="k"><code>build/pipeline/*.py</code></td><td><code>run_sql.py</code>, <code>watch_run.py</code>, <code>compare_resolved.py</code>, <code>test_base_table_trigger.py</code>, <code>remove_benchmark_vendors.py</code></td></tr>
+      <tr><td class="k"><code>build/api/src/</code></td><td><code>app.py</code> (routes), <code>lookup.py</code> (single lookup, rules), <code>bulk.py</code>, <code>athena_tables.py</code>, <code>control.py</code></td></tr>
+      <tr><td class="k"><code>build/iam/</code></td><td>Boundary and role policies, simulator proofs, backups of earlier versions</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="gloss">
+  <h2>Glossary</h2>
+  <dl class="gloss">
+    <dt>Iceberg</dt><dd>A table format in S3 that allows safe updates (MERGE), versions (snapshots) and time travel. Readers always see a complete version.</dd>
+    <dt>MERGE</dt><dd>One SQL statement that updates matching rows and inserts new ones: the "append if it exists, insert if it doesn't" of the requirements.</dd>
+    <dt>snapshot / watermark</dt><dd>A table version. Job A records the snapshot it read from each base table, so the next run knows what changed.</dd>
+    <dt>staging table</dt><dd>A short-lived working table for one run, removed afterwards.</dd>
+    <dt>permissions boundary</dt><dd>An AWS ceiling on what a role can ever do, whatever its own policy grants.</dd>
+    <dt>IAM simulator</dt><dd>An AWS service that answers "would this role be allowed to do this?" without doing it.</dd>
+    <dt>CloudTrail</dt><dd>AWS's log of every API call made in the account.</dd>
+    <dt>hand-over</dt><dd>A Lambda run starting a fresh copy of itself to continue, before its 15-minute limit.</dd>
+    <dt>dead-letter queue</dt><dd>Where a failed asynchronous start is kept so it is not lost.</dd>
+    <dt>reservation counter</dt><dd>The DynamoDB item every proxycheck.io request reserves from first, so two callers can never both take the last queries.</dd>
+    <dt>resolved answer</dt><dd>The one answer to use per address, from fixed rules over every vendor's answer.</dd>
+    <dt>no conclusion</dt><dd>No vendor answered, vendors disagree, or a flag has nothing confirming it.</dd>
+    <dt>agreement</dt><dd>How often a vendor matches the other vendors; the vendor overview scorecards measure agreement.</dd>
+    <dt>accuracy</dt><dd>How often a vendor's location matches customer postal addresses (<code>qualified_lead_ips</code>). Used only on the Location Accuracy report.</dd>
+    <dt>enrichment</dt><dd>proxycheck.io queries spent on base-table addresses (queue, backfill, top-up), up to 50,000 a day; the other 30,000 are kept for lookups.</dd>
+    <dt>enrichment coverage</dt><dd>How many addresses have a proxycheck.io answer, a proxy conclusion and an agreed location; the Enrichment Coverage report.</dd>
+    <dt>publish</dt><dd>Job B's refresh of <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code>: build a checked bucketed copy, swap the files, re-check, restore on failure. No catalog change.</dd>
+    <dt>rollback copy</dt><dd><code>ip-intelligence/publish-previous/<i>table</i>/</code>: the files the last publish replaced.</dd>
+    <dt>confirmed human</dt><dd>An address a qualified customer lead used (<code>qualified_lead_ips.confirmed_human</code>); a bot flag on it is a false positive.</dd>
+    <dt>mode</dt><dd><code>live</code>: table pages read <code>ipintel_curated</code>; <code>shadow</code>: they read the <code>unified</code> copies.</dd>
+  </dl>
+</section>
+
+<footer>Kept in the project folder as <code>docs/ip-intelligence-system-guide.html</code>. Companion: IP Intelligence User Manual. Evidence: <code>IP_PROJECT_VERIFICATION.md</code>.</footer>
+</main>
+</div>

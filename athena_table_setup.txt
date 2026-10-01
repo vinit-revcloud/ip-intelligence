@@ -1,0 +1,167 @@
+SELECT * FROM "ip-database".db11_csv LIMIT 5;
+SELECT * FROM "ip-database".px12_csv LIMIT 5;
+
+SELECT count(*) AS db11_ranges FROM "ip-database".db11_csv;
+-- #	db11_ranges
+-- 1	2984119
+
+SELECT count(*) AS px12_ranges FROM "ip-database".px12_csv;
+-- #	px12_ranges
+-- 1	2690046
+
+SELECT proxy_type, count(*) AS n
+FROM "ip-database".px12_csv GROUP BY proxy_type ORDER BY n DESC;
+-- #	proxy_type	n
+-- 1	PUB	2690046
+
+CREATE TABLE "ip-database".db11_bucketed
+WITH (format = 'PARQUET', write_compression = 'SNAPPY') AS
+SELECT
+  cast(ip_from AS bigint)              AS ip_from,
+  cast(ip_to   AS bigint)              AS ip_to,
+  country_code,
+  region_name,
+  city_name,
+  try_cast(latitude  AS double)        AS latitude,
+  try_cast(longitude AS double)        AS longitude,
+  zip_code,
+  time_zone,
+  b                                    AS prefix16
+FROM "ip-database".db11_csv
+CROSS JOIN UNNEST(
+  sequence(cast(ip_from AS bigint) / 65536, cast(ip_to AS bigint) / 65536)
+) AS t(b);
+
+CREATE TABLE "ip-database".px12_bucketed
+WITH (format = 'PARQUET', write_compression = 'SNAPPY') AS
+SELECT
+  cast(ip_from AS bigint)              AS ip_from,
+  cast(ip_to   AS bigint)              AS ip_to,
+  proxy_type,
+  country_code,
+  region_name,
+  city_name,
+  isp,
+  domain,
+  usage_type,
+  asn,
+  as_name,
+  last_seen,
+  threat,
+  provider,
+  try_cast(fraud_score AS integer)     AS fraud_score,
+  b                                    AS prefix16
+FROM "ip-database".px12_csv
+CROSS JOIN UNNEST(
+  sequence(cast(ip_from AS bigint) / 65536, cast(ip_to AS bigint) / 65536)
+) AS t(b);
+
+SELECT count(*) AS db11_bucketed_rows FROM "ip-database".db11_bucketed;
+-- #	db11_bucketed_rows
+-- 1	3012036
+
+SELECT count(*) AS px12_bucketed_rows FROM "ip-database".px12_bucketed;
+-- #	px12_bucketed_rows
+-- 1	2690046
+
+CREATE TABLE "ip-database".ip_list
+WITH (format = 'PARQUET', write_compression = 'SNAPPY') AS
+WITH all_ips AS (
+  SELECT DISTINCT ip AS ip
+  FROM raw.raw_tune_clicks
+  WHERE ip IS NOT NULL
+    AND regexp_like(ip, '^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
+  UNION
+  SELECT DISTINCT session_ip AS ip
+  FROM unified.unified_session_summary
+  WHERE session_ip IS NOT NULL
+    AND regexp_like(session_ip, '^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
+)
+SELECT
+  ip,
+  cast(split_part(ip,'.',1) AS bigint) * 16777216
++ cast(split_part(ip,'.',2) AS bigint) * 65536
++ cast(split_part(ip,'.',3) AS bigint) * 256
++ cast(split_part(ip,'.',4) AS bigint)                       AS ip_num,
+ (cast(split_part(ip,'.',1) AS bigint) * 16777216
++ cast(split_part(ip,'.',2) AS bigint) * 65536
++ cast(split_part(ip,'.',3) AS bigint) * 256
++ cast(split_part(ip,'.',4) AS bigint)) / 65536              AS prefix16
+FROM all_ips;
+
+SELECT count(*) AS total_unique_ips FROM "ip-database".ip_list;
+-- #	total_unique_ips
+-- 1	4939723
+
+CREATE TABLE "ip-database".ip_dim
+WITH (format = 'PARQUET', write_compression = 'SNAPPY') AS
+SELECT
+  i.ip,
+  i.ip_num,
+  i.prefix16,
+  -- IP2Location DB11
+  l.region_name                          AS db11_state,
+  l.city_name                            AS db11_city,
+  l.zip_code                             AS db11_zip,
+  l.latitude                             AS db11_lat,
+  l.longitude                            AS db11_lon,
+  l.country_code                         AS db11_country,
+  l.time_zone                            AS db11_timezone,
+  (l.ip_from IS NOT NULL)                AS in_db11,
+  -- IP2Proxy PX12
+  p.proxy_type                           AS px12_proxy_type,
+  p.usage_type                           AS px12_usage_type,
+  p.isp                                  AS px12_isp,
+  p.asn                                  AS px12_asn,
+  p.as_name                              AS px12_as_name,
+  p.fraud_score                          AS px12_fraud_score,
+  p.last_seen                            AS px12_last_seen,
+  (p.ip_from IS NOT NULL)                AS in_px12
+FROM "ip-database".ip_list i
+LEFT JOIN "ip-database".db11_bucketed l
+       ON i.prefix16 = l.prefix16
+      AND i.ip_num BETWEEN l.ip_from AND l.ip_to
+LEFT JOIN "ip-database".px12_bucketed p
+       ON i.prefix16 = p.prefix16
+      AND i.ip_num BETWEEN p.ip_from AND p.ip_to;
+      
+SELECT
+  count(*)                                                              AS total_ips,
+  round(100.0 * count(db11_state) / count(*), 2)                        AS db11_state_pct,
+  round(100.0 * count(db11_city)  / count(*), 2)                        AS db11_city_pct,
+  round(100.0 * count(nullif(db11_zip,'')) / count(*), 2)               AS db11_zip_pct,
+  sum(CASE WHEN in_px12 THEN 1 ELSE 0 END)                              AS px12_hits,
+  round(100.0 * sum(CASE WHEN in_px12 THEN 1 ELSE 0 END) / count(*), 4) AS px12_pct
+FROM "ip-database".ip_dim;
+-- #	total_ips	db11_state_pct	db11_city_pct	db11_zip_pct	px12_hits	px12_pct
+-- 1	4939723	100.0	100.0	100.0	16771	0.3395
+
+SELECT px12_usage_type, count(*) AS n,
+       round(100.0 * count(*) / sum(count(*)) OVER (), 1) AS pct
+FROM "ip-database".ip_dim
+WHERE in_px12
+GROUP BY px12_usage_type
+ORDER BY n DESC;
+-- #	px12_usage_type	n	pct
+-- 1	DCH	16188	96.5
+-- 2	EDU	483	2.9
+-- 3	ISP	66	0.4
+-- 4	CDN	12	0.1
+-- 5	ISP/MOB	10	0.1
+-- 6	COM	6	0.0
+-- 7	MOB	4	0.0
+-- 8	GOV	1	0.0
+-- 9	ORG	1	0.0
+
+SELECT
+  count(DISTINCT s.session_ip)                                          AS session_ips,
+  count(DISTINCT CASE WHEN s.ip_region_name <> '' AND s.ip_city_name <> ''
+                       AND s.ip_zip_code <> '' THEN s.session_ip END)    AS geo_complete_today,
+  count(DISTINCT CASE WHEN (s.ip_region_name = '' OR s.ip_city_name = ''
+                            OR s.ip_zip_code = '')
+                       AND d.db11_state IS NOT NULL
+                      THEN s.session_ip END)                             AS gap_filled_by_db11
+FROM unified.unified_session_summary s
+LEFT JOIN "ip-database".ip_dim d ON s.session_ip = d.ip;
+-- #	session_ips	geo_complete_today	gap_filled_by_db11
+-- 1	1990844	1347523	0

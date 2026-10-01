@@ -1,0 +1,4 @@
+mom_label,ips,human,human_pct,likely_human,likely_human_pct,unknown,unknown_pct,suspicious,suspicious_pct,bot,bot_pct
+real_person (revenue > 0),427,427,100.0,0,0.0,0,0.0,0,0.0,0,0.0
+"lead, no revenue",2341,381,16.28,1841,78.64,6,0.26,94,4.02,19,0.81
+no lead,131186,0,0.0,30761,23.45,49444,37.69,49152,37.47,1829,1.39

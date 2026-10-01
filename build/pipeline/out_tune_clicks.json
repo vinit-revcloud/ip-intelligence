@@ -1,0 +1,1 @@
+{"checked_at": "2026-09-14T12:34:53Z", "table_format": "iceberg", "write_pattern": "append", "last_write_at": "2026-09-14 12:06:15.723 UTC", "rows_estimate": 16314255, "valid_ipv4_pct": 100.0, "scan_gb_per_run": 0.07, "status": "valid", "problems": []}

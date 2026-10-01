@@ -1,0 +1,4 @@
+r1_router_overview.sql                   SUCCEEDED  0.02 GB read  3s
+   is_bot | events | ips | first_ts | last_ts | ua_botlike | no_agent | device_types | errors | experiment_found | not_ipv4
+   0 | 165147 | 128371 | 2026-04-07 08:25:07.223000 | 2026-09-18 14:22:12.406000 | 69 | 0 | {Tablet=1322, Desktop=12026, Mobile=151794, Other=5} | 0 | 156996 | 180
+   1 | 7170 | 1040 | 2026-04-17 12:22:45.644000 | 2026-09-18 13:40:19.810000 | 33 | 0 | {Tablet=42, Desktop=3509, Mobile=3619} | 0 | 6588 | 0

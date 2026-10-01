@@ -1,0 +1,233 @@
+{
+ "window": [
+  "2026-06-18",
+  "2026-09-09"
+ ],
+ "session_ips": 133954,
+ "sessions": 350329,
+ "paying_ips": 427,
+ "max_fpr_pct": 2.0,
+ "velocity_threshold_sessions_per_day": 100,
+ "strong_signals": [
+  "ua_botlike",
+  "fraudlogix_bot",
+  "datacenter",
+  "compromised"
+ ],
+ "weak_signals": [
+  "tor",
+  "velocity",
+  "bot_click_all",
+  "bounce_repeat",
+  "tz_mismatch",
+  "vpn_proxy"
+ ],
+ "verdicts": {
+  "human": 808,
+  "likely_human": 32602,
+  "unknown": 49450,
+  "suspicious": 49246,
+  "bot": 1848
+ },
+ "verdict_pct": {
+  "human": 0.6,
+  "likely_human": 24.34,
+  "unknown": 36.92,
+  "suspicious": 36.76,
+  "bot": 1.38
+ },
+ "combined_rule_fpr_on_paying_pct": 0.23,
+ "signal_test": [
+  {
+   "signal": "ua_botlike",
+   "ips_hit": 573,
+   "paying_hit": 0,
+   "paying_ips": 427,
+   "FPR_pct": 0.0,
+   "no_lead_hit": 571,
+   "no_lead_hit_pct": 0.44,
+   "testable": true,
+   "points_away_from_humans": true,
+   "strength": "strong"
+  },
+  {
+   "signal": "fraudlogix_bot",
+   "ips_hit": 549,
+   "paying_hit": 1,
+   "paying_ips": 427,
+   "FPR_pct": 0.23,
+   "no_lead_hit": 544,
+   "no_lead_hit_pct": 0.41,
+   "testable": true,
+   "points_away_from_humans": true,
+   "strength": "strong"
+  },
+  {
+   "signal": "datacenter",
+   "ips_hit": 723,
+   "paying_hit": 0,
+   "paying_ips": 427,
+   "FPR_pct": 0.0,
+   "no_lead_hit": 709,
+   "no_lead_hit_pct": 0.54,
+   "testable": true,
+   "points_away_from_humans": true,
+   "strength": "strong"
+  },
+  {
+   "signal": "tor",
+   "ips_hit": 0,
+   "paying_hit": 0,
+   "paying_ips": 427,
+   "FPR_pct": 0.0,
+   "no_lead_hit": 0,
+   "no_lead_hit_pct": 0.0,
+   "testable": true,
+   "points_away_from_humans": false,
+   "strength": "weak"
+  },
+  {
+   "signal": "compromised",
+   "ips_hit": 28,
+   "paying_hit": 0,
+   "paying_ips": 427,
+   "FPR_pct": 0.0,
+   "no_lead_hit": 28,
+   "no_lead_hit_pct": 0.02,
+   "testable": true,
+   "points_away_from_humans": true,
+   "strength": "strong"
+  },
+  {
+   "signal": "velocity",
+   "ips_hit": 14,
+   "paying_hit": 2,
+   "paying_ips": 427,
+   "FPR_pct": 0.47,
+   "no_lead_hit": 10,
+   "no_lead_hit_pct": 0.01,
+   "testable": true,
+   "points_away_from_humans": false,
+   "strength": "weak"
+  },
+  {
+   "signal": "bot_click_all",
+   "ips_hit": 8881,
+   "paying_hit": 22,
+   "paying_ips": 427,
+   "FPR_pct": 5.15,
+   "no_lead_hit": 8741,
+   "no_lead_hit_pct": 6.66,
+   "testable": true,
+   "points_away_from_humans": true,
+   "strength": "weak"
+  },
+  {
+   "signal": "bounce_repeat",
+   "ips_hit": 14942,
+   "paying_hit": 0,
+   "paying_ips": 427,
+   "FPR_pct": 0.0,
+   "no_lead_hit": 14942,
+   "no_lead_hit_pct": 11.39,
+   "testable": false,
+   "points_away_from_humans": true,
+   "strength": "weak"
+  },
+  {
+   "signal": "tz_mismatch",
+   "ips_hit": 28308,
+   "paying_hit": 145,
+   "paying_ips": 427,
+   "FPR_pct": 33.96,
+   "no_lead_hit": 27581,
+   "no_lead_hit_pct": 21.02,
+   "testable": true,
+   "points_away_from_humans": false,
+   "strength": "weak"
+  },
+  {
+   "signal": "vpn_proxy",
+   "ips_hit": 45266,
+   "paying_hit": 213,
+   "paying_ips": 427,
+   "FPR_pct": 49.88,
+   "no_lead_hit": 43878,
+   "no_lead_hit_pct": 33.45,
+   "testable": true,
+   "points_away_from_humans": false,
+   "strength": "weak"
+  }
+ ],
+ "by_mom_label": [
+  {
+   "mom_label": "real_person (revenue > 0)",
+   "ips": 427,
+   "human": 427,
+   "human_pct": 100.0,
+   "likely_human": 0,
+   "likely_human_pct": 0.0,
+   "unknown": 0,
+   "unknown_pct": 0.0,
+   "suspicious": 0,
+   "suspicious_pct": 0.0,
+   "bot": 0,
+   "bot_pct": 0.0
+  },
+  {
+   "mom_label": "lead, no revenue",
+   "ips": 2341,
+   "human": 381,
+   "human_pct": 16.28,
+   "likely_human": 1841,
+   "likely_human_pct": 78.64,
+   "unknown": 6,
+   "unknown_pct": 0.26,
+   "suspicious": 94,
+   "suspicious_pct": 4.02,
+   "bot": 19,
+   "bot_pct": 0.81
+  },
+  {
+   "mom_label": "no lead",
+   "ips": 131186,
+   "human": 0,
+   "human_pct": 0.0,
+   "likely_human": 30761,
+   "likely_human_pct": 23.45,
+   "unknown": 49444,
+   "unknown_pct": 37.69,
+   "suspicious": 49152,
+   "suspicious_pct": 37.47,
+   "bot": 1829,
+   "bot_pct": 1.39
+  }
+ ],
+ "bot_reasons": [
+  {
+   "signal": "ua_botlike",
+   "bot_ips": 573
+  },
+  {
+   "signal": "fraudlogix_bot",
+   "bot_ips": 548
+  },
+  {
+   "signal": "datacenter",
+   "bot_ips": 722
+  },
+  {
+   "signal": "compromised",
+   "bot_ips": 28
+  }
+ ],
+ "experiments": 32,
+ "checks": {
+  "IPs equal a direct count": true,
+  "sessions equal a direct count": true,
+  "every IP has exactly one verdict": true,
+  "no paying IP is called bot": true,
+  "every strong signal is within 2% FPR on paying IPs": true,
+  "combined strong rules stay within 5%% of paying IPs": true
+ }
+}

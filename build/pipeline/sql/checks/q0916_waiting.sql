@@ -1,0 +1,1 @@
+SELECT count(*) AS still_waiting FROM ipintel_curated.proxycheck_queue q WHERE q.answered_at IS NULL AND NOT EXISTS (SELECT 1 FROM ipintel_curated.ip_intelligence i WHERE i.ip_address = q.ip_address AND i.vendor = 'proxycheck_io');

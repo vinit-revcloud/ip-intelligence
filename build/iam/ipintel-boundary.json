@@ -1,0 +1,283 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CeilingOnlyTheseServices",
+      "Effect": "Allow",
+      "Action": [
+        "athena:*",
+        "glue:*",
+        "s3:*",
+        "lambda:*",
+        "dynamodb:*",
+        "sqs:*",
+        "sns:*",
+        "scheduler:*",
+        "cloudwatch:*",
+        "logs:*",
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret",
+        "cloudtrail:LookupEvents",
+        "sts:GetCallerIdentity",
+        "events:DescribeRule",
+        "events:ListRules",
+        "events:ListTargetsByRule"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "CeilingIamReadsAndChecks",
+      "Effect": "Allow",
+      "Action": [
+        "iam:Get*",
+        "iam:List*",
+        "iam:SimulatePrincipalPolicy"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "CeilingIamWritesOnlyOnProjectRoles",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole",
+        "iam:PutRolePolicy",
+        "iam:PutRolePermissionsBoundary",
+        "iam:TagRole",
+        "iam:UpdateAssumeRolePolicy",
+        "iam:PassRole"
+      ],
+      "Resource": "arn:aws:iam::221490242148:role/ipintel-*"
+    },
+    {
+      "Sid": "NoGlueWriteOutsideIpintelCurated",
+      "Effect": "Deny",
+      "Action": [
+        "glue:Create*",
+        "glue:Update*",
+        "glue:Delete*",
+        "glue:BatchCreate*",
+        "glue:BatchDelete*",
+        "glue:BatchUpdate*",
+        "glue:Put*",
+        "glue:Start*",
+        "glue:Stop*",
+        "glue:Reset*",
+        "glue:Import*",
+        "glue:Tag*",
+        "glue:Untag*",
+        "glue:Resume*",
+        "glue:Cancel*",
+        "glue:Remove*",
+        "glue:Register*",
+        "glue:Deregister*"
+      ],
+      "NotResource": [
+        "arn:aws:glue:us-west-2:221490242148:catalog",
+        "arn:aws:glue:us-west-2:221490242148:database/ipintel_curated",
+        "arn:aws:glue:us-west-2:221490242148:table/ipintel_curated/*"
+      ]
+    },
+    {
+      "Sid": "NoDatabaseOrCatalogLevelGlueChanges",
+      "Effect": "Deny",
+      "Action": [
+        "glue:CreateDatabase",
+        "glue:UpdateDatabase",
+        "glue:DeleteDatabase",
+        "glue:PutDataCatalogEncryptionSettings",
+        "glue:PutResourcePolicy",
+        "glue:DeleteResourcePolicy",
+        "glue:ImportCatalogToGlue"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "NoS3ObjectWritesOutsideProjectFolder",
+      "Effect": "Deny",
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectAcl",
+        "s3:PutObjectTagging",
+        "s3:PutObjectRetention",
+        "s3:PutObjectLegalHold",
+        "s3:DeleteObject",
+        "s3:DeleteObjectVersion",
+        "s3:DeleteObjectTagging",
+        "s3:RestoreObject",
+        "s3:ReplicateObject",
+        "s3:ReplicateDelete"
+      ],
+      "NotResource": "arn:aws:s3:::datalake-landingzone-221490242148-us-west-2/ip-intelligence/*"
+    },
+    {
+      "Sid": "NoBucketSettingChangesAnywhere",
+      "Effect": "Deny",
+      "Action": [
+        "s3:CreateBucket",
+        "s3:PutBucket*",
+        "s3:DeleteBucket*",
+        "s3:PutLifecycleConfiguration",
+        "s3:PutEncryptionConfiguration",
+        "s3:PutReplicationConfiguration",
+        "s3:PutAccelerateConfiguration",
+        "s3:PutAnalyticsConfiguration",
+        "s3:PutInventoryConfiguration",
+        "s3:PutMetricsConfiguration",
+        "s3:PutIntelligentTieringConfiguration",
+        "s3:PutAccessPointPolicy",
+        "s3:PutAccountPublicAccessBlock",
+        "s3:BypassGovernanceRetention"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "OnlyTheTwoProjectWorkgroups",
+      "Effect": "Deny",
+      "Action": [
+        "athena:StartQueryExecution",
+        "athena:StopQueryExecution",
+        "athena:CreateWorkGroup",
+        "athena:UpdateWorkGroup",
+        "athena:DeleteWorkGroup",
+        "athena:CreateNamedQuery",
+        "athena:DeleteNamedQuery",
+        "athena:UpdateNamedQuery",
+        "athena:CreatePreparedStatement",
+        "athena:UpdatePreparedStatement",
+        "athena:DeletePreparedStatement",
+        "athena:StartSession",
+        "athena:StartCalculationExecution",
+        "athena:CreateDataCatalog",
+        "athena:UpdateDataCatalog",
+        "athena:DeleteDataCatalog"
+      ],
+      "NotResource": [
+        "arn:aws:athena:us-west-2:221490242148:workgroup/ipintel",
+        "arn:aws:athena:us-west-2:221490242148:workgroup/ipintel_etl"
+      ]
+    },
+    {
+      "Sid": "NoLambdaActionsOutsideProject",
+      "Effect": "Deny",
+      "Action": [
+        "lambda:Create*",
+        "lambda:Update*",
+        "lambda:Delete*",
+        "lambda:Put*",
+        "lambda:Add*",
+        "lambda:Remove*",
+        "lambda:Publish*",
+        "lambda:Tag*",
+        "lambda:Untag*",
+        "lambda:InvokeFunction",
+        "lambda:InvokeFunctionUrl",
+        "lambda:InvokeAsync"
+      ],
+      "NotResource": [
+        "arn:aws:lambda:us-west-2:221490242148:function:ipintel-*"
+      ]
+    },
+    {
+      "Sid": "TheFenceItselfCannotBeLoosened",
+      "Effect": "Deny",
+      "Action": [
+        "iam:CreatePolicyVersion",
+        "iam:DeletePolicy",
+        "iam:DeletePolicyVersion",
+        "iam:SetDefaultPolicyVersion",
+        "iam:PutRolePolicy",
+        "iam:DeleteRolePolicy",
+        "iam:AttachRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:UpdateAssumeRolePolicy",
+        "iam:PutRolePermissionsBoundary",
+        "iam:DeleteRole"
+      ],
+      "Resource": [
+        "arn:aws:iam::221490242148:policy/ipintel-boundary",
+        "arn:aws:iam::221490242148:role/ipintel-builder-role"
+      ]
+    },
+    {
+      "Sid": "EveryProjectRoleKeepsTheFence",
+      "Effect": "Deny",
+      "Action": "iam:DeleteRolePermissionsBoundary",
+      "Resource": "arn:aws:iam::221490242148:role/ipintel-*"
+    },
+    {
+      "Sid": "NewRolesMustCarryTheFence",
+      "Effect": "Deny",
+      "Action": [
+        "iam:CreateRole",
+        "iam:PutRolePermissionsBoundary"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringNotEquals": {
+          "iam:PermissionsBoundary": "arn:aws:iam::221490242148:policy/ipintel-boundary"
+        }
+      }
+    },
+    {
+      "Sid": "ExistingProjectResourcesCannotBeDeleted",
+      "Effect": "Deny",
+      "Action": [
+        "lambda:DeleteFunction",
+        "dynamodb:DeleteTable",
+        "iam:DeleteRole"
+      ],
+      "Resource": [
+        "arn:aws:lambda:us-west-2:221490242148:function:ipintel-findings-api",
+        "arn:aws:dynamodb:us-west-2:221490242148:table/ipintel-sources",
+        "arn:aws:iam::221490242148:role/ipintel-api-role"
+      ]
+    },
+    {
+      "Sid": "NoOtherResourceWritesOutsideProject",
+      "Effect": "Deny",
+      "Action": [
+        "dynamodb:Create*",
+        "dynamodb:Update*",
+        "dynamodb:Delete*",
+        "dynamodb:Put*",
+        "dynamodb:BatchWrite*",
+        "dynamodb:Restore*",
+        "dynamodb:Import*",
+        "dynamodb:PartiQLInsert",
+        "dynamodb:PartiQLUpdate",
+        "dynamodb:PartiQLDelete",
+        "sqs:*",
+        "sns:*",
+        "scheduler:*",
+        "cloudwatch:PutMetricAlarm",
+        "cloudwatch:DeleteAlarms",
+        "cloudwatch:SetAlarmState",
+        "cloudwatch:PutCompositeAlarm",
+        "cloudwatch:PutDashboard",
+        "cloudwatch:DeleteDashboards",
+        "logs:Delete*",
+        "logs:Put*",
+        "logs:Create*",
+        "logs:Associate*",
+        "logs:Disassociate*"
+      ],
+      "NotResource": [
+        "arn:aws:dynamodb:us-west-2:221490242148:table/ipintel-*",
+        "arn:aws:sqs:us-west-2:221490242148:ipintel-*",
+        "arn:aws:sns:us-west-2:221490242148:ipintel-*",
+        "arn:aws:scheduler:us-west-2:221490242148:schedule/default/ipintel-*",
+        "arn:aws:cloudwatch:us-west-2:221490242148:alarm:ipintel-*",
+        "arn:aws:logs:us-west-2:221490242148:log-group:/aws/lambda/ipintel-*"
+      ]
+    },
+    {
+      "Sid": "SecretsReadOnlyAndOnlyProjectKeys",
+      "Effect": "Deny",
+      "Action": [
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret"
+      ],
+      "NotResource": "arn:aws:secretsmanager:us-west-2:221490242148:secret:ipintel/*"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"Version":"2012-10-17","Statement":[{"Sid":"OnlyLambdaRunsTheJobs","Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole","Condition":{"StringEquals":{"aws:SourceAccount":"221490242148"}}}]}

@@ -1,0 +1,21 @@
+{
+    "FunctionUrl": "https://h25l6d2efgqnxqjrt6xpzjzbdq0hceyr.lambda-url.us-west-2.on.aws/",
+    "FunctionArn": "arn:aws:lambda:us-west-2:221490242148:function:ipintel-findings-api",
+    "AuthType": "NONE",
+    "Cors": {
+        "AllowHeaders": [
+            "authorization",
+            "content-type"
+        ],
+        "AllowMethods": [
+            "GET"
+        ],
+        "AllowOrigins": [
+            "*"
+        ],
+        "MaxAge": 300
+    },
+    "CreationTime": "2026-09-03T09:59:25.123422145Z",
+    "LastModifiedTime": "2026-09-03T09:59:25.123422145Z",
+    "InvokeMode": "BUFFERED"
+}

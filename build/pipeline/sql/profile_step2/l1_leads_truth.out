@@ -1,0 +1,3 @@
+l1_leads_truth.sql                       SUCCEEDED  0.54 GB read  9s
+   leads | first_day | last_day | fake_values | phone_verified_values | is_deal_values | with_expected_revenue | linked_to_session | linked_with_revenue | linked_since_2025
+   15010820 | 2012-03-12 | 2026-09-18 | {true=664022} | {false=334734, true=1013141} | {false=12554581, true=2456239} | 395359 | 12345 | 1222 | 11726

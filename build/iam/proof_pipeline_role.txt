@@ -1,0 +1,69 @@
+MUST BE DENIED
+  PASS production table unified_session_summary   glue:UpdateTable                     explicitDeny
+  PASS production table unified_session_summary   glue:DeleteTable                     explicitDeny
+  PASS production table unified_session_summary   glue:CreateTable                     explicitDeny
+  PASS production table raw_tune_clicks           glue:UpdateTable                     explicitDeny
+  PASS production table raw_tune_clicks           glue:DeleteTable                     explicitDeny
+  PASS existing unified.ip_geo                    glue:UpdateTable                     explicitDeny
+  PASS existing unified.ip_geo                    glue:DeleteTable                     explicitDeny
+  PASS existing unified.ip_geo                    glue:CreateTable                     explicitDeny
+  PASS production table lu_connector              glue:UpdateTable                     explicitDeny
+  PASS production table lu_connector              glue:DeleteTable                     explicitDeny
+  PASS database unified                           glue:DeleteDatabase                  explicitDeny
+  PASS database unified                           glue:UpdateDatabase                  explicitDeny
+  PASS database unified                           glue:CreateDatabase                  explicitDeny
+  PASS an existing Glue crawler                   glue:StartCrawler                    explicitDeny
+  PASS an existing Glue crawler                   glue:UpdateCrawler                   explicitDeny
+  PASS an existing Glue job                       glue:StartJobRun                     explicitDeny
+  PASS an existing Glue job                       glue:UpdateJob                       explicitDeny
+  PASS session summary data files                 s3:PutObject                         explicitDeny
+  PASS session summary data files                 s3:DeleteObject                      explicitDeny
+  PASS tune clicks data files                     s3:PutObject                         explicitDeny
+  PASS tune clicks data files                     s3:DeleteObject                      explicitDeny
+  PASS another team's landing-zone folder         s3:PutObject                         explicitDeny
+  PASS another team's landing-zone folder         s3:DeleteObject                      explicitDeny
+  PASS landing-zone bucket settings               s3:PutBucketNotification             explicitDeny
+  PASS landing-zone bucket settings               s3:PutLifecycleConfiguration         explicitDeny
+  PASS landing-zone bucket settings               s3:PutBucketPolicy                   explicitDeny
+  PASS landing-zone bucket settings               s3:PutBucketVersioning               explicitDeny
+  PASS Athena workgroup primary                   athena:StartQueryExecution           explicitDeny
+  PASS Athena workgroup primary                   athena:UpdateWorkGroup               explicitDeny
+  PASS an existing production Lambda              lambda:InvokeFunction                explicitDeny
+  PASS an existing production Lambda              lambda:UpdateFunctionCode            explicitDeny
+  PASS the existing IP API Lambda (delete)        lambda:DeleteFunction                explicitDeny
+  PASS the existing vendor list table (delete)    dynamodb:DeleteTable                 explicitDeny
+  PASS any other DynamoDB table                   dynamodb:PutItem                     explicitDeny
+  PASS any other DynamoDB table                   dynamodb:DeleteTable                 explicitDeny
+  PASS an existing EventBridge rule               events:PutRule                       implicitDeny
+  PASS an existing EventBridge rule               events:PutTargets                    implicitDeny
+  PASS an existing EventBridge rule               events:DeleteRule                    implicitDeny
+  PASS Lake Formation                             lakeformation:GrantPermissions       implicitDeny
+  PASS Lake Formation                             lakeformation:PutDataLakeSettings    implicitDeny
+  PASS the shared login itself                    iam:PutUserPolicy                    implicitDeny
+  PASS the shared login itself                    iam:AttachUserPolicy                 implicitDeny
+  PASS loosening the builder role                 iam:PutRolePolicy                    explicitDeny
+  PASS loosening the builder role                 iam:AttachRolePolicy                 explicitDeny
+  PASS loosening the builder role                 iam:DeleteRolePermissionsBoundary    explicitDeny
+  PASS loosening the boundary                     iam:CreatePolicyVersion              explicitDeny
+  PASS loosening the boundary                     iam:DeletePolicy                     explicitDeny
+  PASS changing the paid proxycheck key           secretsmanager:PutSecretValue        implicitDeny
+  PASS changing the paid proxycheck key           secretsmanager:DeleteSecret          implicitDeny
+  PASS the API's workgroup                        athena:StartQueryExecution           implicitDeny
+  PASS changing its own code                      lambda:CreateFunction                implicitDeny
+  PASS changing its own code                      lambda:UpdateFunctionCode            implicitDeny
+  PASS changing its own permissions               iam:CreateRole                       explicitDeny
+  PASS changing its own permissions               iam:PutRolePolicy                    implicitDeny
+  PASS writing the vendor list                    dynamodb:PutItem                     implicitDeny
+
+MUST BE ALLOWED
+  PASS read session summary definition            glue:GetTable                        allowed
+  PASS read session summary data                  s3:GetObject                         allowed
+  PASS read tune clicks data                      s3:GetObject                         allowed
+  PASS query in ipintel_etl                       athena:StartQueryExecution           allowed
+  PASS write ipintel_curated.ip_geo               glue:CreateTable                     allowed
+  PASS write ipintel_curated.ip_geo               glue:UpdateTable                     allowed
+  PASS write the project folder                   s3:PutObject                         allowed
+  PASS update pipeline state                      dynamodb:UpdateItem                  allowed
+  PASS start the proxycheck job                   lambda:InvokeFunction                allowed
+
+ALL CHECKS PASSED

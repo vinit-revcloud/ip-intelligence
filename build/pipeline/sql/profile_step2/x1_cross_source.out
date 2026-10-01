@@ -1,0 +1,10 @@
+x1_cross_source.sql                      SUCCEEDED  0.19 GB read  10s
+   session_says | router_says | ips | paying_ips | fl_bot | fl_not_bot | pc_bot | pc_not_bot
+   session not bot | no router | 1826899 | 330833 | 25889 | 1385276 | 40871 | 446061
+   session bot | no router | 112960 | 20265 | 4062 | 108673 | 1006 | 11266
+   session not bot | router not bot | 64387 | 13678 | 319 | 52530 | 577 | 61766
+   no session | router not bot | 54795 | 0 | 189 | 25823 | 806 | 45522
+   session bot | router not bot | 9189 | 4271 | 38 | 9151 | 18 | 9118
+   session bot | router bot | 562 | 154 | 37 | 525 | 93 | 448
+   session not bot | router bot | 280 | 83 | 30 | 250 | 53 | 189
+   no session | router bot | 198 | 0 | 26 | 172 | 55 | 114

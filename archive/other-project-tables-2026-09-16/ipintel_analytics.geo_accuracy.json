@@ -1,0 +1,101 @@
+{
+ "table": {
+  "Name": "geo_accuracy",
+  "DatabaseName": "ipintel_analytics",
+  "Owner": "221490242148",
+  "CreateTime": "2026-09-03 19:18:05+05:30",
+  "UpdateTime": "2026-09-03 19:18:05+05:30",
+  "Retention": 0,
+  "StorageDescriptor": {
+   "Columns": [
+    {
+     "Name": "segment",
+     "Type": "varchar(14)",
+     "Parameters": {}
+    },
+    {
+     "Name": "vendor",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "ips_tested",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "answer_rate_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "state_match_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "cities_comparable",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "city_match_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "zips_supplied",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "zip_match_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "median_error_mi",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "p90_error_mi",
+     "Type": "double",
+     "Parameters": {}
+    }
+   ],
+   "Location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/analytics/geo_accuracy/as_of_date=2026-09-04/",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "Compressed": false,
+   "NumberOfBuckets": 0,
+   "SerdeInfo": {
+    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+    "Parameters": {}
+   },
+   "SortColumns": [],
+   "Parameters": {},
+   "StoredAsSubDirectories": false
+  },
+  "PartitionKeys": [],
+  "TableType": "EXTERNAL_TABLE",
+  "Parameters": {
+   "trino_version": "0.215-24619-g93e00a8",
+   "totalSize": "-1",
+   "has_encrypted_data": "false",
+   "EXTERNAL": "TRUE",
+   "numFiles": "-1",
+   "trino_query_id": "20260903_134801_00071_2kjxk",
+   "auto.purge": "false",
+   "parquet.compression": "SNAPPY",
+   "transactional": "false"
+  },
+  "CreatedBy": "arn:aws:iam::221490242148:user/source_creation_tool_user",
+  "IsRegisteredWithLakeFormation": false,
+  "CatalogId": "221490242148",
+  "VersionId": "0",
+  "IsMultiDialectView": false,
+  "IsMaterializedView": false
+ },
+ "partitions": []
+}

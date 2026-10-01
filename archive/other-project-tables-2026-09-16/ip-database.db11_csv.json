@@ -1,0 +1,91 @@
+{
+ "table": {
+  "Name": "db11_csv",
+  "DatabaseName": "ip-database",
+  "Owner": "hadoop",
+  "CreateTime": "2026-09-02 14:48:53+05:30",
+  "UpdateTime": "2026-09-02 14:48:53+05:30",
+  "LastAccessTime": "1970-01-01 05:30:00+05:30",
+  "Retention": 0,
+  "StorageDescriptor": {
+   "Columns": [
+    {
+     "Name": "ip_from",
+     "Type": "string"
+    },
+    {
+     "Name": "ip_to",
+     "Type": "string"
+    },
+    {
+     "Name": "country_code",
+     "Type": "string"
+    },
+    {
+     "Name": "country_name",
+     "Type": "string"
+    },
+    {
+     "Name": "region_name",
+     "Type": "string"
+    },
+    {
+     "Name": "city_name",
+     "Type": "string"
+    },
+    {
+     "Name": "latitude",
+     "Type": "string"
+    },
+    {
+     "Name": "longitude",
+     "Type": "string"
+    },
+    {
+     "Name": "zip_code",
+     "Type": "string"
+    },
+    {
+     "Name": "time_zone",
+     "Type": "string"
+    }
+   ],
+   "Location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/reference/ip2location_lite_db11/version=2026-09",
+   "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+   "Compressed": false,
+   "NumberOfBuckets": -1,
+   "SerdeInfo": {
+    "SerializationLibrary": "org.apache.hadoop.hive.serde2.OpenCSVSerde",
+    "Parameters": {
+     "quoteChar": "\"",
+     "escapeChar": "\\",
+     "separatorChar": ",",
+     "serialization.format": "1"
+    }
+   },
+   "BucketColumns": [],
+   "SortColumns": [],
+   "Parameters": {},
+   "SkewedInfo": {
+    "SkewedColumnNames": [],
+    "SkewedColumnValues": [],
+    "SkewedColumnValueLocationMaps": {}
+   },
+   "StoredAsSubDirectories": false
+  },
+  "PartitionKeys": [],
+  "TableType": "EXTERNAL_TABLE",
+  "Parameters": {
+   "EXTERNAL": "TRUE",
+   "transient_lastDdlTime": "1788340733"
+  },
+  "CreatedBy": "arn:aws:iam::221490242148:user/source_creation_tool_user",
+  "IsRegisteredWithLakeFormation": false,
+  "CatalogId": "221490242148",
+  "VersionId": "0",
+  "IsMultiDialectView": false,
+  "IsMaterializedView": false
+ },
+ "partitions": []
+}

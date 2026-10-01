@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" fill="none" font-family="Inter, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
+  <!-- "How it works" illustration: one IP, several sources, one verdict. Brand: accent #2563EB, greys, verdict dots only. -->
+  <rect width="560" height="360" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <!-- source nodes -->
+  <g font-size="12" fill="#111827">
+    <rect x="24" y="40" width="150" height="44" rx="10" fill="#F8FAFC" stroke="#E5E7EB"/>
+    <text x="44" y="67">Click stream</text>
+    <rect x="24" y="158" width="150" height="44" rx="10" fill="#F8FAFC" stroke="#E5E7EB"/>
+    <text x="44" y="185">Website sessions</text>
+    <rect x="24" y="276" width="150" height="44" rx="10" fill="#F8FAFC" stroke="#E5E7EB"/>
+    <text x="44" y="303">Experiment router</text>
+  </g>
+  <!-- connectors -->
+  <g stroke="#2563EB" stroke-opacity="0.45" stroke-width="2" fill="none">
+    <path d="M174 62 C 230 62, 230 180, 262 180"/>
+    <path d="M174 180 L 262 180"/>
+    <path d="M174 298 C 230 298, 230 180, 262 180"/>
+    <path d="M378 180 L 418 180"/>
+  </g>
+  <!-- engine -->
+  <rect x="262" y="138" width="116" height="84" rx="12" fill="#2563EB"/>
+  <text x="320" y="174" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">Multi-source</text>
+  <text x="320" y="192" text-anchor="middle" font-size="12" font-weight="600" fill="#FFFFFF">IP intelligence</text>
+  <!-- verdict card -->
+  <rect x="418" y="118" width="122" height="124" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <text x="432" y="142" font-size="11" fill="#6B7280">VERDICT</text>
+  <circle cx="438" cy="164" r="4" fill="#DC2626"/><text x="448" y="168" font-size="12" fill="#111827">Bad</text>
+  <circle cx="438" cy="188" r="4" fill="#059669"/><text x="448" y="192" font-size="12" fill="#111827">Clean</text>
+  <circle cx="438" cy="212" r="4" fill="#9CA3AF"/><text x="448" y="216" font-size="12" fill="#111827">Unknown</text>
+  <text x="432" y="234" font-size="10" fill="#6B7280">+ reason, location</text>
+</svg>

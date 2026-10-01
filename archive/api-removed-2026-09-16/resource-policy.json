@@ -1,0 +1,1 @@
+{"Version":"2012-10-17","Id":"default","Statement":[{"Sid":"fnurl-public","Effect":"Allow","Principal":"*","Action":"lambda:InvokeFunctionUrl","Resource":"arn:aws:lambda:us-west-2:221490242148:function:ipintel-findings-api","Condition":{"StringEquals":{"lambda:FunctionUrlAuthType":"NONE"}}}]}

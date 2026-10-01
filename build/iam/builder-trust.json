@@ -1,0 +1,11 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "OnlyTheSourceCreationToolLoginMayUseThisRole",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::221490242148:user/source_creation_tool_user" },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}

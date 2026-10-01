@@ -1,0 +1,448 @@
+<title>Revenue-Graded Vendor Evaluation Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #f5f7f8; --surface: #ffffff; --ink: #14212b; --ink-2: #3c4b55; --muted: #66757f;
+  --rule: #d8dfe3; --rule-soft: #e7ecef; --accent: #1d6a86; --accent-soft: #dcebf1; --code-bg: #eef3f5;
+  --good: #25734a; --good-soft: #e1f0e7; --warn: #9a6212; --warn-soft: #f7ecd9; --crit: #a8322a; --crit-soft: #f6e1df;
+  --mid: #7fb2c5; --neutral-bar: #b9c4ca;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --cond: "IBM Plex Sans Condensed", "IBM Plex Sans", "Arial Narrow", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0e151a; --surface: #151f26; --ink: #e3eaee; --ink-2: #bac6cd; --muted: #8d9ca5;
+    --rule: #2a3843; --rule-soft: #1f2b33; --accent: #5fb0cc; --accent-soft: #1b3440; --code-bg: #111b21;
+    --good: #6cc494; --good-soft: #17301f; --warn: #e0a64e; --warn-soft: #33270f; --crit: #ec8a80; --crit-soft: #3a1a17;
+    --mid: #2f6f86; --neutral-bar: #4a5963;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0e151a; --surface: #151f26; --ink: #e3eaee; --ink-2: #bac6cd; --muted: #8d9ca5;
+  --rule: #2a3843; --rule-soft: #1f2b33; --accent: #5fb0cc; --accent-soft: #1b3440; --code-bg: #111b21;
+  --good: #6cc494; --good-soft: #17301f; --warn: #e0a64e; --warn-soft: #33270f; --crit: #ec8a80; --crit-soft: #3a1a17;
+  --mid: #2f6f86; --neutral-bar: #4a5963;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink); font: 400 15.5px/1.62 var(--sans); padding-inline: 20px; padding-block: 0 80px; }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+@media (max-width: 900px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+nav.toc { position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto; padding-block: 44px 20px; font-size: 13.5px; }
+nav.toc b { display: block; font: 500 11.5px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+nav.toc a { display: block; color: var(--ink-2); text-decoration: none; padding: 5px 0 5px 10px; border-left: 2px solid var(--rule-soft); }
+nav.toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+@media (max-width: 900px) { nav.toc { position: static; max-height: none; padding-block: 20px 0; columns: 2; } nav.toc b { column-span: all; } }
+main { min-width: 0; }
+.mast { padding-block: 44px 26px; border-bottom: 1px solid var(--rule); display: grid; gap: 14px; }
+.eyebrow { font: 500 12px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 600 clamp(30px, 4.4vw, 42px)/1.08 var(--cond); margin: 0; text-wrap: balance; }
+.lede { font-size: 17px; color: var(--ink-2); margin: 0; max-width: 68ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 26px; font: 400 13px/1.4 var(--mono); color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 500; }
+section { padding-block: 38px 6px; border-top: 1px solid var(--rule-soft); scroll-margin-top: 12px; }
+section:first-of-type { border-top: 0; }
+h2 { font: 600 26px/1.2 var(--cond); margin: 0 0 8px; text-wrap: balance; }
+h3 { font: 600 18px/1.3 var(--cond); margin: 28px 0 8px; }
+p, ul, ol { margin: 0 0 14px; max-width: 74ch; }
+li { margin-bottom: 5px; }
+.answer { font-size: 17px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .88em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+.scroll { overflow-x: auto; margin: 8px 0 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { text-align: left; font: 500 11.5px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th.n { text-align: right; }
+td { padding: 8px 10px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+td.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.ours td { background: var(--accent-soft); }
+tr.total td { font-weight: 600; border-top: 1px solid var(--rule); }
+.note { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 16px; margin: 12px 0 18px; max-width: 76ch; }
+.note.warn { background: var(--warn-soft); border-color: transparent; }
+.note.good { background: var(--good-soft); border-color: transparent; }
+.note b:first-child { display: block; font: 600 13px/1.4 var(--sans); margin-bottom: 2px; }
+.chip { display: inline-block; font: 500 11.5px/1 var(--mono); padding: 4px 7px; border-radius: 99px; white-space: nowrap; }
+.chip.good { background: var(--good-soft); color: var(--good); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.neutral { background: var(--rule-soft); color: var(--ink-2); }
+.figs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 2px solid var(--ink); margin: 18px 0 8px; }
+.fig { padding: 14px 16px 6px 0; border-right: 1px solid var(--rule-soft); }
+.fig + .fig { padding-left: 16px; }
+.fig:last-child { border-right: 0; }
+.fig .v { font: 600 30px/1.1 var(--cond); font-variant-numeric: tabular-nums; }
+.fig .l { font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+.fig .s { font: 12px/1.4 var(--mono); color: var(--muted); margin-top: 6px; }
+@media (max-width: 760px) { .figs { grid-template-columns: repeat(2, minmax(0, 1fr)); } .fig:nth-child(2) { border-right: 0; } .fig:nth-child(3) { padding-left: 0; } }
+.stack { display: flex; height: 26px; border-radius: 4px; overflow: hidden; margin: 10px 0 6px; max-width: 760px; }
+.stack span { display: block; height: 100%; }
+.s-agree { background: var(--good); } .s-near { background: color-mix(in srgb, var(--good) 45%, var(--surface)); }
+.s-state { background: var(--neutral-bar); } .s-diff { background: var(--warn); } .s-one { background: var(--rule); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--ink-2); margin: 0 0 12px; }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.bar { display: inline-block; height: 8px; border-radius: 2px; background: var(--accent); vertical-align: middle; margin-right: 8px; }
+.bar.w { background: var(--warn); }
+.bar.m { background: var(--mid); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+@media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+ol.flow { padding-left: 22px; }
+dl.gloss { display: grid; grid-template-columns: minmax(9rem, 14rem) 1fr; margin: 12px 0 0; max-width: 860px; }
+dl.gloss dt, dl.gloss dd { padding: 9px 0; border-bottom: 1px solid var(--rule-soft); margin: 0; font-size: 14.5px; }
+dl.gloss dt { font-family: var(--mono); font-size: 13px; color: var(--accent); padding-right: 14px; }
+@media (max-width: 560px) { dl.gloss { grid-template-columns: 1fr; } dl.gloss dt { border-bottom: 0; padding-bottom: 0; } }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+@media print {
+  body { background: #fff; color: #000; padding: 0; font-size: 10.5pt; }
+  .wrap { display: block; max-width: none; }
+  nav.toc { display: none; }
+  section { break-inside: auto; padding-block: 16px 4px; }
+  h2, h3 { break-after: avoid; }
+  table, .note, .figs, .stack, tr { break-inside: avoid; }
+  .scroll { overflow: visible; }
+  a { color: inherit; text-decoration: none; }
+  .stack span, .bar, .chip, tr.ours td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+.flow-steps ol { padding-left: 22px; }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <b>Contents</b>
+  <a href="#summary">Summary</a>
+  <a href="#decisions">Decisions and assumptions</a>
+  <a href="#today">What exists today</a>
+  <a href="#target">How it will work</a>
+  <a href="#a">A · Retire our API</a>
+  <a href="#b">B · Vendor evaluation pipeline</a>
+  <a href="#metrics">Metrics, defined</a>
+  <a href="#tables">New tables</a>
+  <a href="#c">C · The app</a>
+  <a href="#d">D · Teammate API changes</a>
+  <a href="#safety">Production safety</a>
+  <a href="#accept">Acceptance tests</a>
+  <a href="#order">Order of work</a>
+  <a href="#risks">Risks</a>
+</nav>
+
+<main>
+<header class="mast">
+  <div class="eyebrow">Implementation plan · from the MoM · 16 Sep 2026</div>
+  <h1>Revenue-Graded Vendor Evaluation Plan</h1>
+  <p class="lede">Grade every IP address by what its sessions and leads actually earned, then score every IP vendor against that grade, daily. At the same time, make the teammate's IP Lookup API the only API.</p>
+  <div class="meta"><span>Status <b>plan, not built yet</b></span><span>Sources <b>unified.unified_session_summary · sampledb.revenue_leads_plus</b></span><span>Cadence <b>daily</b></span></div>
+</header>
+
+<section id="summary">
+  <h2>Summary</h2>
+  <p class="answer">Three pieces of work: a daily evaluation job that labels recent session IPs by lead revenue and scores every vendor on them; switching off our API so the teammate's API is the only one; and the app pages for per-vendor tables and metrics, served through the teammate's API.</p>
+  <div class="figs">
+    <div class="fig"><div class="v">20k+</div><div class="l">Sessions per evaluation</div><div class="s">starting 7 days ago, going back until 500 revenue IPs (about 60 days), 90 days at most</div></div>
+    <div class="fig"><div class="v">7</div><div class="l">Sources scored per IP</div><div class="s">6 vendors + the session table's own IP fields</div></div>
+    <div class="fig"><div class="v">2</div><div class="l">Labels, as in the MoM</div><div class="s">revenue &gt; 0 = human · otherwise = bot</div></div>
+    <div class="fig"><div class="v">FPR · Accuracy</div><div class="l">Headline metrics per vendor</div><div class="s">plus precision, recall, coverage, location match</div></div>
+  </div>
+  <p><b>Measured today, for the MoM window as written (sessions 4–9 Sep):</b> 20,003 sessions, 8,791 IPs, 175 leads, 159 IPs with a lead, <b>49 IPs with non-zero revenue</b>. Every one of these IPs is already in our tables, and 10,285 of the 10,286 IPs seen those days have a proxycheck.io answer. Leads join to sessions reliably on <code>utm_content = session_id</code>. 49 revenue IPs are too few for a stable FPR, which is why the window keeps extending back until it holds at least 500.</p>
+</section>
+
+<section id="decisions">
+  <h2>Decisions and assumptions</h2>
+  <h3>Decided (16 Sep)</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Topic</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td>APIs</td><td>The teammate's IP Lookup API (<code>GET /v1/ip/{ip}</code>) is the only API. Ours (<code>ipintel-findings-api</code>) is removed completely.</td></tr>
+      <tr><td>Labels</td><td>Strict, as in the MoM. An IP with a lead whose revenue is above 0 is <b>human</b>. Every other IP in the window (zero-revenue lead, or no lead) is <b>bot</b>.</td></tr>
+      <tr><td>Window</td><td>Sessions from 7 days ago backwards until there are 20,000 sessions and at least 500 revenue IPs, never further than 90 days. The last 7 days are always left out, so lead revenue has time to appear, and nothing old is applied to today.</td></tr>
+      <tr><td>Cadence</td><td>Daily, after the morning load. Each day's results are kept, so trends can be compared.</td></tr>
+      <tr><td>Leads source</td><td><code>sampledb.revenue_leads_plus</code>, joined on <code>utm_content = session_id</code>.</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Assumptions to confirm (the plan uses these unless told otherwise)</h3>
+  <ol>
+    <li><b>"Revenue" means <code>expected_revenue</code>.</b> About 12% of recent leads have it above 0. The <code>calculated_value_*</code> columns are empty for recent leads.</li>
+    <li><b>Lead stage:</b> <code>lead_status_category</code> gives the ladder below_intro → intro_qualified → meeting → listing → closed. <code>furthest_stage</code> and <code>stage</code> are kept for detail. This is the MoM's <code>lead_category</code>.</li>
+    <li><b>MoM step 6, where the note has a blank:</b> read as "if FraudLogix says bot or proxy, but the lead reached the meeting stage or later, that flag is <i>wrong</i>". The plan reports this as a separate "stage override" view next to the strict label, so the headline numbers stay strict.</li>
+    <li><b>"Flagged" for a vendor</b> means any of proxy, VPN, Tor, datacenter, bot, compromised or scraper. A separate "bot only" score uses just <code>is_bot</code>, which only FraudLogix and the session table answer.</li>
+    <li><b>Lead dates:</b> only leads created on or after the window's first session day count. Leads from years ago are never used.</li>
+  </ol>
+  <div class="note warn"><b>Consequence of strict labels</b>Most IPs have no lead, so under strict labels about 99% of the window is "bot". A vendor that flags nobody will therefore show very low accuracy, and one that flags everybody will show high accuracy. FPR, which only looks at revenue IPs, is not affected. The app will show accuracy next to precision and recall, plus the stage-override view, so nobody reads accuracy alone.</div>
+</section>
+
+<section id="today">
+  <h2>What exists today, and what changes</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Part</th><th>Today</th><th>From now on</th></tr></thead>
+    <tbody>
+      <tr><td>Daily load <code>ipintel-free-daily</code></td><td>07:30 UTC: new IPs from both base tables, free vendors, resolved answers, queue, reports</td><td><span class="chip good">keep</span> + starts the evaluation job when it finishes</td></tr>
+      <tr><td>proxycheck.io job <code>ipintel-proxycheck-daily</code></td><td>50k/day: queue, last 30 days, then backlog; merges answers from our API's live lookups</td><td><span class="chip good">keep</span> + IPs in the evaluation window go right after the queue. The live-lookup merge stays for the teammate API if it saves answers (part D).</td></tr>
+      <tr><td>Unified refresh</td><td>After each passed run, <code>unified.ip_geo</code> / <code>unified.ip_intelligence</code> are replaced with checked copies</td><td><span class="chip good">keep</span>. This is what the teammate API reads.</td></tr>
+      <tr><td>Tables in <code>ipintel_curated</code></td><td>ip_geo, ip_intelligence, analytics, scorecards, ip_occurrences, ip_resolved, proxycheck_queue</td><td><span class="chip good">keep</span> + 5 new evaluation tables</td></tr>
+      <tr><td>Truth for location <code>qualified_lead_ips</code></td><td>2,105 fixed customer addresses, built 10 Sep</td><td><span class="chip warn">replace</span> for scoring with the daily revenue-graded window. Keep it for history.</td></tr>
+      <tr><td>Vendor scorecards <code>vendor_overview_geo/_proxy</code></td><td>Agreement between vendors; FPR on 210 confirmed humans</td><td><span class="chip warn">replace</span> in the app with the evaluation metrics. The tables stay, but are no longer the headline.</td></tr>
+      <tr><td>Reports (<code>geo_accuracy.json</code>, <code>enrichment_coverage.json</code>)</td><td>Rebuilt after every run, served by our API</td><td><span class="chip good">keep</span> the files; served by the teammate API (part D)</td></tr>
+      <tr><td>Our API <code>ipintel-findings-api</code></td><td>/lookup, bulk, /tables, pipeline control, reports, vendor registry; the Lovable app uses it for every page</td><td><span class="chip warn">remove</span> (part A)</td></tr>
+      <tr><td>Teammate API <code>9w07dr3qq2</code></td><td><code>GET /v1/ip/{ip}</code>; reads the unified tables; calls proxycheck.io live without saving</td><td><span class="chip good">the only API</span> + read-only report endpoints and saving live answers (part D)</td></tr>
+      <tr><td>Lovable app</td><td>Lookup, tables, pipeline control, reports, all through our API</td><td><span class="chip warn">rebuild data access</span> on the teammate API; new vendor-evaluation pages (part C)</td></tr>
+      <tr><td>Pipeline control in the app</td><td>Pause, run now, budget, base tables (writes through our API)</td><td><span class="chip warn">read-only</span> status in the app; changes are made in AWS by the owner (runbooks)</td></tr>
+      <tr><td>Safety fence, alarms, email alerts</td><td>Boundary, IAM checks, CloudTrail review, 6 alarms</td><td><span class="chip good">keep</span> + checks for the evaluation job</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="target">
+  <h2>How it will work</h2>
+  <div class="flow-steps">
+  <ol>
+    <li><b>07:30 UTC:</b> the daily load adds new IPs (unchanged).</li>
+    <li><b>Right after:</b> the proxycheck.io job runs. The queue goes first, then any evaluation-window IP without an answer, then the last 30 days, then the backlog. The unified tables are refreshed.</li>
+    <li><b>Then, the evaluation job (new):</b> choose the window, join leads, label IPs, collect every vendor's answer, score, save the day's results, and export JSON for the app.</li>
+    <li><b>Any time:</b> the teammate API answers IP lookups from the unified tables, and serves the evaluation and report JSON read-only to the app.</li>
+  </ol>
+  </div>
+</section>
+
+<section id="a">
+  <h2>A · Retire our API</h2>
+  <p class="answer">"Removed completely" is done in two stages, because the safety fence deliberately forbids deleting this function and its role.</p>
+  <ol>
+    <li><b>Switch off (by us, reversible):</b> set the function's reserved concurrency to 0 so every call is refused, and remove its public Function URL. Keep the code and role, so it can be brought back in minutes.</li>
+    <li><b>Clean up what depended on it:</b>
+      <ul>
+        <li>Remove the lookup, bulk, table, control and report sections from the Lovable prompts.</li>
+        <li>Mark it retired in the User Manual and System Guide.</li>
+        <li>Stop the checks that call it (the scheduled check, <code>compare_resolved.py</code>).</li>
+        <li>Its S3 answer cache (<code>proxycheck/live/by-ip/</code>) stops being written; nothing else uses it.</li>
+      </ul>
+    </li>
+    <li><b>Delete (by an AWS admin, after 7 quiet days):</b> the Lambda <code>ipintel-findings-api</code> and the role <code>ipintel-api-role</code>. The fence blocks the builder role from doing this, so it has to be an admin action.</li>
+  </ol>
+  <div class="note warn"><b>What stops working when it is switched off</b>
+    <ul>
+      <li>Every Lovable page that reads data, until part C and part D are live.</li>
+      <li>Pausing, running jobs and changing the budget from the app.</li>
+      <li>Our rule "API miss → ask proxycheck.io → save → merge into the tables", unless the teammate API starts saving its live answers (D2).</li>
+    </ul>
+    For that reason, stage 1 is done last, once C and D are ready.</div>
+</section>
+
+<section id="b">
+  <h2>B · Vendor evaluation pipeline</h2>
+  <p class="answer">A new step in <code>ipintel-free-daily</code> (<code>action: "evaluate"</code>), started when the daily load and the proxycheck.io run finish. It writes only to <code>ipintel_curated</code>.</p>
+
+  <h3>B1 · Choose the window (MoM step 1)</h3>
+  <ul>
+    <li><b>Sessions:</b> <code>unified.unified_session_summary</code> rows with a session IP and <code>session_date</code> in [today − 90, today − 7].</li>
+    <li><b>Order:</b> newest first, then by session_id.</li>
+    <li><b>Where to stop:</b> the earliest day at which the running totals reach both <b>20,000 sessions</b> and <b>500 IPs with revenue</b>. At 90 days it stops anyway and the run is marked "small sample".</li>
+    <li><b>Saved:</b> the window's first and last day, session count, IP count and lead count, in <code>eval_runs</code>.</li>
+    <li><b>Private and reserved IPs</b> are dropped, as everywhere else.</li>
+  </ul>
+
+  <h3>B2 · Join the leads (MoM step 2)</h3>
+  <ul>
+    <li><code>sampledb.revenue_leads_plus</code> rows where <code>utm_content = session_id</code>, <code>date_pst</code> ≥ the window's first day, and <code>fake</code> kept as a field.</li>
+    <li><b>Kept per lead:</b> id, date, <code>expected_revenue</code>, <code>lead_status_category</code>, <code>furthest_stage</code>, <code>stage</code>, <code>is_meeting</code>, <code>is_listing</code>, <code>is_closed</code>, <code>is_deal</code>, <code>fake</code>, <code>phone_verified</code>, and the lead's <code>state_name</code>, <code>city_name</code> and <code>zip_code</code> (for location scoring).</li>
+    <li><b>Not copied:</b> names, emails, phones or street addresses.</li>
+  </ul>
+
+  <h3>B3 · Grade each IP (MoM steps 3 and 5)</h3>
+  <p>One row per IP in the window:</p>
+  <ul>
+    <li><b>Activity:</b> sessions, bot-click sessions (<code>is_bot_click</code>), leads, and total <code>expected_revenue</code>.</li>
+    <li><b>Stage:</b> the best <code>lead_status_category</code> reached (the <code>lead_category</code>) and the furthest stage.</li>
+    <li><b><code>revenue_class</code>:</b> <code>nonzero</code> or <code>zero</code>, or <code>no_lead</code> when the IP has no lead.</li>
+    <li><b>Strict label:</b> <b>human</b> if revenue &gt; 0, otherwise <b>bot</b>.</li>
+    <li><b>Stage-override label (assumption 3):</b> <b>human</b> if revenue &gt; 0 or the best stage is meeting, listing or closed; otherwise <b>bot</b>.</li>
+  </ul>
+  <p>An IP with several leads takes its best result: any revenue makes it human.</p>
+
+  <h3>B4 · Every vendor's answer (MoM step 4)</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Source</th><th>Location</th><th>Proxy / bot</th><th>Coverage in the 4–9 Sep window</th></tr></thead>
+    <tbody>
+      <tr><td>IP2Location DB11</td><td>yes</td><td>—</td><td>every IP</td></tr>
+      <tr><td>IP2Proxy PX12</td><td>—</td><td>proxy, VPN, Tor, datacenter</td><td>every IP (answers only for listed proxies)</td></tr>
+      <tr><td>FraudLogix</td><td>—</td><td>proxy, VPN, Tor, datacenter, <b>bot</b></td><td>5,039 IPs (tune-click IPs only)</td></tr>
+      <tr><td>proxycheck.io</td><td>yes</td><td>proxy, VPN, compromised, risk score</td><td>10,285 of 10,286</td></tr>
+      <tr><td>ipinfo.io, ipwho.is</td><td>yes</td><td>—</td><td>partial; tie-breakers fill in about 1,000 a day</td></tr>
+      <tr><td>Session table's own fields (<code>ip_is_proxy</code>, <code>is_bot_click</code>, <code>ip_region_name</code>…)</td><td>yes</td><td>proxy, <b>bot click</b></td><td>every session; region filled on 45%</td></tr>
+      <tr><td>Our resolved answer</td><td>yes</td><td>yes</td><td>every IP</td></tr>
+    </tbody>
+  </table></div>
+  <p>Answers are read from the tables, which the daily jobs keep full. The proxycheck.io job gets one new rule: IPs in today's evaluation window that it has not answered go right after the queue. Session IPs from the last 90 days (excluding the last 7) number 133,964, and 44,180 of them have no proxycheck.io answer yet. The first catch-up therefore takes about one day's 50,000 budget. After that, about 1k a day. Answers are taken as they were on evaluation day and saved with the day's results, so earlier days can be reproduced.</p>
+
+  <h3>B5 · Score every IP against every vendor</h3>
+  <p>One row per day × IP × source:</p>
+  <ul>
+    <li><b>The vendor's own answer:</b> location fields and flags.</li>
+    <li><b><code>flagged</code>:</b> any flag set, or empty if the vendor gave no proxy answer.</li>
+    <li><b><code>bot_flag</code></b>, where the vendor answers bot.</li>
+    <li><b>Outcome</b> under the strict label and again under the stage-override label: <code>TP</code>, <code>FP</code>, <code>TN</code> or <code>FN</code>, with "bot" as the positive class. A vendor with no answer gets <code>no_answer</code>.</li>
+    <li><b>Location match</b> for IPs whose lead has an address: state, city and ZIP, using the same matching rules as today.</li>
+  </ul>
+
+  <h3>B6 · Which lead stages decide the bot status (MoM "identify which stages")</h3>
+  <p>For each lead category and furthest stage, per source:</p>
+  <ul>
+    <li>number of IPs;</li>
+    <li>share with revenue;</li>
+    <li>share the vendor flagged;</li>
+    <li>share flagged as bot.</li>
+  </ul>
+  <p>A stage where revenue is common but a vendor flags many IPs shows that vendor's false alarms. A stage with no revenue and a high flag rate shows where flags are useful. This table is also the evidence for (or against) the stage-override rule.</p>
+
+  <h3>B7 · FraudLogix check (MoM step 6)</h3>
+  <p>A dedicated view lists IPs that FraudLogix flags as bot or proxy while their lead has non-zero revenue, or reached the meeting stage or later. It shows each IP's stage, revenue and flag reason. These are FraudLogix's wrong calls, and they are counted as false positives in both label views.</p>
+
+  <h3>B8 · Daily run, checks and exports</h3>
+  <ul>
+    <li>Runs as a hand-over from the daily chain. Staging tables are removed at the end. Results are merged by run date, so re-running a day replaces that day only.</li>
+    <li><b>Checks:</b>
+      <ul>
+        <li>The window reached 20,000 sessions (and 500 revenue IPs, or is marked small sample).</li>
+        <li>Every window IP has exactly one label.</li>
+        <li>Every IP × source row exists.</li>
+        <li>TP + FP + TN + FN + no_answer adds up to the window's IP count for every source.</li>
+        <li>No personal fields were copied.</li>
+        <li>The usual production-safety checks pass.</li>
+      </ul>
+    </li>
+    <li>Exports <code>serving/ipintel_curated/vendor_eval_latest.json</code> (metrics, stage table, window) and a per-day history file for the app.</li>
+  </ul>
+</section>
+
+<section id="metrics">
+  <h2>Metrics, defined (MoM step 8)</h2>
+  <p>"Bot" is the positive class. Each source is scored only on IPs it answered. Coverage shows how many that is.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Metric</th><th>Formula</th><th>Reads as</th></tr></thead>
+    <tbody>
+      <tr><td><b>FPR</b> (false positive rate)</td><td>FP / (FP + TN)</td><td>Of the revenue-earning (human) IPs, the share the vendor flagged. Lower is better. This is the main metric.</td></tr>
+      <tr><td><b>Accuracy</b></td><td>(TP + TN) / (TP + FP + TN + FN)</td><td>Share of IPs the vendor classed the same way as the label</td></tr>
+      <tr><td>Precision</td><td>TP / (TP + FP)</td><td>When the vendor flags, how often the IP earned nothing</td></tr>
+      <tr><td>Recall (detection rate)</td><td>TP / (TP + FN)</td><td>Of the non-earning IPs, the share the vendor flagged</td></tr>
+      <tr><td>Coverage</td><td>answered / window IPs</td><td>How many window IPs the vendor answered at all</td></tr>
+      <tr><td>Bot-only FPR and accuracy</td><td>the same, with <code>is_bot</code> in place of "any flag"</td><td>FraudLogix and the session table only</td></tr>
+      <tr><td>Location match</td><td>state / city / ZIP match ÷ IPs with a lead address and a vendor answer</td><td>The geo comparison, now on recent revenue-graded leads</td></tr>
+    </tbody>
+  </table></div>
+  <p>Every metric is computed under both label views and shows its sample size. A 95% confidence interval (Wilson) is shown next to FPR and accuracy, so small samples are visible.</p>
+</section>
+
+<section id="tables">
+  <h2>New tables (all in <code>ipintel_curated</code>, Iceberg)</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Table</th><th>One row per</th><th>Main columns</th></tr></thead>
+    <tbody>
+      <tr><td><code>eval_runs</code></td><td>run day</td><td>run_date, window_start, window_end, sessions, ips, leads, revenue_ips, small_sample, status</td></tr>
+      <tr><td><code>eval_ip_labels</code></td><td>run day × IP</td><td>ip_address, sessions, bot_click_sessions, leads, revenue_total, revenue_class, lead_category, furthest_stage, meeting_or_later, label_strict, label_stage, lead_state, lead_city, lead_zip</td></tr>
+      <tr><td><code>eval_vendor_ip</code></td><td>run day × IP × source</td><td>source, answered, flagged, bot_flag, is_proxy, is_vpn, is_tor, is_datacenter, is_compromised, state, city, zip_code, outcome_strict, outcome_stage, state_match, city_match, zip_match</td></tr>
+      <tr><td><code>eval_vendor_metrics</code></td><td>run day × source × label view × segment</td><td>ips, answered, tp, fp, tn, fn, fpr, fpr_low, fpr_high, accuracy, accuracy_low, accuracy_high, precision, recall, coverage, bot_fpr, bot_accuracy, state_pct, city_pct, zip_pct</td></tr>
+      <tr><td><code>eval_stage_signal</code></td><td>run day × source × lead category × furthest stage</td><td>ips, revenue_ips, flagged_ips, bot_flagged_ips, revenue_share, flag_share</td></tr>
+    </tbody>
+  </table></div>
+  <p>Kept for 400 days. Weekly maintenance adds them to its compaction list.</p>
+</section>
+
+<section id="c">
+  <h2>C · The app (MoM step 7)</h2>
+  <h3>Data access</h3>
+  <p>With our API removed, the app reads everything through the teammate's API, using the endpoints listed in part D and the same bearer token. Pipeline status in the app is read-only.</p>
+  <h3>Pages</h3>
+  <ol>
+    <li><b>Vendor Evaluation (overview).</b>
+      <ul>
+        <li>The window: dates, sessions, IPs, leads, revenue IPs, and a small-sample warning.</li>
+        <li>A label-view switch: strict or stage override.</li>
+        <li>One row per source: FPR (with interval), accuracy (with interval), precision, recall, coverage, bot-only FPR, and state/city match.</li>
+        <li>A 30-day trend of FPR and accuracy per source.</li>
+      </ul>
+    </li>
+    <li><b>One table per vendor.</b> One tab each: IP2Location, IP2Proxy, FraudLogix, proxycheck.io, ipinfo.io, ipwho.is, session table, our resolved answer. Each row is an IP in the window with:
+      <ul>
+        <li>the label, revenue, lead category and furthest stage;</li>
+        <li>the vendor's location and flags, and the outcome (TP/FP/TN/FN);</li>
+        <li>location match.</li>
+      </ul>
+      Filters: outcome, label, lead category, flagged. Paged, with a CSV download.
+    </li>
+    <li><b>IP comparison.</b> Search an IP to see one row per source, location and risk side by side, with its label and leads (stage and revenue only, no personal data).</li>
+    <li><b>Stage signal.</b> The B6 table as a heat map: lead category × source, coloured by flag share, with the revenue share alongside.</li>
+    <li><b>FraudLogix check.</b> The B7 list.</li>
+    <li><b>Kept:</b> IP Lookup (now calling <code>GET /v1/ip/{ip}</code>), Location Accuracy, Enrichment Coverage, and a read-only pipeline status. Removed: Resolved IPs browsing, bulk lookup, pipeline control and budget editing, unless part D adds them.</li>
+  </ol>
+</section>
+
+<section id="d">
+  <h2>D · Teammate API changes (owned by the teammate)</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>#</th><th>Change</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>D1</td><td>Read-only endpoints serving the pipeline's JSON files from <code>s3://…/ip-intelligence/serving/ipintel_curated/</code>: <code>/v1/eval/latest</code>, <code>/v1/eval/history</code>, <code>/v1/reports/coverage</code>, <code>/v1/reports/geo-accuracy</code>, <code>/v1/pipeline/status</code>. Per-vendor IP rows come from Athena on <code>eval_vendor_ip</code>, paged.</td><td>The app's only data path</td></tr>
+      <tr><td>D2</td><td>Save each live proxycheck.io answer to <code>s3://…/ip-intelligence/proxycheck/live/dt=YYYY-MM-DD/</code> in the same shape our API used</td><td>Keeps "look up → ask proxycheck.io → into the tables"; our proxycheck.io job already merges that folder</td></tr>
+      <tr><td>D3</td><td>Say which proxycheck.io key it uses. If it is the paid key, reserve queries on the shared counter (<code>ipintel-pipeline-state</code>, item <code>quota/&lt;date&gt;</code>) before calling</td><td>So its calls and our 50k/day never exceed 80,000 together</td></tr>
+      <tr><td>D4</td><td>Optional: read location from <code>ipintel_curated.ip_resolved</code>, or use its vendor order and statuses</td><td>Serves the checked, conflict-aware answer</td></tr>
+      <tr><td>D5</td><td>Grant its role read access to <code>ipintel_curated</code> and the serving folder (S3 GetObject, Glue GetTable, Athena in its own workgroup); for D2, PutObject on <code>proxycheck/live/*</code></td><td>Its role is outside our fence; an admin or the teammate adds these</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="safety">
+  <h2>Production safety</h2>
+  <ul>
+    <li><code>sampledb.revenue_leads_plus</code> and <code>unified.unified_session_summary</code> are only read. The fence already blocks writes outside <code>ipintel_curated</code> and <code>ip-intelligence/</code>. The permission check at the start of each run gains <code>sampledb.revenue_leads_plus</code> to its "must be refused" list.</li>
+    <li>No personal data leaves the leads table: names, emails, phones and street addresses are never selected.</li>
+    <li>The evaluation step reads about 1–2 GB a day in Athena, within the 10 GB-per-query cap.</li>
+    <li>Switching off our API is reversible. Deleting it is an admin action after 7 days.</li>
+  </ul>
+</section>
+
+<section id="accept">
+  <h2>Acceptance tests ("works 100%")</h2>
+  <ol>
+    <li><b>Window:</b> the run's first and last day, sessions and revenue IPs match an independent Athena query written from the MoM rules. None of it falls in the last 7 days, and it never goes back more than 90.</li>
+    <li><b>Join:</b> the lead count equals a direct <code>utm_content = session_id</code> count for the same window.</li>
+    <li><b>Labels:</b> every window IP has one label. Revenue IPs are all human under both views. A hand-checked sample of 50 IPs matches.</li>
+    <li><b>Outcomes:</b> for every source, TP + FP + TN + FN + no_answer equals the window IP count. Recomputing FPR and accuracy from <code>eval_vendor_ip</code> gives exactly <code>eval_vendor_metrics</code>.</li>
+    <li><b>FraudLogix check:</b> every listed IP has a FraudLogix flag and revenue &gt; 0 (or meeting or later). None is missing, checked with an independent query.</li>
+    <li><b>Location:</b> match rates for the resolved answer equal those from the existing accuracy code run on the same IPs.</li>
+    <li><b>Daily:</b> two consecutive scheduled runs succeed, keep both days, and re-running a day replaces only that day.</li>
+    <li><b>API switch-off:</b> our Function URL returns nothing. The teammate endpoints (D1) return the same numbers as the tables. Every app page loads from them.</li>
+    <li><b>Safety:</b> the permission check and CloudTrail review pass, and production catalog timestamps are unchanged by us.</li>
+  </ol>
+</section>
+
+<section id="order">
+  <h2>Order of work</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Step</th><th>Work</th><th>Who</th><th>Depends on</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Confirm the five assumptions</td><td>Owner</td><td>—</td></tr>
+      <tr><td>2</td><td>Build the evaluation tables and step (B1–B8); dry run on today's data; acceptance tests 1–6</td><td>Us</td><td>1</td></tr>
+      <tr><td>3</td><td>Give evaluation-window IPs proxycheck.io priority; first catch-up run</td><td>Us</td><td>2</td></tr>
+      <tr><td>4</td><td>Schedule it daily; two passing days (test 7)</td><td>Us</td><td>3</td></tr>
+      <tr><td>5</td><td>Teammate API changes D1–D3 (and D5 grants)</td><td>Teammate / admin</td><td>2</td></tr>
+      <tr><td>6</td><td>New Lovable prompt: data access on the teammate API, evaluation pages, retired pages removed</td><td>Us, then owner pastes</td><td>5</td></tr>
+      <tr><td>7</td><td>Switch off our API (stage 1); update the manual, the guide, the scheduled check and memory; test 8</td><td>Us</td><td>6</td></tr>
+      <tr><td>8</td><td>Delete our Lambda and role (stage 3)</td><td>Admin</td><td>7 + 7 days</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="risks">
+  <h2>Risks</h2>
+  <ul>
+    <li><b>Strict labels skew accuracy.</b> Mitigated by showing FPR, precision, recall and the stage-override view together.</li>
+    <li><b>Few revenue IPs.</b> About 8 a day (49 in 4–9 Sep). Reaching 500 needs roughly 60 days, and the 90-day cap may be hit, in which case the run is marked small sample. Intervals show the uncertainty.</li>
+    <li><b>Revenue lag.</b> Leads keep gaining revenue after 7 days, so recent weeks slightly under-count humans.</li>
+    <li><b>Changing IPs.</b> An IP can be a person one day and a relay the next. Vendor answers are taken as of evaluation day.</li>
+    <li><b>The app goes dark if part A runs before C and D.</b> The order above prevents that.</li>
+    <li><b>Budget.</b> If the teammate API uses the paid key without reserving on the shared counter (D3), the combined daily use can reach 80,000 early.</li>
+  </ul>
+</section>
+
+<footer>Queries behind the numbers in this plan: <code>build/pipeline/sql/checks/leads_plus_profile.sql</code>, <code>mom_window_probe.sql</code>, <code>mom_window_fields.sql</code>. Nothing in this plan has been built yet.</footer>
+</main>
+</div>

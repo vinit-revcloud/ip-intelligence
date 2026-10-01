@@ -1,0 +1,520 @@
+<title>IP Intelligence User Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #f5f7f8; --surface: #ffffff; --ink: #14212b; --ink-2: #3c4b55; --muted: #66757f;
+  --rule: #d8dfe3; --rule-soft: #e7ecef; --accent: #1d6a86; --accent-soft: #dcebf1; --code-bg: #eef3f5;
+  --good: #25734a; --good-soft: #e1f0e7; --warn: #9a6212; --warn-soft: #f7ecd9; --crit: #a8322a; --crit-soft: #f6e1df;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --cond: "IBM Plex Sans Condensed", "IBM Plex Sans", "Arial Narrow", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0e151a; --surface: #151f26; --ink: #e3eaee; --ink-2: #bac6cd; --muted: #8d9ca5;
+    --rule: #2a3843; --rule-soft: #1f2b33; --accent: #5fb0cc; --accent-soft: #1b3440; --code-bg: #111b21;
+    --good: #6cc494; --good-soft: #17301f; --warn: #e0a64e; --warn-soft: #33270f; --crit: #ec8a80; --crit-soft: #3a1a17;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0e151a; --surface: #151f26; --ink: #e3eaee; --ink-2: #bac6cd; --muted: #8d9ca5;
+  --rule: #2a3843; --rule-soft: #1f2b33; --accent: #5fb0cc; --accent-soft: #1b3440; --code-bg: #111b21;
+  --good: #6cc494; --good-soft: #17301f; --warn: #e0a64e; --warn-soft: #33270f; --crit: #ec8a80; --crit-soft: #3a1a17;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink); font: 400 15.5px/1.62 var(--sans); padding-inline: 20px; padding-block: 0 80px; }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+@media (max-width: 900px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+nav.toc { position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto; padding-block: 44px 20px; font-size: 13.5px; }
+nav.toc b { display: block; font: 500 11.5px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+nav.toc a { display: block; color: var(--ink-2); text-decoration: none; padding: 5px 0 5px 10px; border-left: 2px solid var(--rule-soft); }
+nav.toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+@media (max-width: 900px) { nav.toc { position: static; max-height: none; padding-block: 20px 0; columns: 2; } nav.toc b { column-span: all; } }
+main { min-width: 0; }
+.mast { padding-block: 44px 26px; border-bottom: 1px solid var(--rule); display: grid; gap: 14px; }
+.eyebrow { font: 500 12px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 600 clamp(30px, 4.4vw, 42px)/1.08 var(--cond); margin: 0; text-wrap: balance; }
+.lede { font-size: 17px; color: var(--ink-2); margin: 0; max-width: 66ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 26px; font: 400 13px/1.4 var(--mono); color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 500; }
+section { padding-block: 38px 6px; border-top: 1px solid var(--rule-soft); scroll-margin-top: 12px; }
+section:first-of-type { border-top: 0; }
+h2 { font: 600 26px/1.2 var(--cond); margin: 0 0 8px; text-wrap: balance; }
+h3 { font: 600 18px/1.3 var(--cond); margin: 28px 0 8px; }
+h4 { font: 600 15px/1.35 var(--sans); margin: 20px 0 6px; }
+p, ul, ol { margin: 0 0 14px; max-width: 72ch; }
+li { margin-bottom: 5px; }
+.answer { font-size: 17px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .88em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; overflow-x: auto; font: 400 13px/1.55 var(--mono); margin: 8px 0 16px; max-width: 100%; }
+pre code { background: none; padding: 0; font-size: 1em; }
+.scroll { overflow-x: auto; margin: 8px 0 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { text-align: left; font: 500 11.5px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+td.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.note { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 16px; margin: 12px 0 18px; max-width: 72ch; }
+.note.warn { border-color: color-mix(in srgb, var(--warn) 40%, var(--rule)); background: var(--warn-soft); }
+.note b:first-child { display: block; font: 600 13px/1.4 var(--sans); margin-bottom: 2px; }
+.chip { display: inline-block; font: 500 11.5px/1 var(--mono); padding: 4px 7px; border-radius: 99px; white-space: nowrap; }
+.chip.good { background: var(--good-soft); color: var(--good); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.crit { background: var(--crit-soft); color: var(--crit); }
+.chip.neutral { background: var(--rule-soft); color: var(--ink-2); }
+.ways { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 16px 0; }
+.way { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; display: grid; gap: 6px; align-content: start; }
+.way h4 { margin: 0; }
+.way p { margin: 0; font-size: 14px; color: var(--ink-2); }
+ol.steps { padding-left: 22px; }
+dl.gloss { display: grid; grid-template-columns: minmax(9rem, 13rem) 1fr; margin: 12px 0 0; max-width: 820px; }
+dl.gloss dt, dl.gloss dd { padding: 9px 0; border-bottom: 1px solid var(--rule-soft); margin: 0; font-size: 14.5px; }
+dl.gloss dt { font-family: var(--mono); font-size: 13px; color: var(--accent); padding-right: 14px; }
+@media (max-width: 560px) { dl.gloss { grid-template-columns: 1fr; } dl.gloss dt { border-bottom: 0; padding-bottom: 0; } }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+
+.flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 28px; margin: 16px 0 20px; position: relative; }
+.flow .col { display: grid; gap: 8px; align-content: start; }
+.flow .col > b { font: 500 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.flow .box { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 9px 12px; font-size: 13.5px; line-height: 1.4; }
+.flow .box code { font-size: .85em; }
+.flow .box small { display: block; color: var(--muted); font-size: 12px; }
+.flow .box.hl { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+.flow .arrow { grid-column: 1 / -1; font: 400 13px/1.5 var(--sans); color: var(--ink-2); background: var(--accent-soft); border-radius: 6px; padding: 8px 12px; }
+@media (max-width: 700px) { .flow { grid-template-columns: minmax(0, 1fr); } }
+@media print {
+  body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+  .wrap { display: block; max-width: none; }
+  nav.toc { display: none; }
+  section { break-inside: auto; padding-block: 18px 4px; }
+  h2, h3, h4 { break-after: avoid; }
+  table, pre, .note, .box, .way, tr { break-inside: avoid; }
+  pre { white-space: pre-wrap; word-break: break-word; overflow: visible; }
+  .scroll { overflow: visible; }
+  a { color: inherit; text-decoration: none; }
+}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <b>Contents</b>
+  <a href="#start">Start here</a>
+  <a href="#answer">Reading an answer</a>
+  <a href="#app">Using the app</a>
+  <a href="#api">Using the API</a>
+  <a href="#bulk">Many IPs at once</a>
+  <a href="#athena">Using Athena</a>
+  <a href="#fresh">How fresh the data is</a>
+  <a href="#budget">The proxycheck.io budget</a>
+  <a href="#alerts">Alert emails</a>
+  <a href="#tasks">Common tasks</a>
+  <a href="#trouble">Troubleshooting</a>
+  <a href="#gloss">Glossary</a>
+</nav>
+
+<main>
+<header class="mast">
+  <div class="eyebrow">For analysts, engineers and the team · 16 Sep 2026</div>
+  <h1>IP Intelligence User Manual</h1>
+  <p class="lede">How to find out where an IP address is and whether it is a proxy, VPN, Tor exit or bot, from the app, the API or Athena, and how to keep the daily system running.</p>
+  <div class="meta"><span>Addresses <b>4,956,914</b></span><span>Updated <b>daily 07:30 UTC</b></span><span>proxycheck.io <b>80,000 queries/day</b></span></div>
+</header>
+
+<section id="start">
+  <h2>Start here</h2>
+  <p class="answer">Every IP address seen in the ad-click and website-session tables has a location and a proxy verdict. Pick whichever of these suits the job.</p>
+  <div class="ways">
+    <div class="way"><h4>The app (Lovable)</h4><p>Type one address, or paste up to 1,000, and read the answer. Best for looking something up, and for running the pipeline.</p></div>
+    <div class="way"><h4>The API</h4><p><code>GET /lookup/{ip}</code> or <code>POST /lookup</code> for up to 1,000. Best for other systems and scripts. Asks proxycheck.io on the spot when our tables have no conclusion.</p></div>
+    <div class="way"><h4>Athena</h4><p>Query <code>ipintel_curated.ip_resolved</code>: one row per address. Best for reports and joining to other data. Never spends proxycheck.io queries.</p></div>
+  </div>
+  <div class="note"><b>The one table most people need</b><code>ipintel_curated.ip_resolved</code> holds the answer to use for every address: location, proxy verdict, the vendors it rests on, and where the address was seen. The other tables hold each vendor's own answer and the working behind the verdicts.</div>
+</section>
+
+<section id="answer">
+  <h2>Reading an answer</h2>
+  <p class="answer">Each answer has a location part and a proxy part, and each part has a status that says how sure it is.</p>
+
+  <h3>Location status</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Status</th><th>Meaning</th><th>How much to trust it</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip good">agreed</span></td><td>Two or more vendors name the same state and city</td><td>Strongest</td></tr>
+      <tr><td><span class="chip neutral">single_source</span></td><td>Only one vendor answered, almost always IP2Location</td><td>State is usually right; treat city as approximate</td></tr>
+      <tr><td><span class="chip warn">vendors_disagree</span></td><td>Vendors name different places; the best-scoring vendor's answer is shown</td><td>Mostly the same state and a nearby city</td></tr>
+      <tr><td><span class="chip neutral">no_answer</span></td><td>No vendor has a location</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note warn"><b>An IP location is not a home address</b>It places the network hub. City matches a customer's own postal address only 10–15% of the time, and state about 55–60%, for every vendor (see <b>Reports · Location Accuracy</b>). Use it for regional analysis, never as a person's address.</div>
+
+  <h3>Proxy status</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Status</th><th>Meaning</th><th><code>flagged</code></th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip good">confirmed</span></td><td>proxycheck.io answered and at least one other vendor agrees</td><td>true or false</td></tr>
+      <tr><td><span class="chip neutral">proxycheck_only</span></td><td>proxycheck.io is the only vendor that answered</td><td>true or false</td></tr>
+      <tr><td><span class="chip warn">proxycheck_overrides</span></td><td>proxycheck.io answered the opposite of every other vendor, and its answer is used</td><td>true or false</td></tr>
+      <tr><td><span class="chip good">clean_by_vendors</span></td><td>No proxycheck.io answer; every vendor that answered says clean</td><td>false</td></tr>
+      <tr><td><span class="chip warn">flagged_unconfirmed</span></td><td>A vendor flags it and nothing confirms the flag</td><td>empty</td></tr>
+      <tr><td><span class="chip warn">vendors_disagree</span></td><td>Vendors disagree and proxycheck.io has not answered yet</td><td>empty</td></tr>
+      <tr><td><span class="chip neutral">no_answer</span></td><td>No vendor gave a proxy answer</td><td>empty</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Empty means "no conclusion", never "clean".</b> Every yes/no field has three states: true, false, and empty (no answer). Treating empty as false is the most common mistake; in SQL, <code>WHERE NOT flagged</code> silently drops the empty rows, so write <code>WHERE flagged = false</code> or <code>WHERE flagged IS NULL</code> on purpose.</p>
+
+  <h3>The flags</h3>
+  <p><code>is_proxy</code>, <code>is_vpn</code>, <code>is_tor</code>, <code>is_datacenter</code>, <code>is_bot</code>, <code>is_compromised</code>, <code>is_scraper</code>, <code>is_anonymous</code>. <code>flagged</code> is true when any of the first seven is true. Two things to know:</p>
+  <ul>
+    <li>proxycheck.io labels most datacenter traffic as VPN. For "not an ordinary home connection" use <code>is_vpn OR is_proxy OR is_datacenter</code>.</li>
+    <li>Only FraudLogix answers <code>is_bot</code>. No bot flag is confirmed by a second vendor.</li>
+    <li>Many of the busiest VPN-flagged addresses are Cloudflare and Apple privacy relays used by ordinary people. Judge them on behaviour, not the flag alone.</li>
+  </ul>
+</section>
+
+<section id="app">
+  <h2>Using the app</h2>
+  <p class="answer">Once all four parts of the final Lovable prompt are applied, the app has these pages. It opens on IP Lookup.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Page</th><th>Use it to</th></tr></thead>
+    <tbody>
+      <tr><td><b>IP Lookup · One address</b></td><td>See the answer for one IP, every vendor's own answer, where it was seen, and whether proxycheck.io was asked and why. <b>Ask proxycheck.io again</b> forces a fresh answer (one query). Share a lookup by copying the page link (<code>?ip=</code>).</td></tr>
+      <tr><td><b>IP Lookup · Many addresses</b></td><td>Paste up to 1,000 IPs or upload a CSV, look them all up at once, filter the results and <b>Download CSV</b>. Switch off "Ask proxycheck.io when needed" to answer from the tables only.</td></tr>
+      <tr><td><b>Resolved IPs</b></td><td>Browse and filter <code>ip_resolved</code>: by location, verdict, flag. Quick filters for "No conclusion" and "Confirmed flagged". The <b>proxycheck.io queue</b> tab lists addresses from new base-table rows that needed proxycheck.io and whether they were answered.</td></tr>
+      <tr><td><b>Tables</b></td><td>Browse the per-vendor tables and the two vendor scorecards.</td></tr>
+      <tr><td><b>Reports · Location Accuracy</b></td><td>See how often each location vendor, and our own resolved answer, names the same state, city and ZIP as customers' postal addresses, overall and by customer state.</td></tr>
+      <tr><td><b>Reports · Enrichment Coverage</b></td><td>See how many addresses have a proxycheck.io answer, a proxy conclusion and an agreed location, for the last 30 days and for every address, and how many rows were added each day.</td></tr>
+      <tr><td><b>Safety</b></td><td>See that the pipeline cannot write to production, and <b>Pause everything</b> in an emergency.</td></tr>
+      <tr><td><b>Base Tables</b></td><td>Add, remove, switch off or re-check the production tables IP addresses are collected from.</td></tr>
+      <tr><td><b>Daily Jobs</b></td><td>See each run's counts and checks, <b>Run now</b>, switch a job off, and change the daily enrichment budget. The read-only <b>Unified tables</b> card shows when <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> were last refreshed and whether that refresh passed.</td></tr>
+      <tr><td><b>proxycheck Budget</b></td><td>See today's queries against the 80,000 limit and whether the key works.</td></tr>
+      <tr><td><b>Vendor Sources</b></td><td>The registry of vendors, unchanged.</td></tr>
+    </tbody>
+  </table></div>
+  <p>The <b>Reports</b> section of the menu sits between Tables and the pipeline pages (Safety, Base Tables, Daily Jobs, proxycheck Budget).</p>
+
+  <h3>Reading the Location Accuracy report</h3>
+  <p>The truth is the postal address of 2,105 qualified customers (full state name and 5-digit ZIP). For each vendor, and for <b>Our answer (resolved)</b>, the report counts how often the IP location matches:</p>
+  <ul>
+    <li><b>State:</b> the same state name, ignoring case.</li>
+    <li><b>City:</b> the same city name, letters only, ignoring case. This is stricter than the vendor vote, which compares only the first word of the city.</li>
+    <li><b>ZIP:</b> the same first five digits.</li>
+    <li><b>State + city:</b> both match.</li>
+  </ul>
+  <p>Two pools are shown. <b>Every address each vendor answered</b> gives each vendor as many tests as it can take. <b>Same addresses</b> uses only the 1,049 addresses every location vendor answered, so the vendors are compared on equal terms. The by-state table marks states with fewer than 20 tested addresses as a small sample.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Vendor (all answered, 15 Sep)</th><th class="n">Tested</th><th class="n">State</th><th class="n">City</th><th class="n">ZIP</th></tr></thead>
+    <tbody>
+      <tr><td>IP2Location DB11</td><td class="n">2,105</td><td class="n">59.0%</td><td class="n">14.5%</td><td class="n">3.4%</td></tr>
+      <tr><td>proxycheck.io</td><td class="n">2,105</td><td class="n">59.7%</td><td class="n">11.9%</td><td class="n">5.4%</td></tr>
+      <tr><td>ipinfo.io</td><td class="n">1,050</td><td class="n">54.3%</td><td class="n">11.1%</td><td class="n">4.0%</td></tr>
+      <tr><td>ipwho.is</td><td class="n">1,050</td><td class="n">53.7%</td><td class="n">10.5%</td><td class="n">1.8%</td></tr>
+      <tr><td><b>Our answer (resolved)</b></td><td class="n">2,105</td><td class="n">62.5%</td><td class="n">15.2%</td><td class="n">4.1%</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note warn"><b>No vendor reaches 100%, and that is expected</b>A postal address is where the customer lives, not always where the connection is (mobile carriers, work networks). Use the numbers to compare vendors with each other, not as the chance a single answer is right.</div>
+  <p><b>Accuracy and agreement are different.</b> "Agreement" on the vendor scorecards means how often a vendor matches the other vendors. "Accuracy" means how often a vendor matches customers' postal addresses, and is used only on the Location Accuracy page.</p>
+
+  <h3>Reading the Enrichment Coverage report</h3>
+  <p>Totals for addresses <b>last seen in the last 30 days</b> and for <b>all addresses</b>: how many proxycheck.io answered, how many have a proxy conclusion or none, and how many have an agreed location, a single-vendor location, or a disagreement or no location. Below that, rows added per day (by <code>created_at</code>), new addresses per day (by first seen), and the 30-day window broken down by last-seen day.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Snapshot 15 Sep 19:00 UTC</th><th class="n">Last 30 days</th><th class="n">All addresses</th></tr></thead>
+    <tbody>
+      <tr><td>Addresses</td><td class="n">39,508</td><td class="n">4,956,914</td></tr>
+      <tr><td>Answered by proxycheck.io</td><td class="n">18,034 (45.6%)</td><td class="n">77,710 (1.6%)</td></tr>
+      <tr><td>Proxy decided</td><td class="n">30,208 (76.5%)</td><td class="n">82.9%</td></tr>
+      <tr><td>Proxy undecided</td><td class="n">9,300</td><td class="n">848,403</td></tr>
+      <tr><td>Location agreed by 2+ vendors</td><td class="n">8,443 (21.4%)</td><td class="n">—</td></tr>
+      <tr><td>Location from one vendor only</td><td class="n">21,000</td><td class="n">—</td></tr>
+    </tbody>
+  </table></div>
+  <p>All 9,300 undecided last-30-day addresses were last seen 16–30 Aug; from 31 Aug onward none are undecided. The 16 Sep backfill sends every remaining last-30-day address to proxycheck.io first, so after that run every address seen in the last 30 days has a proxycheck.io answer, except addresses proxycheck.io has no record of.</p>
+</section>
+
+<section id="api">
+  <h2>Using the API</h2>
+  <p class="answer">Every call needs the API token in an <code>Authorization</code> header. Ask the project owner for the token, and keep it out of shared code and documents.</p>
+  <pre><code>Base URL:  https://h25l6d2efgqnxqjrt6xpzjzbdq0hceyr.lambda-url.us-west-2.on.aws
+Header:    Authorization: Bearer YOUR_API_TOKEN</code></pre>
+
+  <h3>One address</h3>
+  <pre><code>curl -H "Authorization: Bearer YOUR_API_TOKEN" \
+  "https://h25l6d2efgqnxqjrt6xpzjzbdq0hceyr.lambda-url.us-west-2.on.aws/lookup/8.8.8.8"</code></pre>
+  <p>Add <code>?refresh=true</code> to make proxycheck.io answer again even if it has answered before (one query).</p>
+  <p>The response, in short:</p>
+  <pre><code>{
+  "ip": "152.232.101.74",
+  "public_address": true,
+  "found": true,
+  "seen_in_base_tables": true,
+  "occurrences": [{"source_table": "raw.raw_tune_clicks", "first_seen": "2026-07-07", "last_seen": "2026-07-07", ...}],
+  "resolved": {
+    "geo":   {"status": "agreed", "state": "California", "city": "Los Angeles", "zip_code": "90013",
+              "latitude": 34.05, "longitude": -118.24, "timezone": "-07:00",
+              "decided_by": "ip2location_db11", "agreeing_vendors": ["ip2location_db11", "proxycheck_io"]},
+    "proxy": {"status": "confirmed", "flagged": true, "is_vpn": true, "is_proxy": false, ...,
+              "decided_by": "proxycheck_io", "agreeing_vendors": ["fraudlogix_tune"], "isp": "B2 Net Solutions Inc."}
+  },
+  "vendors": {"geo": [ ...each vendor's row... ], "proxy": [ ... ]},
+  "proxycheck": {"called": false, "reason": null, "reason_code": null}
+}</code></pre>
+
+  <h3>When the API asks proxycheck.io</h3>
+  <p>The same rule applies to API calls and to new rows arriving in the base tables.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Situation</th><th>Asked?</th><th><code>reason_code</code></th></tr></thead>
+    <tbody>
+      <tr><td>Private or reserved address (10.x, 127.x, 172.16–31.x, 192.168.x, 100.64–127.x, 224+ …)</td><td>Never</td><td>—</td></tr>
+      <tr><td>proxycheck.io has already answered this address</td><td>No, unless <code>refresh=true</code></td><td><code>refresh</code></td></tr>
+      <tr><td>Not in the IP tables</td><td>Yes</td><td><code>new_address</code></td></tr>
+      <tr><td>No vendor gave a location</td><td>Yes</td><td><code>no_location</code></td></tr>
+      <tr><td>No vendor gave a proxy answer</td><td>Yes</td><td><code>no_answer</code></td></tr>
+      <tr><td>Proxy vendors disagree</td><td>Yes</td><td><code>vendors_disagree</code></td></tr>
+      <tr><td>Flagged, nothing confirms it</td><td>Yes</td><td><code>flagged_unconfirmed</code></td></tr>
+      <tr><td>Location vendors disagree</td><td>Yes</td><td><code>location_disagree</code></td></tr>
+      <tr><td>In the tables with a location and a clean or confirmed proxy answer</td><td>No</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <p>A proxycheck.io answer is saved straight away, so asking about the same address again is free. The next daily proxycheck job adds it to the tables.</p>
+
+  <h3>Browsing a table</h3>
+  <pre><code>GET /tables/ip-resolved?proxy_status=confirmed&amp;flagged=true&amp;limit=500
+GET /tables/ip-resolved?state=Texas&amp;city=Dallas
+GET /tables/ip-intelligence?ip=8.8.8.8
+GET /tables/proxycheck-queue?outcome=answered</code></pre>
+  <div class="scroll"><table>
+    <thead><tr><th>Endpoint</th><th>Filters</th></tr></thead>
+    <tbody>
+      <tr><td><code>/tables/ip-resolved</code></td><td>ip, geo_status, proxy_status, flagged, state, city, zip, and every flag</td></tr>
+      <tr><td><code>/tables/ip-geo</code></td><td>ip, vendor, state, city, zip</td></tr>
+      <tr><td><code>/tables/ip-intelligence</code></td><td>ip, vendor, every flag</td></tr>
+      <tr><td><code>/tables/ip-geo-analytics</code></td><td>ip, vendor, has_answer</td></tr>
+      <tr><td><code>/tables/ip-intelligence-analytics</code></td><td>ip, vendor, has_answer, flagged, is_masked_device, verdict_class</td></tr>
+      <tr><td><code>/tables/ip-occurrences</code></td><td>ip, base_table</td></tr>
+      <tr><td><code>/tables/proxycheck-queue</code></td><td>ip, reason, outcome</td></tr>
+      <tr><td><code>/tables/vendor-overview-geo</code>, <code>/tables/vendor-overview-proxy</code></td><td>none (a few rows)</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Paging.</b> <code>limit</code> is 2,000 by default and at most 5,000. For the next page pass the <code>next_cursor</code> and <code>query_id</code> from the response (fast, no new scan); <code>offset</code> also works up to 100,000. One query returns at most 50,000 rows; above that <code>truncated</code> is true, so narrow the filters or use Athena. <code>total</code> is filled in when a filter is used, or when you add <code>count=true</code>. Results are reused for up to an hour.</p>
+
+  <h3>Reports and the unified tables</h3>
+  <p>These routes only read. They need the same <code>Authorization: Bearer</code> token as every other call.</p>
+  <pre><code>GET /accuracy/geo
+GET /coverage
+GET /publish</code></pre>
+  <div class="scroll"><table>
+    <thead><tr><th>Endpoint</th><th>Returns</th></tr></thead>
+    <tbody>
+      <tr><td><code>/accuracy/geo</code></td><td>The Location Accuracy report: per vendor and for our resolved answer, tested addresses and state, city, ZIP and state + city match rates, for both pools and by customer state. Only totals, never customer data.</td></tr>
+      <tr><td><code>/coverage</code></td><td>The Enrichment Coverage report: totals for the last 30 days and all addresses, <code>inserted_by_day</code> and <code>window_by_last_seen_day</code>.</td></tr>
+      <tr><td><code>/publish</code></td><td>The unified tables refresh: <code>tables</code>, <code>last_published_at</code>, <code>last_run_id</code>, <code>last_tables</code> and recent <code>runs</code> with their checks.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Both reports are rebuilt at the end of each daily job. Until the first rebuild, the app shows "appears after the next daily run".</p>
+
+  <h3>Status codes</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Code</th><th>Meaning</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td class="n">200</td><td>Answered. Check <code>proxycheck.error</code>: an answer can be complete from the tables even when proxycheck.io could not be asked</td><td>—</td></tr>
+      <tr><td class="n">400</td><td>The request is wrong; <code>error</code> says how</td><td>Fix the request</td></tr>
+      <tr><td class="n">401</td><td>Missing or wrong token</td><td>Check the <code>Authorization</code> header</td></tr>
+      <tr><td class="n">404</td><td>No such endpoint</td><td>The response lists every route</td></tr>
+      <tr><td class="n">502 / 504</td><td>Athena rejected the query or took too long</td><td>Retry; for bulk, send fewer addresses</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="bulk">
+  <h2>Many IPs at once</h2>
+  <p class="answer"><code>POST /lookup</code> answers up to 1,000 addresses in one call, usually within 20–40 seconds, with the same answers as one-at-a-time lookups.</p>
+  <pre><code>curl -X POST -H "Authorization: Bearer YOUR_API_TOKEN" -H "content-type: application/json" \
+  -d '{"ips": ["8.8.8.8", "152.232.101.74", "10.0.0.1"]}' \
+  "https://h25l6d2efgqnxqjrt6xpzjzbdq0hceyr.lambda-url.us-west-2.on.aws/lookup"</code></pre>
+  <div class="scroll"><table>
+    <thead><tr><th>Body field</th><th>Default</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>ips</code></td><td>required</td><td>1 to 1,000 IPv4 addresses; duplicates are merged</td></tr>
+      <tr><td><code>proxycheck</code></td><td><code>true</code></td><td><code>false</code> answers from the tables only and never spends a query</td></tr>
+      <tr><td><code>refresh</code></td><td><code>false</code></td><td><code>true</code> asks proxycheck.io again for every public address (about one query each)</td></tr>
+      <tr><td><code>detail</code></td><td><code>"summary"</code></td><td><code>"full"</code> also returns every vendor's rows and the occurrences</td></tr>
+    </tbody>
+  </table></div>
+  <p>Addresses that need proxycheck.io go to it together in one request. The response has a <code>proxycheck</code> summary (needed, asked, answered, queries reserved, any error) and one <code>results</code> entry per address with <code>resolved</code> and <code>proxycheck</code> like a single lookup.</p>
+  <h3>A whole list, in Python</h3>
+  <pre><code>import csv, json, os, urllib.request
+
+URL = "https://h25l6d2efgqnxqjrt6xpzjzbdq0hceyr.lambda-url.us-west-2.on.aws/lookup"
+TOKEN = os.environ["IPINTEL_API_TOKEN"]          # never paste the token into the script
+
+ips = [line.strip() for line in open("ips.txt") if line.strip()]
+rows = []
+for i in range(0, len(ips), 1000):               # 1,000 per request
+    body = json.dumps({"ips": ips[i:i + 1000], "proxycheck": True}).encode()
+    req = urllib.request.Request(URL, data=body, method="POST",
+                                 headers={"Authorization": "Bearer " + TOKEN, "content-type": "application/json"})
+    reply = json.loads(urllib.request.urlopen(req, timeout=120).read())
+    if reply["proxycheck"]["error"]:
+        print("note:", reply["proxycheck"]["error"])
+    for r in reply["results"]:
+        g, p = r["resolved"]["geo"], r["resolved"]["proxy"]
+        rows.append([r["ip"], g["state"], g["city"], g["zip_code"], g["status"],
+                     p["flagged"], p["is_vpn"], p["is_proxy"], p["status"], p["isp"]])
+
+with open("ip_answers.csv", "w", newline="") as f:
+    csv.writer(f).writerows([["ip", "state", "city", "zip", "geo_status",
+                              "flagged", "is_vpn", "is_proxy", "proxy_status", "isp"]] + rows)</code></pre>
+  <div class="note warn"><b>Budget for bulk lookups</b>API lookups share the daily proxycheck.io limit with the pipeline. 30,000 queries a day are always kept free for lookups, all day and after the 22:00 UTC top-up; the pipeline never spends them. When the limit is reached, the call still answers from the tables and says so in <code>proxycheck.error</code>. For lists of addresses that are already in the tables, set <code>"proxycheck": false</code> or use Athena.</div>
+</section>
+
+<section id="athena">
+  <h2>Using Athena</h2>
+  <p class="answer">Everything is in the <code>ipintel_curated</code> database. Queries that filter on <code>ip_address</code> read only a few megabytes.</p>
+  <pre><code>-- The answer for a list of addresses
+SELECT ip_address, state, city, zip_code, geo_status, flagged, is_vpn, is_proxy, is_datacenter,
+       proxy_status, isp, proxycheck_risk_score, last_seen
+FROM ipintel_curated.ip_resolved
+WHERE ip_address IN ('8.8.8.8', '152.232.101.74');
+
+-- Join to your own data: sessions with the IP verdict
+SELECT s.session_date, s.session_ip, r.state, r.flagged, r.proxy_status
+FROM unified.unified_session_summary s
+LEFT JOIN ipintel_curated.ip_resolved r ON r.ip_address = s.session_ip
+WHERE s.session_date = date '2026-09-10';
+
+-- Addresses with no conclusion yet
+SELECT proxy_status, count(*) FROM ipintel_curated.ip_resolved
+WHERE proxy_status IN ('no_answer', 'vendors_disagree', 'flagged_unconfirmed') GROUP BY 1;</code></pre>
+  <p>All tables, and dozens more ready-made queries, are in <code>ATHENA_REVIEW_QUERIES_LIVE.md</code> in the project folder. Every timestamp is UTC as <code>YYYY-MM-DDTHH:MM:SSZ</code>.</p>
+  <div class="note"><b>Please use your own workgroup for reading</b>The <code>ipintel</code> and <code>ipintel_etl</code> workgroups belong to the API and the daily jobs. Reading the tables from your usual workgroup is fine; writing to <code>ipintel_curated</code> is reserved for the pipeline.</div>
+  <p><b>The <code>unified</code> copies.</b> <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> are copies of the same tables in <code>ipintel_curated</code>, refreshed after each successful proxycheck.io run for another team's API. They can lag by up to a day and no longer hold the removed benchmark vendors. For your own queries, use <code>ipintel_curated</code>.</p>
+</section>
+
+<section id="fresh">
+  <h2>How fresh the data is</h2>
+  <p class="answer">The tables update once a day in the early morning (UTC). An address that first appears after 07:30 is in the tables the next morning; look it up through the API if you need it sooner.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>When (UTC)</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td class="n">every 6 h, :06</td><td>New ad clicks land in <code>raw.raw_tune_clicks</code> (their own job)</td></tr>
+      <tr><td class="n">~06:21</td><td><code>unified.unified_session_summary</code> is rewritten (their own job)</td></tr>
+      <tr><td class="n">07:30</td><td><b>Daily load:</b> new addresses get every free vendor's answer; all tables, scorecards and <code>ip_resolved</code> refresh</td></tr>
+      <tr><td class="n">straight after</td><td><b>proxycheck.io:</b> addresses from new rows that need it go first, then the daily backfill; together up to 50,000</td></tr>
+      <tr><td class="n">after proxycheck.io</td><td><b>Unified tables refreshed:</b> if every check passed, <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> are replaced with fresh copies of the <code>ipintel_curated</code> tables</td></tr>
+      <tr><td class="n">end of each job</td><td><b>Reports rebuilt:</b> Location Accuracy and Enrichment Coverage</td></tr>
+      <tr><td class="n">10:00</td><td>Backfill start if the daily load did not start it</td></tr>
+      <tr><td class="n">22:00</td><td><b>Top-up:</b> finishes the 50,000 enrichment budget if the morning run stopped early; never uses the 30,000 kept for lookups</td></tr>
+      <tr><td class="n">Sun 03:00</td><td>Weekly table maintenance</td></tr>
+      <tr><td>any time</td><td>API lookups</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="budget">
+  <h2>The proxycheck.io budget</h2>
+  <p class="answer">The plan allows 80,000 queries a day. Since 15 Sep 13:00 UTC, at the owner's request, 50,000 go to enrichment and 30,000 are always kept free for API lookups. A shared counter reserves every query before it is sent, so nothing can go over the limit.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Use</th><th class="n">Queries</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Enrichment: addresses from new base-table rows, then the daily backfill</td><td class="n">up to 50,000</td><td>Queued addresses count inside the 50,000 and no longer borrow from the lookup reserve</td></tr>
+      <tr><td>API lookups (one or bulk)</td><td class="n">30,000 kept free</td><td>1 query per address, 2 reserved for a single lookup; lookups can use anything left of the 80,000</td></tr>
+      <tr><td>22:00 top-up</td><td class="n">rest of the 50,000</td><td>Only runs batches if the morning run stopped early; never touches the 30,000</td></tr>
+    </tbody>
+  </table></div>
+  <h3>What the backfill sends first</h3>
+  <ol>
+    <li>Addresses queued from new base-table rows.</li>
+    <li>Addresses first seen today.</li>
+    <li>Every address seen in the base tables in the last 30 days that proxycheck.io has not answered, even if the other vendors agree it is clean. proxycheck.io confirms the proxy answer and adds a second vote on location.</li>
+    <li>Addresses with no conclusion (<code>no_answer</code>, <code>vendors_disagree</code>, <code>flagged_unconfirmed</code>): seen in the last 90 days first, then by kind of no-conclusion and most recently seen.</li>
+  </ol>
+  <p>For 16 Sep the backfill picked 49,504 addresses: the first 20,597 are every remaining address from the last 30 days (8,719 with no answer and 11,878 clean by vendors), then 28,907 older addresses with no answer, seen 31–90 days ago.</p>
+  <p>The <b>Edit</b> budget on Daily Jobs changes only the enrichment share, up to 50,000 (the 80,000 limit minus the 30,000 lookup reserve). An address that is both proxy and VPN is charged twice by proxycheck.io; about 1% extra is reserved for that. The <b>proxycheck Budget</b> page shows our counter and proxycheck.io's own, which runs a few minutes behind.</p>
+</section>
+
+<section id="alerts">
+  <h2>Alert emails</h2>
+  <p class="answer">Alerts come from the <code>ipintel-alerts</code> topic. Most say exactly what failed; the run log on the Daily Jobs page has the detail.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Email about</th><th>Meaning</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td>proxycheck use passed 90%</td><td>Expected most days once the top-up has run</td><td>Nothing</td></tr>
+      <tr><td>A job failed / an assertion failed</td><td>A daily run stopped; nothing half-written is kept, and the next run picks up the same work</td><td>Read the run's message; press Run now after fixing the cause</td></tr>
+      <tr><td>No run for 26 hours</td><td>The daily load has not finished</td><td>Check the schedule is on and the pipeline is not paused</td></tr>
+      <tr><td>Hand-over in the dead-letter queue</td><td>A long proxycheck run could not start its next copy</td><td>Press Run now on the proxycheck job; saved answers are not lost</td></tr>
+      <tr><td>proxycheck rejected the key</td><td>The key in Secrets Manager (<code>ipintel/proxycheck-paid</code>) is wrong or the plan lapsed</td><td>Renew the plan or update the secret, then Run now</td></tr>
+      <tr><td>Paused: safety check failed</td><td>The pipeline saw a way to write to production and stopped itself</td><td>Contact the project owner; do not resume until the check passes</td></tr>
+      <tr><td>A base table has not been written for 30 hours</td><td>Its own production job has not delivered new rows</td><td>Tell the owner of that table</td></tr>
+      <tr><td>Weekly maintenance failed</td><td>Table compaction did not finish</td><td>Nothing urgent; it retries next week</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="tasks">
+  <h2>Common tasks</h2>
+  <h4>Stop everything now</h4>
+  <ol class="steps"><li>Open <b>Safety</b> and press <b>Pause everything</b>.</li><li>Give a reason. Both jobs and every proxycheck.io call stop; nothing is deleted.</li><li>Press <b>Resume</b> when ready. Resume is refused while a safety check is failing.</li></ol>
+  <h4>Collect addresses from another table</h4>
+  <ol class="steps"><li>Open <b>Base Tables</b> and press <b>Add base table</b>.</li><li>Pick the database, table, IP column and seen-at column from the lists.</li><li>Save. The table is checked immediately; fix anything listed under problems. The next daily load reads it. The pipeline only reads base tables, never writes to them.</li></ol>
+  <h4>Get today's new addresses in now instead of tomorrow</h4>
+  <ol class="steps"><li>Open <b>Daily Jobs</b> and press <b>Run now</b> on Free sources.</li><li>When it finishes it starts the proxycheck job for any addresses that need it.</li></ol>
+  <h4>Change how much the backfill spends</h4>
+  <ol class="steps"><li>Open <b>Daily Jobs</b>, proxycheck card, <b>Edit</b> the daily budget (at most 50,000; the other 30,000 stay free for lookups).</li></ol>
+  <h4>Check whether the last 30 days are enriched</h4>
+  <ol class="steps"><li>Open <b>Reports · Enrichment Coverage</b> (or call <code>GET /coverage</code>).</li><li>In the last-30-days column, read <b>answered by proxycheck.io</b> and <b>proxy undecided</b>. The by-last-seen-day table shows which days still have undecided addresses.</li></ol>
+  <h4>Compare vendor accuracy by state</h4>
+  <ol class="steps"><li>Open <b>Reports · Location Accuracy</b> (or call <code>GET /accuracy/geo</code>).</li><li>Pick the <b>Same addresses</b> pool for a fair comparison, then open the by-state table. Ignore states marked small sample (fewer than 20 tested).</li></ol>
+  <h4>Check the unified tables were refreshed</h4>
+  <ol class="steps"><li>Open <b>Daily Jobs</b> and read the <b>Unified tables</b> card, or call <code>GET /publish</code>.</li><li><code>last_published_at</code> should be today, after the proxycheck run. The latest run lists its checks and the row count of each table.</li></ol>
+  <h4>Force a fresh proxycheck.io answer for one address</h4>
+  <ol class="steps"><li>On <b>IP Lookup</b> press <b>Ask proxycheck.io again</b>, or call <code>/lookup/{ip}?refresh=true</code>.</li></ol>
+  <h4>Look up a list and download it</h4>
+  <ol class="steps"><li>On <b>IP Lookup</b>, choose <b>Many addresses</b>, paste up to 1,000, press Look up, then <b>Download CSV</b>.</li><li>For more than 1,000, split the list, or use the Python example above.</li></ol>
+</section>
+
+<section id="trouble">
+  <h2>Troubleshooting</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>What you see</th><th>Why</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>An address I know is new is not in Athena</td><td>It arrived after today's 07:30 load</td><td>Use the API, or Run now on Free sources</td></tr>
+      <tr><td><code>proxycheck.error</code>: daily limit reached</td><td>Today's 80,000 are used</td><td>The answer from the tables is still returned; try again after midnight UTC</td></tr>
+      <tr><td><code>proxycheck.error</code>: the pipeline is paused</td><td>Someone pressed Pause everything</td><td>Resume on the Safety page</td></tr>
+      <tr><td><code>flagged</code> is empty</td><td>No conclusion yet</td><td>It is in the backfill queue; or look it up to ask proxycheck.io now</td></tr>
+      <tr><td>A private address has no answer</td><td>No vendor has records for private or reserved ranges</td><td>Expected</td></tr>
+      <tr><td>A bulk call returns 504</td><td>Too slow for one call</td><td>Send 500 addresses per call instead</td></tr>
+      <tr><td>A page says "not available yet"</td><td>The app calls an endpoint the API does not have</td><td>Re-apply the final Lovable prompt</td></tr>
+      <tr><td>No new session addresses for days</td><td><code>unified_session_summary</code> is not being rewritten by its own job. On 15 Sep its newest sessions were from 11 Sep; it was rewritten at 14:20 UTC that day, so the 16 Sep 07:30 load should pick up 12–15 Sep</td><td>Check new addresses per day on Enrichment Coverage; if it stalls again, tell that table's owner</td></tr>
+      <tr><td>A report page says "appears after the next daily run"</td><td>The report file has not been built yet</td><td>Wait for the next daily job, or press Run now on Free sources</td></tr>
+      <tr><td>The Unified tables card shows a failed refresh</td><td>A check failed while building or swapping the copy. The unified tables keep their previous copy; if the swap had started, the previous files are put back automatically</td><td>Nothing urgent; the next successful proxycheck run tries again. Tell an engineer if it fails two days running</td></tr>
+      <tr><td><code>unified.ip_intelligence</code> is behind <code>ipintel_curated</code></td><td>It is refreshed only after a proxycheck run that passes every check</td><td>Use <code>ipintel_curated</code>, or check <code>GET /publish</code></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="gloss">
+  <h2>Glossary</h2>
+  <dl class="gloss">
+    <dt>base table</dt><dd>A production table IP addresses are collected from: <code>raw.raw_tune_clicks</code> (ad clicks) and <code>unified.unified_session_summary</code> (website sessions). Only ever read.</dd>
+    <dt>vendor</dt><dd>A source that answers questions about an address: IP2Location DB11, IP2Proxy PX12, FraudLogix, ipinfo.io, ipwho.is, proxycheck.io.</dd>
+    <dt>resolved answer</dt><dd>The one answer to use, worked out from every vendor's answer by fixed rules. In <code>ip_resolved</code> and in every lookup.</dd>
+    <dt>no conclusion</dt><dd>No vendor answered, vendors disagree, or a flag has nothing confirming it.</dd>
+    <dt>backfill</dt><dd>The daily job that asks proxycheck.io about addresses that have no proxycheck.io answer yet: today's and the last 30 days' addresses first, then no-conclusion addresses.</dd>
+    <dt>top-up</dt><dd>The 22:00 UTC run that finishes the 50,000 enrichment budget if the morning run stopped early. It never uses the 30,000 kept for lookups.</dd>
+    <dt>enrichment</dt><dd>Spending proxycheck.io queries on addresses from the base tables (queue and backfill), as opposed to API lookups.</dd>
+    <dt>enrichment coverage</dt><dd>How many addresses have a proxycheck.io answer, a proxy conclusion and an agreed location. The Enrichment Coverage report.</dd>
+    <dt>agreement</dt><dd>How often a vendor matches the other vendors. Used on the vendor scorecards.</dd>
+    <dt>accuracy</dt><dd>How often a vendor's location matches customers' postal addresses. Used only on the Location Accuracy report.</dd>
+    <dt>publish</dt><dd>Refreshing <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> with checked copies of the <code>ipintel_curated</code> tables, after each proxycheck run that passes.</dd>
+    <dt>queue</dt><dd><code>proxycheck_queue</code>: addresses from new base-table rows that need proxycheck.io, sent before the backfill.</dd>
+    <dt>privacy relay</dt><dd>A service (Apple iCloud Private Relay, Cloudflare WARP) that hides a user's address behind a shared one. Shows as VPN.</dd>
+    <dt>residential proxy</dt><dd>A home connection used to route other people's traffic, often a compromised device. Shows as proxy on a home ISP.</dd>
+    <dt>UTC</dt><dd>Coordinated Universal Time. 07:30 UTC is 00:30 Pacific daylight time and 13:00 India time.</dd>
+  </dl>
+</section>
+
+<footer>For how the system is built, every decision and its evidence, see the IP Intelligence System Guide. Requirement-by-requirement proof: <code>IP_PROJECT_VERIFICATION.md</code>.</footer>
+</main>
+</div>

@@ -1,0 +1,6 @@
+SELECT * FROM (SELECT 'location_disagree' AS expect, ip_address FROM ipintel_curated.ip_resolved WHERE geo_status = 'vendors_disagree' AND proxy_decided_by IS DISTINCT FROM 'proxycheck_io' AND proxy_status NOT IN ('no_answer','vendors_disagree','flagged_unconfirmed') LIMIT 1)
+UNION ALL SELECT * FROM (SELECT 'flagged_unconfirmed', ip_address FROM ipintel_curated.ip_resolved WHERE proxy_status = 'flagged_unconfirmed' AND geo_status = 'single_source' AND last_seen >= date '2026-09-01' LIMIT 1)
+UNION ALL SELECT * FROM (SELECT 'no_answer', ip_address FROM ipintel_curated.ip_resolved WHERE proxy_status = 'no_answer' AND geo_status = 'single_source' AND last_seen >= date '2026-09-01' LIMIT 1)
+UNION ALL SELECT * FROM (SELECT 'no call: clean + location', ip_address FROM ipintel_curated.ip_resolved WHERE proxy_status = 'clean_by_vendors' AND geo_status = 'single_source' LIMIT 1)
+UNION ALL SELECT * FROM (SELECT 'no call: proxycheck answered', ip_address FROM ipintel_curated.ip_resolved WHERE proxy_decided_by = 'proxycheck_io' AND geo_status = 'vendors_disagree' LIMIT 1)
+UNION ALL SELECT 'new_address (check absent)', CAST(count(*) AS varchar) FROM ipintel_curated.ip_resolved WHERE ip_address IN ('1.0.0.1', '149.112.112.112')

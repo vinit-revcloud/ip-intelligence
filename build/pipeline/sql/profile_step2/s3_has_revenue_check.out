@@ -1,0 +1,6 @@
+s3_has_revenue_check.sql                 SUCCEEDED  0.54 GB read  9s
+   has_revenue | has_lead | sessions | with_linked_lead | linked_lead_with_revenue | session_expected_revenue_gt0 | first_day | last_day
+   off | off | 10097400 | 3678 | 23 | 0 | 2022-08-19 | 2026-09-17
+   on | off | 1039174 | 4645 | 1053 | 247478 | 2022-09-28 | 2026-09-17
+   off | on | 190584 | 1623 | 3 | 0 | 2022-08-24 | 2026-09-17
+   on | on | 115365 | 1274 | 137 | 11237 | 2023-06-13 | 2026-08-18

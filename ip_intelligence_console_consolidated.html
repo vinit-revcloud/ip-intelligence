@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IP Intelligence Console — Consolidated Prototype</title>
+<style>
+:root{
+  --bg:#f5f7fb;--card:#fff;--ink:#182230;--muted:#667085;--line:#e4e7ec;
+  --brand:#3157d5;--brand-2:#6678e8;--brand-soft:#eef2ff;
+  --good:#12b76a;--good-soft:#ecfdf3;--warn:#f79009;--warn-soft:#fffaeb;
+  --bad:#f04438;--bad-soft:#fef3f2;--info:#0ba5ec;--nav:#101828;--nav2:#1d2939;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 4px 14px rgba(16,24,40,.05);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+button,input,select{font:inherit}
+button{touch-action:manipulation}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid rgba(49,87,213,.22);outline-offset:2px}
+.app{display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100vh}
+.sidebar{background:var(--nav);color:#d0d5dd;padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto;z-index:50}
+.logo{color:#fff;font-weight:850;font-size:18px;padding:8px 10px 18px;line-height:1.25}
+.logo small{display:block;color:#98a2b3;font-size:11px;font-weight:550;margin-top:4px}
+.nav-label{padding:8px 11px 5px;color:#667085;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+.nav-button{width:100%;min-height:42px;border:0;background:transparent;color:#cbd5e1;text-align:left;padding:10px 12px;border-radius:9px;margin:2px 0;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:9px}
+.nav-button:hover,.nav-button.active{background:#27334a;color:#fff}
+.nav-icon{width:18px;text-align:center;opacity:.9}
+.nav-badge{margin-left:auto;background:#f04438;color:#fff;font-size:10px;line-height:1;padding:4px 6px;border-radius:999px;font-weight:800}
+.sidebar-foot{margin:18px 8px 0;padding:12px;border:1px solid #344054;border-radius:10px;background:#172033;font-size:11px;color:#98a2b3}
+.sidebar-foot strong{display:block;color:#fff;margin-bottom:4px}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(16,24,40,.54);z-index:40}
+.main{min-width:0;padding:18px 24px 44px;overflow:hidden}
+.topbar{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:14px}
+.title-wrap{display:flex;align-items:flex-start;gap:10px;min-width:220px}
+.mobile-menu{display:none;border:1px solid var(--line);background:#fff;border-radius:9px;min-width:44px;min-height:44px;cursor:pointer;font-size:20px;align-items:center;justify-content:center}
+h1{font-size:24px;line-height:1.2;margin:0}.subtitle{font-size:12px;color:var(--muted);margin-top:5px;max-width:720px}
+.toolbar{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.control,.btn{min-height:40px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:8px 10px;font-size:12px}
+.control{max-width:180px}.btn{font-weight:750;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.btn:hover{background:#f9fafb}.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}.btn.primary:hover{background:#284bc0}.btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}.btn.ghost{background:transparent}.btn.small{min-height:34px;padding:6px 9px;font-size:11px}.btn.link{border:0;background:transparent;color:var(--brand);padding:4px;min-height:30px}
+.ip-search{display:flex;gap:6px}.ip-search input{width:160px}
+.prototype-note{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#eef4ff;border:1px solid #c7d7fe;color:#3538cd;padding:10px 12px;border-radius:10px;margin-bottom:14px;font-size:12px}
+.screen{display:none}.screen.active{display:block}
+.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(6,minmax(130px,1fr));margin-bottom:14px}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px;box-shadow:var(--shadow);min-width:0}.card.compact{padding:12px}.card h2{font-size:17px;margin:0 0 8px}.card h3{font-size:13px;margin:0 0 11px}.card p{margin:6px 0;color:var(--muted);font-size:12px;line-height:1.5}
+.kpi{cursor:default}.kpi.clickable{cursor:pointer}.kpi.clickable:hover{border-color:#b8c4ef;box-shadow:0 5px 18px rgba(49,87,213,.09)}
+.kpi .label{text-transform:uppercase;letter-spacing:.04em;font-size:10px;color:var(--muted);font-weight:850}.kpi .value{font-size:25px;font-weight:880;margin:5px 0 2px}.delta{font-size:11px;color:var(--good)}.delta.bad{color:var(--bad)}.delta.warn{color:var(--warn)}
+.section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:18px 0 9px}.section-head h2{font-size:16px;margin:0}.section-head .actions{display:flex;gap:8px;flex-wrap:wrap}
+.alert-strip{display:flex;align-items:center;gap:10px;padding:12px 13px;border:1px solid #fedf89;background:var(--warn-soft);border-radius:10px;margin-bottom:14px;font-size:12px}.alert-strip.critical{background:var(--bad-soft);border-color:#fecdca}.alert-strip .grow{flex:1}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}.green{background:var(--good)}.orange{background:var(--warn)}.red{background:var(--bad)}.blue{background:var(--brand)}
+.table-wrap{width:100%;overflow:auto;-webkit-overflow-scrolling:touch;border-radius:8px}.table-wrap.compact table{min-width:0}table{width:100%;border-collapse:collapse;font-size:12px;min-width:680px}th{text-align:left;color:var(--muted);font-weight:750;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}td{padding:10px 8px;border-bottom:1px solid #f0f2f5;vertical-align:middle}tr:hover td{background:#fafbfc}.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:850;background:#f2f4f7;color:#475467;white-space:nowrap}.pill.good{background:var(--good-soft);color:#027a48}.pill.warn{background:var(--warn-soft);color:#b54708}.pill.bad{background:var(--bad-soft);color:#b42318}.pill.info{background:#eef4ff;color:#3538cd}.pill.dark{background:#e4e7ec;color:#344054}
+.barrow{display:grid;grid-template-columns:minmax(110px,165px) minmax(90px,1fr) 58px;gap:9px;align-items:center;margin:10px 0;font-size:12px}.barbg{height:10px;background:#eef2f6;border-radius:99px;overflow:hidden}.bar{height:100%;background:var(--brand);border-radius:99px}.bar.alt{background:var(--brand-2)}.bar.good{background:var(--good)}.bar.warn{background:var(--warn)}.bar.bad{background:var(--bad)}
+.metric{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fbfcfe}.metric .num{font-size:20px;font-weight:880;margin-top:2px}.tiny{font-size:11px}.muted{color:var(--muted)}.nowrap{white-space:nowrap}
+.callout{padding:11px;border-left:4px solid var(--brand);background:#eef4ff;border-radius:8px;font-size:12px;line-height:1.5}.callout.warn{border-color:var(--warn);background:var(--warn-soft)}.callout.bad{border-color:var(--bad);background:var(--bad-soft)}.callout.good{border-color:var(--good);background:var(--good-soft)}
+.tabs{display:flex;gap:3px;border-bottom:1px solid var(--line);margin:12px 0 14px;overflow:auto;-webkit-overflow-scrolling:touch}.tab-button{border:0;background:transparent;min-height:42px;padding:9px 12px;color:var(--muted);font-size:12px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent}.tab-button:hover{color:var(--ink)}.tab-button.active{color:var(--brand);font-weight:850;border-bottom-color:var(--brand)}.tab-panel{display:none}.tab-panel.active{display:block}
+.chart{height:210px;min-width:0}.chart svg{width:100%;height:100%;display:block}.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-top:7px}.legend-item{display:inline-flex;gap:5px;align-items:center}.legend-swatch{width:8px;height:8px;border-radius:50%;background:var(--brand)}
+.heat{display:grid;grid-template-columns:145px repeat(3,minmax(80px,1fr));gap:2px;font-size:11px;min-width:520px}.heat div{padding:10px;text-align:center;background:#f8fafc}.heat .head{background:#eef2ff;font-weight:850}.heat .a{background:#dbeafe}.heat .b{background:#e0e7ff}.heat .c{background:#fef3c7}
+.compare-builder{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr)) auto;gap:8px;align-items:end}.field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:800;margin-bottom:5px}.field select,.field input{width:100%;min-height:40px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 10px;font-size:12px}
+.score{display:flex;align-items:center;gap:8px}.score strong{font-size:18px}.score-meter{width:70px;height:7px;background:#eef2f6;border-radius:99px;overflow:hidden}.score-meter span{display:block;height:100%;background:var(--brand)}
+.task-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:start;padding:13px;border:1px solid var(--line);border-radius:10px;margin:8px 0}.task-card:hover{border-color:#c7d7fe}.priority{width:10px;height:10px;border-radius:50%;margin-top:5px}.task-title{font-weight:800;font-size:13px}.task-meta{font-size:11px;color:var(--muted);margin-top:4px}.task-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.checkbox-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.check{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:9px;padding:10px;background:#fff}.check input{margin-top:2px}
+.progress{height:8px;background:#eef2f6;border-radius:99px;overflow:hidden}.progress span{display:block;height:100%;background:var(--brand)}
+.drawer{position:fixed;inset:0;background:rgba(16,24,40,.45);display:none;justify-content:flex-end;z-index:90}.drawer.open{display:flex}.drawer-panel{width:min(720px,94vw);height:100%;background:#fff;padding:20px;overflow:auto;box-shadow:-12px 0 32px rgba(16,24,40,.18)}.drawer-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:14px}.drawer-head h2{margin:0;font-size:20px}
+.modal{position:fixed;inset:0;background:rgba(16,24,40,.5);display:none;align-items:center;justify-content:center;padding:18px;z-index:100}.modal.open{display:flex}.modal-card{width:min(650px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 22px 60px rgba(16,24,40,.28)}.modal-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:14px}.modal-head h2{margin:0;font-size:19px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
+.kv{display:grid;grid-template-columns:170px 1fr;gap:8px 12px;font-size:12px}.kv div:nth-child(odd){color:var(--muted)}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;background:#0f172a;color:#d1fae5;padding:12px;border-radius:8px;overflow:auto}
+.toast{position:fixed;right:20px;bottom:20px;max-width:390px;background:#101828;color:#fff;padding:12px 14px;border-radius:10px;box-shadow:0 10px 30px rgba(16,24,40,.25);display:none;z-index:120;font-size:12px}.toast.show{display:block;animation:toastin .2s ease-out}@keyframes toastin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.mobile-only{display:none}
+@media(max-width:1280px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.three,.four{grid-template-columns:repeat(2,minmax(0,1fr))}.compare-builder{grid-template-columns:repeat(3,minmax(150px,1fr))}}
+@media(max-width:900px){
+  .app{display:block}.sidebar{position:fixed;left:0;top:0;bottom:0;width:280px;height:100vh;transform:translateX(-105%);transition:transform .2s ease;box-shadow:12px 0 30px rgba(16,24,40,.25)}
+  body.nav-open .sidebar{transform:translateX(0)}body.nav-open .nav-backdrop{display:block}.mobile-menu{display:inline-flex}.main{padding:14px 14px 40px}.topbar{align-items:flex-start}.toolbar{width:100%;justify-content:flex-start}.topbar{flex-direction:column}.ip-search{flex:1;min-width:240px}.ip-search input{width:100%}.mobile-only{display:inline-flex}
+}
+@media(max-width:680px){
+  .main{padding:12px 10px 34px}.two,.three,.form-grid{grid-template-columns:1fr}.four,.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar #globalPublisher,.toolbar #refreshBtn{grid-column:1/-1}.compare-builder{grid-template-columns:1fr}.toolbar{display:grid;grid-template-columns:1fr 1fr}.toolbar .control{max-width:none;width:100%}.toolbar .ip-search{grid-column:1/-1;min-width:0}.toolbar .btn{min-height:44px}.prototype-note{align-items:flex-start}.card{padding:13px}.barrow{grid-template-columns:105px 1fr 48px;gap:7px}.task-card{grid-template-columns:auto minmax(0,1fr)}.task-actions{grid-column:2;justify-content:flex-start}.checkbox-list{grid-template-columns:1fr}.kv{grid-template-columns:120px 1fr}.section-head{align-items:flex-start;flex-direction:column}.section-head .actions{width:100%}.section-head .actions .btn{flex:1}.alert-strip{align-items:flex-start;flex-wrap:wrap}.alert-strip .grow{flex:1 1 calc(100% - 22px)}.alert-strip .btn{flex:1 1 135px}.drawer-panel{width:100vw;padding:16px}.modal{padding:8px}.modal-card{padding:16px}.toast{left:10px;right:10px;bottom:10px;max-width:none}h1{font-size:21px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+    <div class="logo">IP Intelligence Console<small>Vendor performance, QA & operations</small></div>
+    <div class="nav-label">Workspace</div>
+    <nav>
+      <button class="nav-button active" data-screen="overview"><span class="nav-icon">⌂</span>Overview</button>
+      <button class="nav-button" data-screen="comparison"><span class="nav-icon">⇄</span>Vendor Comparison</button>
+      <button class="nav-button" data-screen="jobs"><span class="nav-icon">▶</span>Jobs & Sampling</button>
+      <button class="nav-button" data-screen="operations"><span class="nav-icon">⚙</span>Operations<span class="nav-badge" id="navTaskCount">3</span></button>
+      <button class="nav-button" data-screen="sources"><span class="nav-icon">▦</span>Sources & Plans</button>
+    </nav>
+    <div class="sidebar-foot"><strong>Agent monitor is active</strong>Errors create triage tasks automatically. One critical task needs approval.</div>
+  </aside>
+  <div class="nav-backdrop" id="navBackdrop"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="title-wrap">
+        <button class="mobile-menu" id="mobileMenuBtn" aria-label="Open navigation" aria-expanded="false">☰</button>
+        <div><h1 id="pageTitle">Overview</h1><div class="subtitle" id="pageSubtitle">Executive view of data flow, quality, vendor performance, cost and action items.</div></div>
+      </div>
+      <div class="toolbar">
+        <select class="control" id="globalPeriod" aria-label="Date range"><option>Last 90 days</option><option>Last 30 days</option><option>Last 7 days</option></select>
+        <select class="control" id="globalSite" aria-label="Site"><option>All Sites</option><option>Site A</option><option>Site B</option></select>
+        <select class="control" id="globalPublisher" aria-label="Publisher"><option>All Publishers</option><option>Publisher 184</option><option>Publisher 213</option></select>
+        <form class="ip-search" id="ipSearchForm"><input class="control" id="ipSearchInput" aria-label="IP address search" placeholder="Search IP address"><button class="btn" type="submit">Find IP</button></form>
+        <button class="btn" id="refreshBtn">Refresh</button>
+      </div>
+    </header>
+
+    <div class="prototype-note" id="prototypeNote"><span><strong>Interactive prototype:</strong> all figures are illustrative mock data. Buttons and workflows are functional in-browser.</span><button class="btn small" id="dismissNote">Dismiss</button></div>
+
+    <!-- OVERVIEW -->
+    <section class="screen active" id="overview">
+      <div class="grid kpis">
+        <div class="card kpi clickable" data-nav="comparison"><div class="label">Comparable IPs</div><div class="value">28,442</div><div class="delta">within ±7 days</div></div>
+        <div class="card kpi clickable" data-nav="operations" data-ops-tab="health"><div class="label">Enrichment Coverage</div><div class="value">93.7%</div><div class="delta">+1.2 pts</div></div>
+        <div class="card kpi clickable" data-nav="operations"><div class="label">Open Tasks</div><div class="value" id="overviewTaskCount">3</div><div class="delta bad">1 critical</div></div>
+        <div class="card kpi clickable" data-nav="comparison" data-compare-tab="detection"><div class="label">Proxy / Bot Rate</div><div class="value">38.4%</div><div class="delta bad">+3.1 pts</div></div>
+        <div class="card kpi clickable" data-nav="comparison" data-compare-tab="location"><div class="label">Location Confidence</div><div class="value">94.1%</div><div class="delta">184K truth matches</div></div>
+        <div class="card kpi clickable" data-nav="comparison" data-compare-tab="revenue"><div class="label">Revenue FP Risk</div><div class="value">7.3%</div><div class="delta bad">$41K at risk</div></div>
+      </div>
+
+      <div class="alert-strip critical"><span class="dot red"></span><div class="grow"><strong>Critical task:</strong> MaxMind Anonymous enrichment has failed for 2h 14m. The operations agent created task OPS-1048 and prepared a credential-rotation plan.</div><button class="btn small" data-nav="operations">Open task</button><button class="btn primary small" data-action="approve-remediation">Approve remediation</button></div>
+
+      <div class="grid two">
+        <div class="card"><div class="section-head" style="margin-top:0"><h2>Data Flow</h2><button class="btn link" data-nav="operations" data-ops-tab="health">View health</button></div><div class="chart"><svg viewBox="0 0 700 210" preserveAspectRatio="none" aria-label="Enriched IP observations per day chart"><polyline fill="none" stroke="#3157d5" stroke-width="4" points="20,165 90,150 160,143 230,126 300,121 370,110 440,106 510,91 580,95 680,68"/><polyline fill="none" stroke="#7887f7" stroke-width="3" points="20,180 90,172 160,164 230,156 300,151 370,145 440,137 510,139 580,125 680,115"/><line x1="20" y1="188" x2="680" y2="188" stroke="#d0d5dd"/></svg></div><div class="legend"><span class="legend-item"><span class="legend-swatch"></span>Fraudlogix</span><span class="legend-item"><span class="legend-swatch" style="background:#7887f7"></span>IP2Location historical</span></div></div>
+        <div class="card"><div class="section-head" style="margin-top:0"><h2>Vendor Quality Snapshot</h2><button class="btn link" data-nav="comparison">Full comparison</button></div><div class="table-wrap compact"><table><thead><tr><th>Product source</th><th>Proxy rate</th><th>State accuracy</th><th>Revenue FP</th></tr></thead><tbody><tr><td>Fraudlogix / TUNE</td><td>38.1%</td><td>98.1%</td><td><span class="pill bad">8.1%</span></td></tr><tr><td>ProxyCheck API</td><td>31.4%</td><td>97.5%</td><td><span class="pill warn">4.0%</span></td></tr><tr><td>MaxMind Anonymous</td><td>28.2%</td><td>99.0%</td><td><span class="pill good">2.7%</span></td></tr></tbody></table></div><p>Metrics use only timely overlapping IP observations and the selected truth source.</p></div>
+        <div class="card"><div class="section-head" style="margin-top:0"><h2>Tasks Requiring Action</h2><button class="btn link" data-nav="operations">View all tasks</button></div><div id="overviewTasks"><div class="task-card" data-task-id="OPS-1048"><span class="priority red"></span><div><div class="task-title">Restore MaxMind Anonymous enrichment</div><div class="task-meta">Critical · Agent diagnosis ready · SLA breached by 14m</div></div><div class="task-actions"><button class="btn small" data-task-action="open">Open</button></div></div><div class="task-card" data-task-id="OPS-1043"><span class="priority orange"></span><div><div class="task-title">Investigate Fraudlogix classification drift</div><div class="task-meta">High · Publisher 184 / Sub-ID fb-rt-03</div></div><div class="task-actions"><button class="btn small" data-task-action="open">Open</button></div></div></div>
+        <div class="card"><div class="section-head" style="margin-top:0"><h2>Plans & Capacity</h2><button class="btn link" data-nav="sources" data-source-tab="plans">Manage plans</button></div><div class="barrow"><span>ProxyCheck</span><div class="barbg"><div class="bar" style="width:9.4%"></div></div><b>9%</b></div><div class="barrow"><span>Spur Teams</span><div class="barbg"><div class="bar alt" style="width:22%"></div></div><b>22%</b></div><div class="callout good"><strong>Unused capacity:</strong> the ProxyCheck sample can increase from 10% to about 36% this month without incremental spend.</div></div>
+      </div>
+    </section>
+
+    <!-- COMPARISON -->
+    <section class="screen" id="comparison">
+      <div class="card">
+        <div class="section-head" style="margin-top:0"><div><h2>Comparison Builder</h2><p>All quality metrics are computed on the same IP observations within the selected time-match window.</p></div><button class="btn" data-action="save-comparison">Save view</button></div>
+        <div class="compare-builder">
+          <div class="field"><label for="sourceA">Source A</label><select id="sourceA"><option>Fraudlogix / TUNE</option><option>IP2Location Historical DB</option><option>MaxMind GeoLite2 City</option></select></div>
+          <div class="field"><label for="sourceB">Source B</label><select id="sourceB"><option>ProxyCheck API</option><option>MaxMind Anonymous</option><option>IP2Proxy LITE PX12</option></select></div>
+          <div class="field"><label for="sourceC">Source C</label><select id="sourceC"><option>MaxMind Anonymous</option><option>IP2Location LITE DB11</option><option>Cloudflare Bot Signals</option></select></div>
+          <div class="field"><label for="matchWindow">Time match</label><select id="matchWindow"><option>Same IP within ±7 days</option><option>Same IP within ±24 hours</option><option>Same IP within ±30 days</option><option>Any match in last 90 days</option></select></div>
+          <div class="field"><label for="truthSource">Truth source</label><select id="truthSource"><option>Phone verified + prepop</option><option>Phone verified only</option><option>Prepop only</option><option>Browser location when shared</option><option>All available truth sources</option></select></div>
+          <button class="btn primary" id="runComparisonBtn">Run comparison</button>
+        </div>
+      </div>
+
+      <div class="grid four" style="margin-top:14px">
+        <div class="metric"><div class="tiny muted">Timely overlapping IPs</div><div class="num" id="matchedIpCount">28,442</div></div>
+        <div class="metric"><div class="tiny muted">Observation match rate</div><div class="num">37.1%</div></div>
+        <div class="metric"><div class="tiny muted">Median observation lag</div><div class="num">14h</div></div>
+        <div class="metric"><div class="tiny muted">Revenue represented</div><div class="num">$918K</div></div>
+      </div>
+      <div class="alert-strip" style="margin-top:14px"><span class="dot orange"></span><div class="grow"><strong>Comparison quality:</strong> enough overlap for state, metro and high-level proxy analysis. Residential-proxy disagreements have only 8,492 three-way matches.</div><button class="btn small" data-compare-tab="overlap">Improve overlap</button></div>
+
+      <div class="tabs" data-tab-group="compare">
+        <button class="tab-button active" data-tab="summary">Summary</button>
+        <button class="tab-button" data-tab="detection">Bot & Proxy</button>
+        <button class="tab-button" data-tab="location">Location Accuracy</button>
+        <button class="tab-button" data-tab="revenue">Revenue & False Positives</button>
+        <button class="tab-button" data-tab="overlap">Overlap & Missing Data</button>
+        <button class="tab-button" data-tab="disagreements">IP Disagreements</button>
+      </div>
+
+      <div class="tab-panel active" data-tab-panel="compare:summary">
+        <div class="card"><h2>Product Scorecard</h2><div class="table-wrap"><table><thead><tr><th>Product source</th><th>Coverage</th><th>Location confidence</th><th>Proxy confidence</th><th>Revenue FP</th><th>Actual CPM</th><th>Business fit</th></tr></thead><tbody><tr><td><strong>Fraudlogix / TUNE</strong><br><span class="tiny muted">Fraudlogix · bundled product</span></td><td>76.2%</td><td><div class="score"><strong>91</strong><span class="score-meter"><span style="width:91%"></span></span></div></td><td><div class="score"><strong>82</strong><span class="score-meter"><span style="width:82%"></span></span></div></td><td><span class="pill bad">8.1%</span></td><td>Included</td><td><span class="pill warn">Primary, needs QA</span></td></tr><tr><td><strong>ProxyCheck API</strong><br><span class="tiny muted">proxycheck.io · 80K/day</span></td><td>11.0%</td><td><div class="score"><strong>88</strong><span class="score-meter"><span style="width:88%"></span></span></div></td><td><div class="score"><strong>86</strong><span class="score-meter"><span style="width:86%"></span></span></div></td><td><span class="pill warn">4.0%</span></td><td>$0.043</td><td><span class="pill good">Strong QA value</span></td></tr><tr><td><strong>MaxMind Anonymous</strong><br><span class="tiny muted">MaxMind · trial</span></td><td>4.1%</td><td><div class="score"><strong>94</strong><span class="score-meter"><span style="width:94%"></span></span></div></td><td><div class="score"><strong>89</strong><span class="score-meter"><span style="width:89%"></span></span></div></td><td><span class="pill good">2.7%</span></td><td>$0.68</td><td><span class="pill info">Promising challenger</span></td></tr></tbody></table></div><p>Location and proxy confidence are separate; the prototype does not collapse them into one universal accuracy score.</p></div><div class="card" style="margin-top:14px"><h2>Business Outcome Accuracy</h2><div class="table-wrap"><table><thead><tr><th>Product source</th><th>Bad-traffic capture</th><th>Good revenue traffic accepted</th><th>Incremental bad IPs found</th><th>Revenue incorrectly blocked</th></tr></thead><tbody><tr><td>Fraudlogix / TUNE</td><td>71.4%</td><td>91.9%</td><td>Baseline</td><td>$74,360</td></tr><tr><td>ProxyCheck API</td><td>68.2%</td><td>96.0%</td><td>+4,811</td><td>$36,720</td></tr><tr><td>MaxMind Anonymous</td><td>65.1%</td><td>97.3%</td><td>+2,944</td><td>$24,786</td></tr></tbody></table></div><p>“Good traffic accepted” treats revenue-producing sessions as legitimate for the business false-positive calculation. Bad-traffic labels still require a finalized outcome definition.</p></div>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="compare:detection">
+        <div class="grid two">
+          <div class="card"><h2>Detection Rate — Overlapping IPs Only</h2><div class="barrow"><span>Fraudlogix / TUNE</span><div class="barbg"><div class="bar" style="width:38.1%"></div></div><b>38.1%</b></div><div class="barrow"><span>ProxyCheck API</span><div class="barbg"><div class="bar alt" style="width:31.4%"></div></div><b>31.4%</b></div><div class="barrow"><span>MaxMind Anonymous</span><div class="barbg"><div class="bar warn" style="width:28.2%"></div></div><b>28.2%</b></div><p>Denominator: 28,442 matched observations within ±7 days.</p></div>
+          <div class="card"><h2>Normalized Detection Detail</h2><div class="table-wrap"><table><thead><tr><th>Class</th><th>Fraudlogix</th><th>ProxyCheck</th><th>MaxMind</th></tr></thead><tbody><tr><td>Residential proxy</td><td>11.2%</td><td>14.4%</td><td>10.1%</td></tr><tr><td>Datacenter / hosting</td><td>18.7%</td><td>12.2%</td><td>11.3%</td></tr><tr><td>VPN</td><td>8.0%</td><td>7.2%</td><td>7.8%</td></tr><tr><td>Tor</td><td>0.4%</td><td>0.3%</td><td>0.4%</td></tr><tr><td>Known crawler</td><td>1.4%</td><td>0.8%</td><td>1.0%</td></tr><tr><td>Unknown / insufficient</td><td>3.1%</td><td>1.2%</td><td>4.6%</td></tr></tbody></table></div></div>
+        </div>
+        <div class="card" style="margin-top:14px"><div class="section-head" style="margin-top:0"><h2>Proxy Confidence Method</h2><button class="btn small" data-action="open-confidence-method">View formula</button></div><div class="grid four"><div class="metric"><div class="tiny muted">Vendor agreement</div><div class="num">64%</div></div><div class="metric"><div class="tiny muted">Known infrastructure matches</div><div class="num">18K</div></div><div class="metric"><div class="tiny muted">Revenue contradiction</div><div class="num">7.3%</div></div><div class="metric"><div class="tiny muted">Phone-verified contradiction</div><div class="num">5.8%</div></div></div></div>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="compare:location">
+        <div class="grid two">
+          <div class="card"><h2>Accuracy by Geographic Level</h2><div class="table-wrap"><table><thead><tr><th>Source</th><th>State</th><th>Metro</th><th>County</th><th>City</th><th>Correct router decision</th></tr></thead><tbody><tr><td>Fraudlogix</td><td>98.1%</td><td>95.0%</td><td>94.2%</td><td>87.4%</td><td>97.9%</td></tr><tr><td>ProxyCheck</td><td>97.5%</td><td>94.2%</td><td>92.6%</td><td>85.1%</td><td>97.2%</td></tr><tr><td>MaxMind</td><td>99.0%</td><td>96.8%</td><td>95.2%</td><td>91.1%</td><td>98.7%</td></tr></tbody></table></div></div>
+          <div class="card"><h2>Truth Source Coverage</h2><div class="barrow"><span>Phone verified</span><div class="barbg"><div class="bar good" style="width:72%"></div></div><b>72%</b></div><div class="barrow"><span>Partner prepop</span><div class="barbg"><div class="bar alt" style="width:61%"></div></div><b>61%</b></div><div class="barrow"><span>Browser location</span><div class="barbg"><div class="bar warn" style="width:8%"></div></div><b>8%</b></div><div class="barrow"><span>Both agree</span><div class="barbg"><div class="bar" style="width:54%"></div></div><b>54%</b></div><div class="grid two" style="margin-top:14px"><div class="metric"><div class="tiny muted">Truth observations</div><div class="num">184,291</div></div><div class="metric"><div class="tiny muted">Conflicting truth records</div><div class="num">3.4%</div></div></div></div>
+        </div>
+        <div class="card" style="margin-top:14px"><h2>Distance Error</h2><div class="grid four"><div class="metric"><div class="tiny muted">Median</div><div class="num">12 mi</div></div><div class="metric"><div class="tiny muted">P75</div><div class="num">27 mi</div></div><div class="metric"><div class="tiny muted">P90</div><div class="num">49 mi</div></div><div class="metric"><div class="tiny muted">P95</div><div class="num">81 mi</div></div></div></div>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="compare:revenue">
+        <div class="grid two">
+          <div class="card"><h2>Revenue False-Positive Rate</h2><div class="barrow"><span>Fraudlogix</span><div class="barbg"><div class="bar bad" style="width:81%"></div></div><b>8.1%</b></div><div class="barrow"><span>ProxyCheck</span><div class="barbg"><div class="bar warn" style="width:40%"></div></div><b>4.0%</b></div><div class="barrow"><span>MaxMind</span><div class="barbg"><div class="bar good" style="width:27%"></div></div><b>2.7%</b></div><p>Business rule: any revenue-producing session classified as block-worthy is counted as a false positive.</p></div>
+          <div class="card"><h2>Revenue at Risk Over Time</h2><div class="chart"><svg viewBox="0 0 700 210" preserveAspectRatio="none"><polyline fill="none" stroke="#f04438" stroke-width="4" points="20,145 90,138 160,146 230,132 300,121 370,110 440,96 510,104 580,81 680,74"/><polyline fill="none" stroke="#3157d5" stroke-width="3" points="20,165 90,162 160,156 230,158 300,149 370,151 440,142 510,143 580,134 680,128"/><line x1="20" y1="188" x2="680" y2="188" stroke="#d0d5dd"/></svg></div><div class="legend"><span class="legend-item"><span class="legend-swatch" style="background:#f04438"></span>Fraudlogix</span><span class="legend-item"><span class="legend-swatch"></span>ProxyCheck</span></div></div>
+        </div>
+        <div class="card" style="margin-top:14px"><div class="section-head" style="margin-top:0"><h2>ISP Value & Risk</h2><button class="btn small" data-action="export-isp">Export</button></div><div class="table-wrap"><table><thead><tr><th>ISP / ASN</th><th>Sessions</th><th>Avg revenue/session</th><th>Proxy rate</th><th>Phone verified</th><th>Total revenue</th><th>Revenue FP risk</th></tr></thead><tbody><tr><td>AT&T / AS7018</td><td>442K</td><td>$1.82</td><td>2.1%</td><td>71%</td><td>$804K</td><td>1.4%</td></tr><tr><td>Verizon / AS701</td><td>318K</td><td>$1.74</td><td>3.8%</td><td>69%</td><td>$553K</td><td>2.2%</td></tr><tr><td>Comcast / AS7922</td><td>517K</td><td>$1.59</td><td>2.4%</td><td>72%</td><td>$822K</td><td>1.8%</td></tr><tr><td>DigitalOcean / AS14061</td><td>47K</td><td>$0.08</td><td>91%</td><td>3%</td><td>$3.7K</td><td>0.3%</td></tr></tbody></table></div></div>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="compare:overlap">
+        <div class="grid two">
+          <div class="card"><h2>Timely Overlap Matrix</h2><div class="table-wrap"><div class="heat"><div></div><div class="head">Fraudlogix</div><div class="head">ProxyCheck</div><div class="head">MaxMind</div><div class="head">Fraudlogix</div><div class="a">189,221</div><div class="b">28,442</div><div class="c">10,881</div><div class="head">ProxyCheck</div><div class="b">28,442</div><div class="a">39,882</div><div class="b">8,492</div><div class="head">MaxMind</div><div class="c">10,881</div><div class="b">8,492</div><div class="a">12,811</div></div></div><p>Matrix uses the current ±7-day observation window, not merely matching the IP at any historical point.</p></div>
+          <div class="card"><h2>Missing Coverage Opportunity</h2><div class="callout"><strong>180,729 Fraudlogix observations lack ProxyCheck enrichment.</strong><br>A 10% QA sample requires 18,073 lookups and fits the current plan.</div><div class="grid two" style="margin-top:12px"><div class="metric"><div class="tiny muted">Estimated cost</div><div class="num">$0</div></div><div class="metric"><div class="tiny muted">Quota after job</div><div class="num">22.6%</div></div><div class="metric"><div class="tiny muted">Est. completion</div><div class="num">4 min</div></div><div class="metric"><div class="tiny muted">New three-way overlap</div><div class="num">+4,900</div></div></div><button class="btn primary" style="margin-top:12px" data-action="prefill-overlap-job">Create sampling job</button></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="compare:disagreements">
+        <div class="card"><div class="section-head" style="margin-top:0"><div><h2>IP Disagreement Queue</h2><p>Prioritized by revenue impact, truth-source evidence and classification conflict.</p></div><button class="btn" data-action="export-disagreements">Export queue</button></div><div class="table-wrap"><table><thead><tr><th>IP</th><th>Fraudlogix</th><th>ProxyCheck</th><th>MaxMind</th><th>Revenue</th><th>Phone verified</th><th>Alyson proxy confidence</th><th>Likely outcome</th><th></th></tr></thead><tbody><tr><td>73.***.***.21</td><td><span class="pill bad">Proxy</span></td><td><span class="pill good">Clean</span></td><td><span class="pill good">Clean</span></td><td>$184</td><td>Yes</td><td>18%</td><td><span class="pill warn">Fraudlogix FP</span></td><td><button class="btn small" data-open-ip="73.14.88.21">Open IP</button></td></tr><tr><td>104.***.***.87</td><td><span class="pill good">Clean</span></td><td><span class="pill bad">Residential proxy</span></td><td><span class="pill warn">Unknown</span></td><td>$0</td><td>No</td><td>81%</td><td><span class="pill bad">Likely bad</span></td><td><button class="btn small" data-open-ip="104.29.55.87">Open IP</button></td></tr></tbody></table></div></div>
+      </div>
+    </section>
+
+    <!-- JOBS -->
+    <section class="screen" id="jobs">
+      <div class="grid two">
+        <div class="card"><div class="section-head" style="margin-top:0"><div><h2>New Vendor Lookup Job</h2><p>Run through an API or export/import a batch when the vendor requires a manual workflow.</p></div></div>
+          <div class="form-grid">
+            <div class="field"><label for="jobPopulation">Population</label><select id="jobPopulation"><option value="189221">Fraudlogix observations</option><option value="180729">Fraudlogix without ProxyCheck</option><option value="412781">All unique IPs</option><option value="8203">Revenue-positive flagged traffic</option></select></div>
+            <div class="field"><label for="jobPeriod">Period</label><select id="jobPeriod"><option>Last 30 days</option><option>Last 90 days</option><option>Last 7 days</option></select></div>
+            <div class="field"><label for="jobSample">Sample rate</label><input id="jobSample" type="number" min="0.1" max="100" step="0.1" value="10"></div>
+            <div class="field"><label for="jobMode">Delivery mode</label><select id="jobMode"><option>API — run automatically</option><option>CSV — export for vendor</option><option>CSV — import vendor results</option></select></div>
+          </div>
+          <h3 style="margin-top:16px">Products to enrich</h3>
+          <div class="checkbox-list"><label class="check"><input type="checkbox" class="job-source" value="ProxyCheck API" data-cpm="0" checked><span><strong>ProxyCheck API</strong><br><span class="tiny muted">Included within current quota</span></span></label><label class="check"><input type="checkbox" class="job-source" value="MaxMind Anonymous" data-cpm="0.68"><span><strong>MaxMind Anonymous</strong><br><span class="tiny muted">Trial / usage-based estimate</span></span></label><label class="check"><input type="checkbox" class="job-source" value="Spur Teams" data-cpm="0"><span><strong>Spur Teams</strong><br><span class="tiny muted">Included capacity available</span></span></label><label class="check"><input type="checkbox" class="job-source" value="IP2Location API" data-cpm="1.2"><span><strong>IP2Location API</strong><br><span class="tiny muted">Estimated overage applies</span></span></label></div>
+          <div class="row-actions" style="margin-top:14px"><button class="btn primary" id="estimateJobBtn">Estimate job</button><button class="btn" id="runJobBtn">Run job</button><button class="btn" id="exportJobBtn">Export sample CSV</button><button class="btn" id="importJobBtn">Import results</button><input type="file" id="importJobFile" accept=".csv,.json" hidden></div>
+        </div>
+        <div class="card"><h2>Estimate & Plan Impact</h2><div class="grid two"><div class="metric"><div class="tiny muted">Estimated records</div><div class="num" id="jobEstimateRecords">18,922</div></div><div class="metric"><div class="tiny muted">Estimated incremental cost</div><div class="num" id="jobEstimateCost">$0.00</div></div><div class="metric"><div class="tiny muted">ProxyCheck quota after</div><div class="num" id="jobEstimateQuota">12%</div></div><div class="metric"><div class="tiny muted">Estimated completion</div><div class="num" id="jobEstimateTime">4 min</div></div></div><div class="callout good" id="jobRecommendation" style="margin-top:12px"><strong>Plan optimization:</strong> this job fits current capacity. ProxyCheck can support a larger sample at no additional cost.</div></div>
+      </div>
+      <div class="section-head"><h2>Recent Jobs</h2><div class="actions"><button class="btn" data-action="refresh-jobs">Refresh jobs</button></div></div>
+      <div class="card"><div class="table-wrap"><table id="jobsTable"><thead><tr><th>Job</th><th>Population</th><th>Product source</th><th>Rows</th><th>Status</th><th>Cost</th><th>Created</th><th></th></tr></thead><tbody><tr><td>QA-2026-08-27-01</td><td>Fraudlogix 10%</td><td>ProxyCheck API</td><td>18,073</td><td><span class="pill good">Complete</span></td><td>$0</td><td>Today</td><td><div class="row-actions"><button class="btn small" data-action="view-job">View</button><button class="btn small" data-action="download-job">Download</button></div></td></tr><tr><td>QA-2026-08-26-02</td><td>Unknown IPs</td><td>MaxMind Anonymous</td><td>5,412</td><td><span class="pill bad">Failed</span></td><td>$0</td><td>Yesterday</td><td><div class="row-actions"><button class="btn small" data-action="retry-job">Retry</button><button class="btn small" data-action="view-job">View</button></div></td></tr></tbody></table></div></div>
+    </section>
+
+    <!-- OPERATIONS -->
+    <section class="screen" id="operations">
+      <div class="grid four"><div class="metric"><div class="tiny muted">Open tasks</div><div class="num" id="opsOpenTasks">3</div></div><div class="metric"><div class="tiny muted">Critical</div><div class="num">1</div></div><div class="metric"><div class="tiny muted">Unlinked errors</div><div class="num" id="unlinkedErrors">1</div></div><div class="metric"><div class="tiny muted">Agent actions today</div><div class="num">14</div></div></div>
+      <div class="tabs" data-tab-group="ops"><button class="tab-button active" data-tab="tasks">Tasks</button><button class="tab-button" data-tab="errors">Errors</button><button class="tab-button" data-tab="health">Data Health</button><button class="tab-button" data-tab="agent">Agent Activity</button></div>
+
+      <div class="tab-panel active" data-tab-panel="ops:tasks">
+        <div class="section-head"><div><h2>Operational Tasks</h2><p>Alerts and errors become owned tasks with priority, SLA, agent diagnosis and a resolution workflow.</p></div><div class="actions"><button class="btn primary" data-action="create-task">+ Create task</button><button class="btn" data-action="task-rules">Automation rules</button></div></div>
+        <div id="taskList">
+          <div class="task-card" data-task-id="OPS-1048"><span class="priority red"></span><div><div class="task-title">OPS-1048 · Restore MaxMind Anonymous enrichment</div><div class="task-meta">Critical · Assigned to Operations Agent · Due 16 minutes ago · Source error ERR-8841</div><div class="callout bad" style="margin-top:8px"><strong>Agent diagnosis:</strong> credential returned 401. Proposed action: rotate secret, validate with 100 lookups, replay failed queue.</div></div><div class="task-actions"><button class="btn small" data-task-action="open">Open</button><button class="btn primary small" data-task-action="run">Run remediation</button><button class="btn small" data-task-action="resolve">Resolve</button></div></div>
+          <div class="task-card" data-task-id="OPS-1043"><span class="priority orange"></span><div><div class="task-title">OPS-1043 · Investigate Fraudlogix classification drift</div><div class="task-meta">High · Assigned to Data Quality Agent · Due in 4h · Alert ALT-1942</div><div class="callout warn" style="margin-top:8px"><strong>Agent finding:</strong> increase is concentrated in Publisher 184 and one sub-ID; revenue false-positive rate also rose.</div></div><div class="task-actions"><button class="btn small" data-task-action="open">Open</button><button class="btn small" data-task-action="assign">Assign to me</button><button class="btn small" data-task-action="resolve">Resolve</button></div></div>
+          <div class="task-card" data-task-id="OPS-1039"><span class="priority orange"></span><div><div class="task-title">OPS-1039 · Refresh IP2Location historical database</div><div class="task-meta">Medium · Assigned to Data Engineering · Due tomorrow · Freshness monitor</div></div><div class="task-actions"><button class="btn small" data-task-action="open">Open</button><button class="btn small" data-task-action="snooze">Snooze</button><button class="btn small" data-task-action="resolve">Resolve</button></div></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="ops:errors">
+        <div class="section-head"><div><h2>Error Stream</h2><p>Raw system errors remain here; material errors should be linked to a task rather than merely displayed as alerts.</p></div><button class="btn" data-action="export-errors">Export errors</button></div>
+        <div class="card"><div class="table-wrap"><table><thead><tr><th>Error ID</th><th>Source</th><th>Started</th><th>Type</th><th>Affected</th><th>Linked task</th><th>Status</th><th></th></tr></thead><tbody><tr><td>ERR-8841</td><td>MaxMind Anonymous</td><td>2h 14m ago</td><td>API 401</td><td>18,422 rows</td><td>OPS-1048</td><td><span class="pill bad">Active</span></td><td><div class="row-actions"><button class="btn small" data-action="view-error">Details</button><button class="btn small" data-action="retry-error">Retry</button></div></td></tr><tr><td>ERR-8838</td><td>ProxyCheck API</td><td>Yesterday</td><td>Rate limit</td><td>812 rows</td><td>—</td><td><span class="pill warn">Unlinked</span></td><td><div class="row-actions"><button class="btn primary small" data-action="create-task-from-error">Create task</button><button class="btn small" data-action="view-error">Details</button></div></td></tr><tr><td>ERR-8821</td><td>Fraudlogix / TUNE</td><td>Aug 25</td><td>Schema drift</td><td>4,117 rows</td><td>OPS-1031</td><td><span class="pill good">Resolved</span></td><td><button class="btn small" data-action="view-error">Details</button></td></tr></tbody></table></div></div>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="ops:health">
+        <div class="section-head"><div><h2>Source Data Health</h2><p>Monitors flow, freshness, schema, coverage, null rates, latency, cost and classification drift.</p></div><button class="btn" data-action="configure-monitors">Configure monitors</button></div>
+        <div class="card"><div class="table-wrap"><table><thead><tr><th>Product source</th><th>Status</th><th>Coverage</th><th>Error rate</th><th>p95</th><th>Freshness</th><th>Classification drift</th><th>Last success</th><th></th></tr></thead><tbody><tr><td>Fraudlogix / TUNE</td><td><span class="pill warn">Drift</span></td><td>76.2%</td><td>0.3%</td><td>118ms</td><td>4m</td><td>+13 pts</td><td>1m ago</td><td><button class="btn small" data-action="health-details">Open</button></td></tr><tr><td>ProxyCheck API</td><td><span class="pill good">Healthy</span></td><td>11.0%</td><td>0.8%</td><td>144ms</td><td>Realtime</td><td>Stable</td><td>20s ago</td><td><button class="btn small" data-action="health-details">Open</button></td></tr><tr><td>IP2Location Historical</td><td><span class="pill warn">Stale</span></td><td>31.4%</td><td>1.1%</td><td>Local</td><td>17h</td><td>Stable</td><td>17h ago</td><td><button class="btn small" data-action="health-details">Open</button></td></tr><tr><td>MaxMind Anonymous</td><td><span class="pill bad">Failed</span></td><td>0%</td><td>100%</td><td>—</td><td>2h 14m</td><td>Unavailable</td><td>2h 14m ago</td><td><button class="btn small" data-action="health-details">Open</button></td></tr></tbody></table></div></div>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="ops:agent">
+        <div class="grid two"><div class="card"><h2>Operations Agent</h2><div class="grid two"><div class="metric"><div class="tiny muted">Mode</div><div class="num">Approval</div></div><div class="metric"><div class="tiny muted">Tasks created</div><div class="num">6</div></div><div class="metric"><div class="tiny muted">Auto-resolved</div><div class="num">8</div></div><div class="metric"><div class="tiny muted">Failed actions</div><div class="num">0</div></div></div><div class="callout" style="margin-top:12px"><strong>Current policy:</strong> the agent can diagnose, create tasks, run read-only checks and retry idempotent jobs. Credential changes and source disablement require approval.</div><button class="btn" style="margin-top:12px" data-action="edit-agent-policy">Edit agent policy</button></div><div class="card"><h2>Recent Agent Activity</h2><div class="task-card"><span class="priority blue"></span><div><div class="task-title">Prepared MaxMind credential remediation</div><div class="task-meta">7 minutes ago · Waiting for approval</div></div><button class="btn small" data-action="view-agent-action">View</button></div><div class="task-card"><span class="priority green"></span><div><div class="task-title">Replayed 812 ProxyCheck rate-limited rows</div><div class="task-meta">Yesterday · Completed successfully</div></div><button class="btn small" data-action="view-agent-action">View</button></div><div class="task-card"><span class="priority orange"></span><div><div class="task-title">Opened drift investigation</div><div class="task-meta">3 days ago · Publisher 184</div></div><button class="btn small" data-action="view-agent-action">View</button></div></div></div>
+      </div>
+    </section>
+
+    <!-- SOURCES & PLANS -->
+    <section class="screen" id="sources">
+      <div class="grid four"><div class="metric"><div class="tiny muted">Paid plans</div><div class="num">2</div></div><div class="metric"><div class="tiny muted">Annual committed</div><div class="num">$2,510</div></div><div class="metric"><div class="tiny muted">Weighted actual CPM</div><div class="num">$0.19</div></div><div class="metric"><div class="tiny muted">Unused capacity value</div><div class="num">$624</div></div></div>
+      <div class="tabs" data-tab-group="sources"><button class="tab-button active" data-tab="products">Product Sources</button><button class="tab-button" data-tab="plans">Plans & Spend</button><button class="tab-button" data-tab="coverage">Plan Coverage & Overlap</button></div>
+
+      <div class="tab-panel active" data-tab-panel="sources:products">
+        <div class="section-head"><div><h2>Product Sources</h2><p>Every vendor product is modeled independently, even when multiple products come from the same company.</p></div><button class="btn primary" data-action="add-source">+ Add source</button></div>
+        <div class="card"><div class="table-wrap"><table><thead><tr><th>Company</th><th>Product source</th><th>Delivery</th><th>Primary use</th><th>Subscription state</th><th>Plan</th><th>Health</th><th>Owner</th><th></th></tr></thead><tbody><tr><td>Fraudlogix</td><td>Fraudlogix via TUNE</td><td>Feed / API</td><td>Fraud + proxy</td><td><span class="pill info">Bundled</span></td><td>TUNE subscription</td><td><span class="pill good">Healthy</span></td><td>Data Eng</td><td><button class="btn small" data-action="edit-source">Edit</button></td></tr><tr><td>IP2Location</td><td>Historical Commercial DB</td><td>Database</td><td>Location benchmark</td><td><span class="pill dark">Historical</span></td><td>Expired</td><td><span class="pill info">Read only</span></td><td>Data Eng</td><td><button class="btn small" data-action="edit-source">Edit</button></td></tr><tr><td>IP2Location</td><td>LITE DB11</td><td>Database</td><td>Location</td><td><span class="pill good">Free</span></td><td>LITE</td><td><span class="pill good">Healthy</span></td><td>Router</td><td><button class="btn small" data-action="edit-source">Edit</button></td></tr><tr><td>IP2Location</td><td>IP2Proxy LITE PX12</td><td>Database</td><td>Proxy baseline</td><td><span class="pill good">Free</span></td><td>LITE</td><td><span class="pill good">Healthy</span></td><td>Data Eng</td><td><button class="btn small" data-action="edit-source">Edit</button></td></tr><tr><td>MaxMind</td><td>GeoLite2 City</td><td>Database</td><td>Location challenger</td><td><span class="pill good">Free</span></td><td>GeoLite</td><td><span class="pill good">Healthy</span></td><td>Data Eng</td><td><button class="btn small" data-action="edit-source">Edit</button></td></tr><tr><td>MaxMind</td><td>Anonymous IP</td><td>API / DB</td><td>Proxy challenger</td><td><span class="pill warn">Trial</span></td><td>Evaluation</td><td><span class="pill bad">Failed</span></td><td>Data Eng</td><td><button class="btn small" data-action="edit-source">Edit</button></td></tr><tr><td>proxycheck.io</td><td>ProxyCheck API</td><td>API</td><td>Proxy QA</td><td><span class="pill info">Paid</span></td><td>80K/day</td><td><span class="pill good">Healthy</span></td><td>Data Eng</td><td><button class="btn small" data-action="edit-source">Edit</button></td></tr><tr><td>Cloudflare</td><td>Bot Signals</td><td>Request headers / logs</td><td>Edge bot signal</td><td><span class="pill warn">Not connected</span></td><td>To confirm</td><td><span class="pill dark">Unknown</span></td><td>Platform</td><td><button class="btn small" data-action="edit-source">Edit</button></td></tr></tbody></table></div></div>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="sources:plans">
+        <div class="section-head"><div><h2>Plans, Contracts & Spend</h2><p>Track what is paid, billing cadence, quota, renewal, overage and actual versus potential CPM.</p></div><button class="btn primary" data-action="add-plan">+ Add plan</button></div>
+        <div class="card"><div class="table-wrap"><table><thead><tr><th>Company / plan</th><th>Paid?</th><th>Cost</th><th>Billing cadence</th><th>Included quota</th><th>Used</th><th>Actual CPM</th><th>Potential CPM</th><th>Renewal</th><th>Overage</th><th></th></tr></thead><tbody><tr><td><strong>Fraudlogix via TUNE</strong><br><span class="tiny muted">Bundled product</span></td><td><span class="pill info">Bundled</span></td><td>Allocation pending</td><td>Annual TUNE contract</td><td>To confirm</td><td>4.7M</td><td>Pending allocation</td><td>Pending</td><td>Contract date</td><td>Unknown</td><td><button class="btn small" data-action="edit-plan">Edit</button></td></tr><tr><td><strong>ProxyCheck API</strong><br><span class="tiny muted">80K requests/day</span></td><td><span class="pill good">Yes</span></td><td>$109.89/year</td><td>Annual</td><td>80K/day</td><td>218K/mo</td><td>$0.043</td><td>$0.004</td><td>Mar 18, 2027</td><td>Upgrade tier</td><td><button class="btn small" data-action="edit-plan">Edit</button></td></tr><tr><td><strong>Spur Teams</strong><br><span class="tiny muted">Candidate / pilot</span></td><td><span class="pill warn">Pilot</span></td><td>$200/month</td><td>Monthly</td><td>500K assessments + 50K API</td><td>110K</td><td>$1.84</td><td>$0.40</td><td>Monthly</td><td>Plan upgrade</td><td><button class="btn small" data-action="edit-plan">Edit</button></td></tr><tr><td><strong>IP2Location LITE</strong></td><td><span class="pill good">Free</span></td><td>$0</td><td>—</td><td>Local DB</td><td>Unlimited internal</td><td>$0</td><td>$0</td><td>—</td><td>—</td><td><button class="btn small" data-action="edit-plan">Edit</button></td></tr></tbody></table></div></div>
+        <div class="grid two" style="margin-top:14px"><div class="card"><h2>Quota Utilization</h2><div class="barrow"><span>ProxyCheck</span><div class="barbg"><div class="bar" style="width:9.4%"></div></div><b>9%</b></div><div class="barrow"><span>Spur assessments</span><div class="barbg"><div class="bar alt" style="width:22%"></div></div><b>22%</b></div><div class="barrow"><span>Spur Context API</span><div class="barbg"><div class="bar warn" style="width:41%"></div></div><b>41%</b></div></div><div class="card"><h2>Plan Optimizer</h2><div class="callout good"><strong>ProxyCheck:</strong> increase ongoing QA sampling from 10% to 36% without incremental cost.</div><div class="callout" style="margin-top:8px"><strong>Fraudlogix:</strong> allocate the TUNE subscription cost to this product before comparing actual CPM.</div><div class="callout warn" style="margin-top:8px"><strong>Spur:</strong> separate session-assessment usage from Context API usage; they have different quotas.</div></div></div>
+      </div>
+
+      <div class="tab-panel" data-tab-panel="sources:coverage">
+        <div class="grid two"><div class="card"><h2>Feature Coverage by Product</h2><div class="table-wrap"><table><thead><tr><th>Product</th><th>State</th><th>Metro</th><th>City</th><th>Datacenter</th><th>VPN</th><th>Residential proxy</th><th>Fraud score</th></tr></thead><tbody><tr><td>Fraudlogix / TUNE</td><td>Partial</td><td>Partial</td><td>Partial</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr><tr><td>IP2Location LITE DB11</td><td>Yes</td><td>Derived</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>No</td></tr><tr><td>IP2Proxy LITE PX12</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Generic only</td><td>Generic only</td><td>No</td></tr><tr><td>MaxMind GeoLite2 City</td><td>Yes</td><td>Derived</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>No</td></tr><tr><td>ProxyCheck API</td><td>Yes</td><td>Derived</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Risk</td></tr></tbody></table></div></div><div class="card"><h2>Potential Product Overlap</h2><div class="callout warn"><strong>Location duplication:</strong> IP2Location LITE DB11, MaxMind GeoLite2 City and some Fraudlogix fields overlap. Keep them as separate sources for QA, but do not assume all three are required in production.</div><div class="callout" style="margin-top:8px"><strong>Proxy duplication:</strong> Fraudlogix, ProxyCheck, IP2Proxy and MaxMind Anonymous cover overlapping categories at different depth and freshness.</div><div class="callout good" style="margin-top:8px"><strong>Plan opportunity:</strong> use free/local products for baseline coverage and reserve paid capacity for timely comparison and fraud enrichment.</div><button class="btn" style="margin-top:12px" data-action="plan-overlap-report">Open overlap report</button></div></div>
+      </div>
+    </section>
+
+    <!-- IP DETAIL (not left-nav; accessed through search and drill-down) -->
+    <section class="screen" id="ipDetail">
+      <div class="section-head" style="margin-top:0"><div><button class="btn small" data-action="back-from-ip">← Back</button></div><div class="actions"><button class="btn" data-action="rerun-ip">Run missing lookups</button><button class="btn" data-action="copy-ip-link">Copy investigation link</button></div></div>
+      <div class="card" style="display:flex;justify-content:space-between;gap:14px;align-items:flex-end;flex-wrap:wrap"><div><div class="tiny muted">IP ADDRESS</div><div style="font-size:30px;font-weight:900" id="ipDetailAddress">73.14.88.21</div><div class="muted tiny">Observed 17 times · last seen 22 minutes ago</div></div><div><span class="pill good">Likely Human</span> <span class="pill info">Location 96%</span> <span class="pill warn">Proxy 18%</span></div></div>
+      <div class="grid three" style="margin-top:14px"><div class="card"><h2>Network</h2><div class="kv"><div>ISP</div><div>AT&T</div><div>ASN</div><div>AS7018</div><div>Network type</div><div>Residential</div><div>Organization</div><div>AT&T Internet</div></div></div><div class="card"><h2>Business Outcomes</h2><div class="kv"><div>Sessions</div><div>17</div><div>Leads</div><div>6</div><div>Phone verified</div><div>5</div><div>Sales</div><div>3</div><div>Revenue</div><div><strong>$184</strong></div><div>Revenue/session</div><div><strong>$10.82</strong></div></div></div><div class="card"><h2>Internal Assessment</h2><div class="metric"><div class="tiny muted">Location confidence</div><div class="num">96%</div></div><div class="metric" style="margin-top:8px"><div class="tiny muted">Proxy confidence</div><div class="num">18%</div></div><div class="callout warn" style="margin-top:8px"><strong>Likely Fraudlogix false positive.</strong></div></div></div>
+      <div class="section-head"><h2>Geography Comparison</h2></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Source</th><th>Observed at</th><th>State</th><th>Metro</th><th>County</th><th>City</th><th>Truth match</th></tr></thead><tbody><tr><td>Phone Verified</td><td>Aug 26 14:22</td><td>CA</td><td>LA Metro</td><td>Orange</td><td>Irvine</td><td><span class="pill good">Truth</span></td></tr><tr><td>Prepop</td><td>Aug 26 14:21</td><td>CA</td><td>LA Metro</td><td>Orange</td><td>Irvine</td><td><span class="pill good">Truth</span></td></tr><tr><td>Fraudlogix</td><td>Aug 26 14:22</td><td>CA</td><td>LA Metro</td><td>Orange</td><td>Santa Ana</td><td>Metro only</td></tr><tr><td>IP2Location</td><td>Aug 26 14:22</td><td>CA</td><td>LA Metro</td><td>Orange</td><td>Irvine</td><td>City</td></tr></tbody></table></div></div>
+      <div class="section-head"><h2>Proxy Classification</h2></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Product source</th><th>Observed at</th><th>Classification</th><th>Vendor confidence</th><th>Raw reason</th></tr></thead><tbody><tr><td>Fraudlogix / TUNE</td><td>Aug 26 14:22</td><td><span class="pill bad">Proxy</span></td><td>76</td><td>Hosting/proxy pattern</td></tr><tr><td>ProxyCheck API</td><td>Aug 26 15:08</td><td><span class="pill good">Clean</span></td><td>91</td><td>Residential ISP</td></tr><tr><td>MaxMind Anonymous</td><td>Aug 26 16:11</td><td><span class="pill good">Clean</span></td><td>88</td><td>Anonymous=false</td></tr></tbody></table></div><button class="btn" style="margin-top:10px" data-action="raw-ip-json">View raw responses</button></div>
+    </section>
+  </main>
+</div>
+
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle"><div class="drawer-panel"><div class="drawer-head"><div><h2 id="drawerTitle">Details</h2><div class="tiny muted" id="drawerSubtitle">Operational detail</div></div><button class="btn" id="closeDrawerBtn">Close</button></div><div id="drawerBody"></div></div></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-card"><div class="modal-head"><div><h2 id="modalTitle">Form</h2><div class="tiny muted" id="modalSubtitle"></div></div><button class="btn" id="closeModalBtn">Close</button></div><div id="modalBody"></div></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  const pageMeta={
+    overview:['Overview','Executive view of data flow, quality, vendor performance, cost and action items.'],
+    comparison:['Vendor Comparison','Overlap, bot/proxy detection, location accuracy, revenue false positives and IP-level disagreements in one report.'],
+    jobs:['Jobs & Sampling','Create API or CSV lookup jobs while optimizing sampling against plan limits and cost.'],
+    operations:['Operations','Tasks, errors, source health and agent-managed remediation.'],
+    sources:['Sources & Plans','Product-level sources, subscriptions, spend, quota and duplicate feature coverage.'],
+    ipDetail:['IP Investigation','Detailed location, proxy classifications, business outcomes and raw vendor responses.']
+  };
+  let currentScreen='overview';
+  let previousScreen='comparison';
+  let toastTimer;
+  let taskCount=3;
+
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+
+  function showToast(message){
+    const t=$('#toast');t.textContent=message;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+  }
+  function closeMobileNav(){document.body.classList.remove('nav-open');$('#mobileMenuBtn').setAttribute('aria-expanded','false')}
+  function showScreen(id, options={}){
+    if(!pageMeta[id]) return;
+    if(id==='ipDetail' && currentScreen!=='ipDetail') previousScreen=currentScreen;
+    currentScreen=id;
+    $$('.screen').forEach(x=>x.classList.toggle('active',x.id===id));
+    $$('.nav-button').forEach(x=>x.classList.toggle('active',x.dataset.screen===id));
+    $('#pageTitle').textContent=pageMeta[id][0];$('#pageSubtitle').textContent=pageMeta[id][1];
+    closeMobileNav();window.scrollTo({top:0,behavior:'smooth'});
+    if(options.compareTab) switchTab('compare',options.compareTab);
+    if(options.opsTab) switchTab('ops',options.opsTab);
+    if(options.sourceTab) switchTab('sources',options.sourceTab);
+  }
+  function switchTab(group,tab){
+    $$(`[data-tab-group="${group}"] .tab-button`).forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+    $$(`[data-tab-panel^="${group}:"]`).forEach(p=>p.classList.toggle('active',p.dataset.tabPanel===`${group}:${tab}`));
+    const panel=$(`[data-tab-panel="${group}:${tab}"]`);if(panel) panel.scrollIntoView({block:'nearest'});
+  }
+  function openDrawer(title,subtitle,html){$('#drawerTitle').textContent=title;$('#drawerSubtitle').textContent=subtitle||'';$('#drawerBody').innerHTML=html;$('#drawer').classList.add('open');setTimeout(()=>$('#closeDrawerBtn').focus(),20)}
+  function closeDrawer(){$('#drawer').classList.remove('open')}
+  function openModal(title,subtitle,html){$('#modalTitle').textContent=title;$('#modalSubtitle').textContent=subtitle||'';$('#modalBody').innerHTML=html;$('#modal').classList.add('open');setTimeout(()=>$('#modal input, #modal select, #modal button')?.focus(),20)}
+  function closeModal(){$('#modal').classList.remove('open')}
+  function updateTaskCounts(){
+    $('#navTaskCount').textContent=taskCount;$('#overviewTaskCount').textContent=taskCount;$('#opsOpenTasks').textContent=taskCount;
+    if(taskCount===0) $('#navTaskCount').style.display='none';
+  }
+  function downloadFile(filename,content,type='text/csv'){
+    const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  function copyText(text){
+    if(navigator.clipboard && window.isSecureContext){return navigator.clipboard.writeText(text)}
+    const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy')}finally{ta.remove()}return Promise.resolve();
+  }
+  function genericDetails(title){
+    return `<div class="grid two"><div class="metric"><div class="tiny muted">Status</div><div class="num">Needs review</div></div><div class="metric"><div class="tiny muted">Affected observations</div><div class="num">18,422</div></div></div><div class="section-head"><h2>Diagnostics</h2></div><div class="kv"><div>Started</div><div>Aug 27, 1:10 PM PT</div><div>Last success</div><div>Aug 27, 1:09 PM PT</div><div>Current error</div><div>Vendor API 401 / expired token</div><div>Coverage loss</div><div>2.8% of current IP observations</div><div>Recommended action</div><div>Rotate credential, validate with 100 lookups and replay the failed queue.</div></div><div class="modal-actions"><button class="btn primary" data-action="approve-remediation">Approve remediation</button><button class="btn" data-action="create-task">Create follow-up task</button></div>`;
+  }
+
+  $$('.nav-button').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.screen)));
+  $('#mobileMenuBtn').addEventListener('click',()=>{const open=!document.body.classList.contains('nav-open');document.body.classList.toggle('nav-open',open);$('#mobileMenuBtn').setAttribute('aria-expanded',String(open))});
+  $('#navBackdrop').addEventListener('click',closeMobileNav);
+  $('#closeDrawerBtn').addEventListener('click',closeDrawer);$('#drawer').addEventListener('click',e=>{if(e.target.id==='drawer')closeDrawer()});
+  $('#closeModalBtn').addEventListener('click',closeModal);$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();closeModal();closeMobileNav()}});
+  $('#dismissNote').addEventListener('click',()=>$('#prototypeNote').remove());
+  $('#refreshBtn').addEventListener('click',()=>{showToast('Dashboard refreshed with the latest available mock data.');$('#refreshBtn').textContent='Refreshed';setTimeout(()=>$('#refreshBtn').textContent='Refresh',1400)});
+  $('#globalPeriod').addEventListener('change',e=>showToast(`Global period set to ${e.target.value}.`));
+  $('#globalSite').addEventListener('change',e=>showToast(`Site filter set to ${e.target.value}.`));
+  $('#globalPublisher').addEventListener('change',e=>showToast(`Publisher filter set to ${e.target.value}.`));
+
+  $$('[data-tab-group]').forEach(group=>group.addEventListener('click',e=>{const b=e.target.closest('.tab-button');if(b)switchTab(group.dataset.tabGroup,b.dataset.tab)}));
+  $$('[data-nav]').forEach(el=>el.addEventListener('click',()=>showScreen(el.dataset.nav,{compareTab:el.dataset.compareTab,opsTab:el.dataset.opsTab,sourceTab:el.dataset.sourceTab})));
+  $$('[data-compare-tab]').forEach(el=>el.addEventListener('click',()=>{showScreen('comparison');switchTab('compare',el.dataset.compareTab)}));
+  $$('[data-ops-tab]').forEach(el=>el.addEventListener('click',()=>{showScreen('operations');switchTab('ops',el.dataset.opsTab)}));
+  $$('[data-source-tab]').forEach(el=>el.addEventListener('click',()=>{showScreen('sources');switchTab('sources',el.dataset.sourceTab)}));
+
+  $('#runComparisonBtn').addEventListener('click',()=>{
+    const windowText=$('#matchWindow').value;const count=windowText.includes('24 hours')?'18,611':windowText.includes('30 days')?'41,203':windowText.includes('Any')?'56,802':'28,442';
+    $('#matchedIpCount').textContent=count;showToast(`Comparison completed for ${count} timely overlapping IP observations.`);
+  });
+
+  $('#ipSearchForm').addEventListener('submit',e=>{e.preventDefault();const ip=$('#ipSearchInput').value.trim();if(!ip){showToast('Enter an IP address to investigate.');return}openIp(ip)});
+  function openIp(ip){$('#ipDetailAddress').textContent=ip;showScreen('ipDetail')}
+  $$('[data-open-ip]').forEach(b=>b.addEventListener('click',()=>openIp(b.dataset.openIp)));
+
+  function estimateJob(silent=false){
+    const population=Number($('#jobPopulation').value);const rate=Math.max(.1,Math.min(100,Number($('#jobSample').value)||10));const rows=Math.ceil(population*rate/100);let cost=0;
+    $$('.job-source:checked').forEach(c=>cost+=rows*(Number(c.dataset.cpm)||0)/1000);
+    $('#jobEstimateRecords').textContent=rows.toLocaleString();$('#jobEstimateCost').textContent=`$${cost.toFixed(2)}`;$('#jobEstimateQuota').textContent=`${Math.min(99,Math.round(9.4+rows/8000))}%`;$('#jobEstimateTime').textContent=`${Math.max(1,Math.ceil(rows/5000))} min`;
+    $('#jobRecommendation').innerHTML=cost===0?'<strong>Plan optimization:</strong> this job fits current included capacity. Increase the sample if greater overlap is needed.':'<strong>Cost warning:</strong> one or more selected products may incur incremental usage cost.';
+    if(!silent) showToast('Job estimate updated.');return {population,rate,rows,cost};
+  }
+  $('#estimateJobBtn').addEventListener('click',estimateJob);
+  $('#runJobBtn').addEventListener('click',()=>{
+    const x=estimateJob();const checked=$$('.job-source:checked').map(c=>c.value);if(!checked.length){showToast('Select at least one product source.');return}
+    const id=`QA-${new Date().toISOString().slice(0,10)}-${String(Math.floor(Math.random()*90+10))}`;const tr=document.createElement('tr');tr.innerHTML=`<td>${id}</td><td>${$('#jobPopulation').selectedOptions[0].text} ${x.rate}%</td><td>${checked.join(', ')}</td><td>${x.rows.toLocaleString()}</td><td><span class="pill info">Running</span></td><td>$${x.cost.toFixed(2)}</td><td>Just now</td><td><button class="btn small" data-action="view-job">View</button></td>`;$('#jobsTable tbody').prepend(tr);showToast(`${id} started.`);
+  });
+  $('#exportJobBtn').addEventListener('click',()=>{const rows=['ip_address,observed_at_utc,source_population','73.14.88.21,2026-08-27T20:10:00Z,Fraudlogix','104.29.55.87,2026-08-27T20:11:00Z,Fraudlogix','198.51.100.4,2026-08-27T20:12:00Z,Fraudlogix'];downloadFile('ip_vendor_sample.csv',rows.join('\n'));showToast('Sample CSV exported.')});
+  $('#importJobBtn').addEventListener('click',()=>$('#importJobFile').click());
+  $('#importJobFile').addEventListener('change',e=>{const f=e.target.files[0];if(f){showToast(`${f.name} imported and queued for schema validation.`);e.target.value=''}});
+
+  document.addEventListener('click',e=>{
+    const taskBtn=e.target.closest('[data-task-action]');if(taskBtn){
+      const card=taskBtn.closest('[data-task-id]');const id=card?.dataset.taskId||'Task';const action=taskBtn.dataset.taskAction;
+      if(action==='open'){openDrawer(id,'Task detail, evidence, SLA and agent plan',genericDetails(id));return}
+      if(action==='run'){taskBtn.textContent='Running…';taskBtn.disabled=true;setTimeout(()=>{taskBtn.textContent='Remediation running';showToast(`${id}: remediation started by the operations agent.`)},500);return}
+      if(action==='assign'){taskBtn.textContent='Assigned to you';taskBtn.disabled=true;showToast(`${id} assigned to you.`);return}
+      if(action==='snooze'){showToast(`${id} snoozed for 24 hours.`);return}
+      if(action==='resolve'){card.style.opacity='.45';taskBtn.textContent='Resolved';taskBtn.disabled=true;taskCount=Math.max(0,taskCount-1);updateTaskCounts();showToast(`${id} resolved.`);return}
+    }
+    const a=e.target.closest('[data-action]');if(!a)return;const action=a.dataset.action;
+    if(action==='approve-remediation'){showToast('Remediation approved. The operations agent is rotating the credential and validating the source.');return}
+    if(action==='save-comparison'){showToast('Comparison view saved.');return}
+    if(action==='open-confidence-method'){openDrawer('Proxy confidence methodology','Separate from vendor risk scores',`<div class="callout"><strong>Prototype formula:</strong> vendor agreement, known infrastructure evidence, observation freshness, revenue contradiction, phone-verification contradiction and repeated session behavior each contribute independently.</div><div class="section-head"><h2>Still to configure</h2></div><div class="kv"><div>Weights</div><div>Require data-science approval</div><div>Maturation window</div><div>Require business definition</div><div>Block threshold</div><div>Require routing-policy approval</div></div>`);return}
+    if(action==='export-isp'){downloadFile('isp_value_risk.csv','isp,sessions,revenue_per_session,proxy_rate\nAT&T,442000,1.82,0.021\nVerizon,318000,1.74,0.038');showToast('ISP report exported.');return}
+    if(action==='prefill-overlap-job'){showScreen('jobs');$('#jobPopulation').value='180729';$('#jobSample').value='10';estimateJob();return}
+    if(action==='export-disagreements'){downloadFile('ip_disagreements.csv','ip,fraudlogix,proxycheck,maxmind,revenue\n73.14.88.21,proxy,clean,clean,184\n104.29.55.87,clean,residential_proxy,unknown,0');showToast('Disagreement queue exported.');return}
+    if(action==='refresh-jobs'){showToast('Job statuses refreshed.');return}
+    if(action==='view-job'){openDrawer('Lookup job','Execution detail and output',`<div class="grid two"><div class="metric"><div class="tiny muted">Status</div><div class="num">Complete</div></div><div class="metric"><div class="tiny muted">Rows</div><div class="num">18,073</div></div></div><div class="section-head"><h2>Results</h2></div><div class="kv"><div>Successful</div><div>17,922</div><div>No result</div><div>133</div><div>Errors</div><div>18</div><div>Actual cost</div><div>$0</div></div>`);return}
+    if(action==='download-job'){downloadFile('job_results.csv','ip,proxy,proxy_type,confidence\n73.14.88.21,false,,91');showToast('Job results downloaded.');return}
+    if(action==='retry-job'){a.textContent='Retrying…';a.disabled=true;showToast('Failed job queued for retry.');return}
+    if(action==='create-task'){openTaskModal();return}
+    if(action==='task-rules'){openDrawer('Task automation rules','How alerts become tasks',`<div class="callout"><strong>Current policy:</strong> critical source failures create tasks immediately; drift and coverage alerts create tasks after two consecutive violations; informational alerts remain unassigned.</div><div class="section-head"><h2>Rules</h2></div><div class="kv"><div>Coverage below SLA</div><div>Create High task after 10 minutes</div><div>API failure</div><div>Create Critical task after 5 minutes</div><div>Classification drift</div><div>Create High task after two periods</div><div>Quota >90%</div><div>Create Medium task</div></div>`);return}
+    if(action==='export-errors'){downloadFile('ip_source_errors.csv','error_id,source,type,status\nERR-8841,MaxMind Anonymous,API 401,active');showToast('Errors exported.');return}
+    if(action==='view-error'||action==='health-details'||action==='view-agent-action'){openDrawer('Operational detail','Error, health and agent evidence',genericDetails('detail'));return}
+    if(action==='retry-error'){a.textContent='Retrying…';a.disabled=true;showToast('Error replay queued.');return}
+    if(action==='create-task-from-error'){createTaskFromError(a);return}
+    if(action==='configure-monitors'){openModal('Configure monitors','Set task-producing thresholds',`<div class="form-grid"><div class="field"><label>Coverage warning</label><input value="90%"></div><div class="field"><label>Coverage critical</label><input value="75%"></div><div class="field"><label>Error-rate critical</label><input value="5%"></div><div class="field"><label>Freshness critical</label><input value="24 hours"></div></div><div class="modal-actions"><button class="btn" data-action="cancel-modal">Cancel</button><button class="btn primary" data-action="save-monitors">Save monitors</button></div>`);return}
+    if(action==='edit-agent-policy'){openModal('Edit agent policy','Control autonomous versus approval-required actions',`<div class="checkbox-list"><label class="check"><input type="checkbox" checked><span>Allow read-only diagnostics</span></label><label class="check"><input type="checkbox" checked><span>Allow retry of idempotent jobs</span></label><label class="check"><input type="checkbox"><span>Allow credential rotation without approval</span></label><label class="check"><input type="checkbox"><span>Allow disabling a source without approval</span></label></div><div class="modal-actions"><button class="btn" data-action="cancel-modal">Cancel</button><button class="btn primary" data-action="save-agent-policy">Save policy</button></div>`);return}
+    if(action==='add-source'||action==='edit-source'){openSourceModal(action==='add-source'?'Add product source':'Edit product source');return}
+    if(action==='add-plan'||action==='edit-plan'){openPlanModal(action==='add-plan'?'Add plan':'Edit plan');return}
+    if(action==='plan-overlap-report'){openDrawer('Plan coverage overlap','Potential duplicate spend and complementary coverage',`<div class="callout warn"><strong>Three location products overlap:</strong> keep free challengers for QA, but choose one production routing source after the accuracy bake-off.</div><div class="callout" style="margin-top:8px"><strong>Four proxy products overlap:</strong> compare incremental residential-proxy detection and revenue false-positive impact before paying for more than one premium source.</div>`);return}
+    if(action==='back-from-ip'){showScreen(previousScreen);return}
+    if(action==='rerun-ip'){showScreen('jobs');showToast('Job builder opened for this IP.');return}
+    if(action==='copy-ip-link'){copyText(location.href.split('#')[0]+'#ip='+encodeURIComponent($('#ipDetailAddress').textContent)).then(()=>showToast('Investigation link copied.')).catch(()=>showToast('Copy was blocked by the browser; select the URL from the address bar.'));return}
+    if(action==='raw-ip-json'){openDrawer('Raw vendor responses','Unnormalized source payloads',`<pre class="mono">{\n  "source": "fraudlogix_tune",\n  "observed_at": "2026-08-26T21:22:00Z",\n  "proxy": true,\n  "risk": 76,\n  "city": "Santa Ana"\n}\n\n{\n  "source": "proxycheck_api",\n  "observed_at": "2026-08-26T22:08:00Z",\n  "proxy": false,\n  "type": "RESIDENTIAL",\n  "confidence": 91\n}</pre>`);return}
+    if(action==='cancel-modal'){closeModal();return}
+    if(action.startsWith('save-')){closeModal();showToast('Configuration saved in the prototype.');return}
+  });
+
+  function openTaskModal(){openModal('Create operational task','Assign ownership, priority and an action',`<div class="form-grid"><div class="field"><label>Task title</label><input id="newTaskTitle" value="Investigate IP source issue"></div><div class="field"><label>Priority</label><select id="newTaskPriority"><option>High</option><option>Critical</option><option>Medium</option><option>Low</option></select></div><div class="field"><label>Owner</label><select><option>Operations Agent</option><option>Data Engineering</option><option>Data Quality Agent</option><option>Unassigned</option></select></div><div class="field"><label>Due</label><select><option>Within 4 hours</option><option>Today</option><option>Tomorrow</option></select></div></div><div class="field" style="margin-top:12px"><label>Description</label><input value="Review source evidence and resolve the underlying problem."></div><div class="modal-actions"><button class="btn" data-action="cancel-modal">Cancel</button><button class="btn primary" id="modalCreateTaskBtn">Create task</button></div>`);setTimeout(()=>$('#modalCreateTaskBtn')?.addEventListener('click',()=>{taskCount++;updateTaskCounts();closeModal();showToast('Operational task created.')}),0)}
+  function createTaskFromError(button){
+    button.textContent='Task created';button.disabled=true;taskCount++;updateTaskCounts();$('#unlinkedErrors').textContent='0';showToast('OPS-1049 created and linked to ERR-8838.');
+  }
+  function openSourceModal(title){openModal(title,'Each product is a separate comparable source',`<div class="form-grid"><div class="field"><label>Company</label><input value="New Vendor"></div><div class="field"><label>Product source name</label><input value="Product / Plan"></div><div class="field"><label>Delivery</label><select><option>API</option><option>Database</option><option>Feed</option><option>Request headers / logs</option></select></div><div class="field"><label>Primary use</label><select><option>Proxy detection</option><option>Location</option><option>Fraud intelligence</option><option>Bot signal</option></select></div><div class="field"><label>Subscription state</label><select><option>Paid</option><option>Free</option><option>Trial</option><option>Bundled</option><option>Historical</option></select></div><div class="field"><label>Owner</label><select><option>Data Engineering</option><option>Router</option><option>Platform</option></select></div></div><div class="modal-actions"><button class="btn" data-action="cancel-modal">Cancel</button><button class="btn primary" data-action="save-source">Save source</button></div>`)}
+  function openPlanModal(title){openModal(title,'Track paid status, quota, renewal and unit economics',`<div class="form-grid"><div class="field"><label>Plan name</label><input value="Vendor plan"></div><div class="field"><label>Payment status</label><select><option>Paid</option><option>Free</option><option>Trial</option><option>Bundled</option></select></div><div class="field"><label>Cost</label><input value="$0"></div><div class="field"><label>Billing cadence</label><select><option>Monthly</option><option>Annual</option><option>Daily usage</option><option>Bundled contract</option></select></div><div class="field"><label>Quota</label><input value="100,000 / month"></div><div class="field"><label>Renewal date</label><input type="date" value="2027-03-18"></div><div class="field"><label>Overage</label><input value="Plan upgrade"></div><div class="field"><label>Cost allocation</label><input value="100% to IP Intelligence"></div></div><div class="modal-actions"><button class="btn" data-action="cancel-modal">Cancel</button><button class="btn primary" data-action="save-plan">Save plan</button></div>`)}
+
+  updateTaskCounts();estimateJob(true);
+})();
+</script>
+</body>
+</html>

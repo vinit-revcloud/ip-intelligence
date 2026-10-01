@@ -1,0 +1,5 @@
+lead_category,ips,revenue_ips,revenue_pct,fraudlogix_tune_flag_pct,ip2proxy_px12_flag_pct,proxycheck_io_flag_pct,session_summary_flag_pct
+listing,2,1,50.0,0.0,,50.0,50.0
+meeting,67,57,85.1,29.8,,40.3,44.8
+intro_qualified,739,369,49.9,22.5,100.0,28.3,31.4
+below_intro,1960,0,0.0,44.6,100.0,14.8,16.2

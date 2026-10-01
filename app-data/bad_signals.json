@@ -1,0 +1,543 @@
+{
+ "as_of": "2026-09-18T22:20:13Z",
+ "standard": "is_bot = bad signal (owner decision 19 Sep 2026): FraudLogix latest decision FLAGGED for any reason; proxycheck.io proxy, VPN, TOR, datacenter, compromised, scraper, any proxy/threat type, cloud network or risk 67+; IP2Proxy listed. An IP is bad if FraudLogix or proxycheck.io says so.",
+ "proxy_only_reasons": [
+  "VPN",
+  "PROXY",
+  "MOBILE_PROXY_SIGNALS",
+  "PROXYCHECK_IO:VPN",
+  "PROXYCHECK_IO:PROXY"
+ ],
+ "per_ip": {
+  "ips": 4989212,
+  "answered_ips": 4989122,
+  "bad_ips": 687978,
+  "bad_ips_strict": 357521,
+  "proxy_vpn_only_ips": 330457
+ },
+ "vendors": [
+  {
+   "vendor": "fraudlogix_tune",
+   "rows_": 4533991,
+   "bad": 612561,
+   "not_bad": 3921430,
+   "no_answer": 0
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "rows_": 4989206,
+   "bad": 16873,
+   "not_bad": 0,
+   "no_answer": 4972333
+  },
+  {
+   "vendor": "proxycheck_io",
+   "rows_": 1257199,
+   "bad": 145893,
+   "not_bad": 1111306,
+   "no_answer": 0
+  }
+ ],
+ "reasons": [
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXY",
+   "ips": 315253
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "NON_HUMAN_SCRIPT",
+   "ips": 71263
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "ABNORMAL_TRAFFIC_PATTERNS",
+   "ips": 61040
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "MASKED_DEVICES",
+   "ips": 49940
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "VPN",
+   "ips": 46200
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "10",
+   "ips": 33333
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS14618",
+   "ips": 31927
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "BASIC_FRAUD",
+   "ips": 26176
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS16509",
+   "ips": 23201
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "9",
+   "ips": 20233
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "HIGH_RISK",
+   "ips": 17223
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/DCH",
+   "ips": 14956
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "BOT_GENERATED",
+   "ips": 9295
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "OTHER_REASON",
+   "ips": 7372
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS16509",
+   "ips": 6277
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS212238",
+   "ips": 5924
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS8075",
+   "ips": 4246
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS9009",
+   "ips": 3748
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS396982",
+   "ips": 3404
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "MOBILE_PROXY_SIGNALS",
+   "ips": 3391
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "SOCKS5",
+   "ips": 3272
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "VPN",
+   "ips": 3116
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "DATA_CENTER",
+   "ips": 2256
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS14061",
+   "ips": 1619
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS20473",
+   "ips": 1579
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS60068",
+   "ips": 1314
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "SPOOFED",
+   "ips": 1293
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS16276",
+   "ips": 833
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:VPN",
+   "ips": 793
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/DCH/SCANNER",
+   "ips": 614
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/EDU",
+   "ips": 479
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "NOT_APPLICABLE",
+   "ips": 431
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS14618",
+   "ips": 383
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "COMPROMISED_SERVER",
+   "ips": 332
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/DCH/BOTNET",
+   "ips": 310
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/DCH/SPAM",
+   "ips": 286
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS24940",
+   "ips": 228
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS63949",
+   "ips": 226
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:HIGH_RISK",
+   "ips": 215
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS12876",
+   "ips": 198
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "TOR",
+   "ips": 137
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS14061",
+   "ips": 96
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "8",
+   "ips": 90
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "HTTP",
+   "ips": 75
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/DCH/SPAM/SCANNER",
+   "ips": 73
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS20473",
+   "ips": 63
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS396982",
+   "ips": 60
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS45102",
+   "ips": 54
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS31898",
+   "ips": 48
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS9009",
+   "ips": 44
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS212238",
+   "ips": 42
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS51167",
+   "ips": 31
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "HTTPS",
+   "ips": 28
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "TOR",
+   "ips": 28
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS8075",
+   "ips": 27
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP",
+   "ips": 26
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "CLOUD_ASN:AS8560",
+   "ips": 22
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/DCH/SCANNER/BOTNET",
+   "ips": 21
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "SOCKS4",
+   "ips": 19
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/DCH/SPAM/BOTNET",
+   "ips": 15
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP/SPAM/SCANNER/BOTNET",
+   "ips": 14
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS60068",
+   "ips": 12
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS16276",
+   "ips": 11
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP/SPAM/SCANNER",
+   "ips": 11
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/DCH/SPAM/SCANNER/BOTNET",
+   "ips": 9
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP/MOB",
+   "ips": 8
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP/BOTNET",
+   "ips": 8
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/CDN",
+   "ips": 7
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:SOCKS5",
+   "ips": 6
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS63949",
+   "ips": 5
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/COM",
+   "ips": 5
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/EDU/SPAM",
+   "ips": 5
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS8560",
+   "ips": 5
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "SHADOWSOCKS",
+   "ips": 4
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP/SCANNER",
+   "ips": 4
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/MOB",
+   "ips": 4
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS12876",
+   "ips": 3
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP/SPAM",
+   "ips": 3
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:TOR",
+   "ips": 3
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/CDN/SPAM",
+   "ips": 3
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS24940",
+   "ips": 3
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/EDU/SCANNER",
+   "ips": 2
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/CDN/SPAM/SCANNER",
+   "ips": 1
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP/MOB/BOTNET",
+   "ips": 1
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP/MOB/SPAM",
+   "ips": 1
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:COMPROMISED_SERVER",
+   "ips": 1
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/GOV",
+   "ips": 1
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ORG/BOTNET",
+   "ips": 1
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "PROXYCHECK_IO:CLOUD_ASN:AS31898",
+   "ips": 1
+  },
+  {
+   "vendor": "fraudlogix_tune",
+   "reason": "TOR_EXIT_NODE",
+   "ips": 1
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/COM/BOTNET",
+   "ips": 1
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/EDU/BOTNET",
+   "ips": 1
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP/SPAM/BOTNET",
+   "ips": 1
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/ISP/SCANNER/BOTNET",
+   "ips": 1
+  },
+  {
+   "vendor": "proxycheck_io",
+   "reason": "DATA_CENTER",
+   "ips": 1
+  },
+  {
+   "vendor": "ip2proxy_px12",
+   "reason": "PUB/CDN/SCANNER",
+   "ips": 1
+  }
+ ],
+ "truth_test": {
+  "measured_on": "2026-09-19",
+  "paying_ips": 1044,
+  "paying_marked_bad": 535,
+  "paying_marked_bad_strict_max": 49,
+  "fake_ips": 40,
+  "fake_marked_bad": 24,
+  "paying_bad_by_reason": {
+   "VPN": 300,
+   "PROXY": 185,
+   "MASKED_DEVICES": 23,
+   "ABNORMAL_TRAFFIC_PATTERNS": 16,
+   "MOBILE_PROXY_SIGNALS": 5,
+   "BASIC_FRAUD": 3,
+   "BOT_GENERATED": 3,
+   "SOCKS5": 2,
+   "NON_HUMAN_SCRIPT": 1,
+   "DATA_CENTER": 1
+  }
+ }
+}

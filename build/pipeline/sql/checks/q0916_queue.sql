@@ -1,0 +1,1 @@
+SELECT reason, coalesce(outcome, 'waiting') AS outcome, count(*) AS addresses, min(queued_at) AS first_queued, max(answered_at) AS last_answered FROM ipintel_curated.proxycheck_queue GROUP BY 1, 2 ORDER BY 3 DESC;

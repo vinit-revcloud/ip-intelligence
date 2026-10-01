@@ -1,0 +1,117 @@
+{
+ "table": {
+  "Name": "ip_intel_pc",
+  "DatabaseName": "ipintel_curated",
+  "Owner": "hadoop",
+  "CreateTime": "2026-09-11 14:52:41+05:30",
+  "UpdateTime": "2026-09-11 14:52:41+05:30",
+  "LastAccessTime": "1970-01-01 05:30:00+05:30",
+  "Retention": 0,
+  "StorageDescriptor": {
+   "Columns": [
+    {
+     "Name": "ip_address",
+     "Type": "string"
+    },
+    {
+     "Name": "vendor",
+     "Type": "string"
+    },
+    {
+     "Name": "has_answer",
+     "Type": "string"
+    },
+    {
+     "Name": "is_proxy",
+     "Type": "string"
+    },
+    {
+     "Name": "is_vpn",
+     "Type": "string"
+    },
+    {
+     "Name": "is_tor",
+     "Type": "string"
+    },
+    {
+     "Name": "is_datacenter",
+     "Type": "string"
+    },
+    {
+     "Name": "is_bot",
+     "Type": "string"
+    },
+    {
+     "Name": "is_compromised",
+     "Type": "string"
+    },
+    {
+     "Name": "is_scraper",
+     "Type": "string"
+    },
+    {
+     "Name": "is_anonymous",
+     "Type": "string"
+    },
+    {
+     "Name": "fraud_reason",
+     "Type": "string"
+    },
+    {
+     "Name": "risk_score",
+     "Type": "string"
+    },
+    {
+     "Name": "isp",
+     "Type": "string"
+    },
+    {
+     "Name": "asn",
+     "Type": "string"
+    },
+    {
+     "Name": "observed_at",
+     "Type": "string"
+    },
+    {
+     "Name": "last_seen_at",
+     "Type": "string"
+    }
+   ],
+   "Location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/curated/ip_intel_pc/observed_date=2026-09-11",
+   "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+   "Compressed": false,
+   "NumberOfBuckets": -1,
+   "SerdeInfo": {
+    "SerializationLibrary": "org.apache.hadoop.hive.serde2.OpenCSVSerde",
+    "Parameters": {
+     "serialization.format": "1"
+    }
+   },
+   "BucketColumns": [],
+   "SortColumns": [],
+   "Parameters": {},
+   "SkewedInfo": {
+    "SkewedColumnNames": [],
+    "SkewedColumnValues": [],
+    "SkewedColumnValueLocationMaps": {}
+   },
+   "StoredAsSubDirectories": false
+  },
+  "PartitionKeys": [],
+  "TableType": "EXTERNAL_TABLE",
+  "Parameters": {
+   "skip.header.line.count": "1",
+   "EXTERNAL": "TRUE",
+   "transient_lastDdlTime": "1789118561"
+  },
+  "CreatedBy": "arn:aws:iam::221490242148:user/source_creation_tool_user",
+  "IsRegisteredWithLakeFormation": false,
+  "CatalogId": "221490242148",
+  "VersionId": "0",
+  "IsMultiDialectView": false,
+  "IsMaterializedView": false
+ },
+ "partitions": []
+}

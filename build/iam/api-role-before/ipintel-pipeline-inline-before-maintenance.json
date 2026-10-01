@@ -1,0 +1,156 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ReadTheCatalog",
+            "Effect": "Allow",
+            "Action": [
+                "glue:GetDatabase",
+                "glue:GetDatabases",
+                "glue:GetTable",
+                "glue:GetTables",
+                "glue:GetPartition",
+                "glue:GetPartitions",
+                "glue:BatchGetPartition"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ReadTheThreeDatalakeBuckets",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:ListBucket",
+                "s3:GetBucketLocation",
+                "s3:GetBucketAcl",
+                "s3:ListBucketMultipartUploads",
+                "s3:ListMultipartUploadParts"
+            ],
+            "Resource": [
+                "arn:aws:s3:::datalake-raw-221490242148-us-west-2",
+                "arn:aws:s3:::datalake-raw-221490242148-us-west-2/*",
+                "arn:aws:s3:::datalake-unified-221490242148-us-west-2",
+                "arn:aws:s3:::datalake-unified-221490242148-us-west-2/*",
+                "arn:aws:s3:::datalake-landingzone-221490242148-us-west-2",
+                "arn:aws:s3:::datalake-landingzone-221490242148-us-west-2/*"
+            ]
+        },
+        {
+            "Sid": "WriteOnlyTheProjectFolder",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:DeleteObject",
+                "s3:AbortMultipartUpload"
+            ],
+            "Resource": "arn:aws:s3:::datalake-landingzone-221490242148-us-west-2/ip-intelligence/*"
+        },
+        {
+            "Sid": "WriteOnlyIpintelCurated",
+            "Effect": "Allow",
+            "Action": [
+                "glue:CreateTable",
+                "glue:UpdateTable",
+                "glue:DeleteTable",
+                "glue:BatchDeleteTable",
+                "glue:CreatePartition",
+                "glue:BatchCreatePartition",
+                "glue:UpdatePartition",
+                "glue:DeletePartition",
+                "glue:BatchDeletePartition"
+            ],
+            "Resource": [
+                "arn:aws:glue:us-west-2:221490242148:catalog",
+                "arn:aws:glue:us-west-2:221490242148:database/ipintel_curated",
+                "arn:aws:glue:us-west-2:221490242148:table/ipintel_curated/*"
+            ]
+        },
+        {
+            "Sid": "QueryOnlyInTheEtlWorkgroup",
+            "Effect": "Allow",
+            "Action": [
+                "athena:StartQueryExecution",
+                "athena:GetQueryExecution",
+                "athena:GetQueryResults",
+                "athena:StopQueryExecution",
+                "athena:GetWorkGroup"
+            ],
+            "Resource": "arn:aws:athena:us-west-2:221490242148:workgroup/ipintel_etl"
+        },
+        {
+            "Sid": "PipelineState",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:Query",
+                "dynamodb:Scan",
+                "dynamodb:BatchWriteItem"
+            ],
+            "Resource": "arn:aws:dynamodb:us-west-2:221490242148:table/ipintel-pipeline-state"
+        },
+        {
+            "Sid": "VendorListReadOnly",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:GetItem",
+                "dynamodb:Scan"
+            ],
+            "Resource": "arn:aws:dynamodb:us-west-2:221490242148:table/ipintel-sources"
+        },
+        {
+            "Sid": "StartTheProxycheckJobAndHandOver",
+            "Effect": "Allow",
+            "Action": "lambda:InvokeFunction",
+            "Resource": "arn:aws:lambda:us-west-2:221490242148:function:ipintel-proxycheck-daily"
+        },
+        {
+            "Sid": "FailedHandOversAndAlerts",
+            "Effect": "Allow",
+            "Action": [
+                "sqs:SendMessage",
+                "sns:Publish"
+            ],
+            "Resource": [
+                "arn:aws:sqs:us-west-2:221490242148:ipintel-proxycheck-dlq",
+                "arn:aws:sns:us-west-2:221490242148:ipintel-alerts"
+            ]
+        },
+        {
+            "Sid": "ProxycheckKeysReadOnly",
+            "Effect": "Allow",
+            "Action": "secretsmanager:GetSecretValue",
+            "Resource": "arn:aws:secretsmanager:us-west-2:221490242148:secret:ipintel/*"
+        },
+        {
+            "Sid": "SelfChecksAndMetrics",
+            "Effect": "Allow",
+            "Action": [
+                "iam:SimulatePrincipalPolicy"
+            ],
+            "Resource": "arn:aws:iam::221490242148:role/ipintel-pipeline-role"
+        },
+        {
+            "Sid": "ActivityReviewAndMetrics",
+            "Effect": "Allow",
+            "Action": [
+                "cloudtrail:LookupEvents",
+                "cloudwatch:PutMetricData"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "OwnLogs",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "arn:aws:logs:us-west-2:221490242148:log-group:/aws/lambda/ipintel-*"
+        }
+    ]
+}

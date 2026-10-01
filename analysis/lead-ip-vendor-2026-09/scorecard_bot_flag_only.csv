@@ -1,0 +1,3 @@
+vendor,lead_ips,answered,coverage_pct,flagged,TP,FP,TN,FN,no_answer,FPR_pct,accuracy_pct,precision_pct,recall_pct
+fraudlogix_tune,2768,2326,84.0,5,4,1,339,1982,442,0.3,14.7,80.0,0.2
+session_summary,2768,2768,100.0,140,118,22,405,2223,0,5.2,18.9,84.3,5.0

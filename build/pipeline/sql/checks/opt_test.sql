@@ -1,0 +1,1 @@
+OPTIMIZE ipintel_curated.vendor_overview_geo REWRITE DATA USING BIN_PACK

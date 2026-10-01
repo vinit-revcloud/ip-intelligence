@@ -1,0 +1,4 @@
+s2_session_botclick.sql                  SUCCEEDED  0.15 GB read  9s
+   is_bot_click | sessions | ips | with_lead | with_revenue | ua_botlike | median_duration | median_events | with_click_ids | click_ids_example
+   true | 2237493 | 122711 | 11882 | 64260 | 17383 | 0 | 1 | 5174 | {}
+   false | 9205030 | 1891566 | 294067 | 1090279 | 14985 | 0 | 1 | 66145 | {}

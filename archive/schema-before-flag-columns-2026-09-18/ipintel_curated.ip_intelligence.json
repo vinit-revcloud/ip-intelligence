@@ -1,0 +1,157 @@
+{
+    "Table": {
+        "Name": "ip_intelligence",
+        "DatabaseName": "ipintel_curated",
+        "CreateTime": "2026-09-14T17:38:32+05:30",
+        "UpdateTime": "2026-09-18T19:30:15+05:30",
+        "Retention": 0,
+        "StorageDescriptor": {
+            "Columns": [
+                {
+                    "Name": "ip_address",
+                    "Type": "string",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "1",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "vendor",
+                    "Type": "string",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "2",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "is_proxy",
+                    "Type": "boolean",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "3",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "is_vpn",
+                    "Type": "boolean",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "4",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "is_tor",
+                    "Type": "boolean",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "5",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "is_datacenter",
+                    "Type": "boolean",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "6",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "is_bot",
+                    "Type": "boolean",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "7",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "is_compromised",
+                    "Type": "boolean",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "8",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "is_scraper",
+                    "Type": "boolean",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "9",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "is_anonymous",
+                    "Type": "boolean",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "10",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "isp",
+                    "Type": "string",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "11",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "asn",
+                    "Type": "string",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "12",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "created_at",
+                    "Type": "string",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "13",
+                        "iceberg.field.optional": "true"
+                    }
+                },
+                {
+                    "Name": "updated_at",
+                    "Type": "string",
+                    "Parameters": {
+                        "iceberg.field.current": "true",
+                        "iceberg.field.id": "14",
+                        "iceberg.field.optional": "true"
+                    }
+                }
+            ],
+            "Location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/iceberg/ip_intelligence",
+            "AdditionalLocations": [],
+            "Compressed": false,
+            "NumberOfBuckets": 0,
+            "SortColumns": [],
+            "StoredAsSubDirectories": false
+        },
+        "TableType": "EXTERNAL_TABLE",
+        "Parameters": {
+            "metadata_location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/iceberg/ip_intelligence/metadata/00038-3c6ad997-6669-4612-8cdc-4d2b6e448149.metadata.json",
+            "previous_metadata_location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/iceberg/ip_intelligence/metadata/00037-74861df7-a6cf-40a8-abb7-18aff68c3579.metadata.json",
+            "table_type": "ICEBERG"
+        },
+        "CreatedBy": "arn:aws:sts::221490242148:assumed-role/ipintel-builder-role/botocore-session-1789386311",
+        "IsRegisteredWithLakeFormation": false,
+        "CatalogId": "221490242148",
+        "VersionId": "38",
+        "IsMultiDialectView": false,
+        "IsMaterializedView": false
+    }
+}

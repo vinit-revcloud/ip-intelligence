@@ -1,0 +1,173 @@
+{
+  "window": [
+    "2026-06-18",
+    "2026-09-09"
+  ],
+  "direct_join": {
+    "ips": 2768,
+    "leads": 3235
+  },
+  "lead_ips": 2768,
+  "real_person_ips": 427,
+  "bot_ips": 2341,
+  "leads": 3235,
+  "blank_revenue_ips": 1315,
+  "fake_or_spam_ips": 7,
+  "scorecard": [
+    {
+      "vendor": "fraudlogix_tune",
+      "lead_ips": 2768,
+      "answered": 2326,
+      "coverage_pct": 84.0,
+      "flagged": 898,
+      "TP": 822,
+      "FP": 76,
+      "TN": 264,
+      "FN": 1164,
+      "no_answer": 442,
+      "FPR_pct": 22.4,
+      "accuracy_pct": 46.7,
+      "precision_pct": 91.5,
+      "recall_pct": 41.4
+    },
+    {
+      "vendor": "ip2proxy_px12",
+      "lead_ips": 2768,
+      "answered": 14,
+      "coverage_pct": 0.5,
+      "flagged": 14,
+      "TP": 14,
+      "FP": 0,
+      "TN": 0,
+      "FN": 0,
+      "no_answer": 2754,
+      "FPR_pct": null,
+      "accuracy_pct": 100.0,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0
+    },
+    {
+      "vendor": "proxycheck_io",
+      "lead_ips": 2768,
+      "answered": 2768,
+      "coverage_pct": 100.0,
+      "flagged": 528,
+      "TP": 389,
+      "FP": 139,
+      "TN": 288,
+      "FN": 1952,
+      "no_answer": 0,
+      "FPR_pct": 32.6,
+      "accuracy_pct": 24.5,
+      "precision_pct": 73.7,
+      "recall_pct": 16.6
+    },
+    {
+      "vendor": "session_summary",
+      "lead_ips": 2768,
+      "answered": 2768,
+      "coverage_pct": 100.0,
+      "flagged": 580,
+      "TP": 426,
+      "FP": 154,
+      "TN": 273,
+      "FN": 1915,
+      "no_answer": 0,
+      "FPR_pct": 36.1,
+      "accuracy_pct": 25.3,
+      "precision_pct": 73.4,
+      "recall_pct": 18.2
+    }
+  ],
+  "bot_scorecard": [
+    {
+      "vendor": "fraudlogix_tune",
+      "lead_ips": 2768,
+      "answered": 2326,
+      "coverage_pct": 84.0,
+      "flagged": 5,
+      "TP": 4,
+      "FP": 1,
+      "TN": 339,
+      "FN": 1982,
+      "no_answer": 442,
+      "FPR_pct": 0.3,
+      "accuracy_pct": 14.7,
+      "precision_pct": 80.0,
+      "recall_pct": 0.2
+    },
+    {
+      "vendor": "session_summary",
+      "lead_ips": 2768,
+      "answered": 2768,
+      "coverage_pct": 100.0,
+      "flagged": 140,
+      "TP": 118,
+      "FP": 22,
+      "TN": 405,
+      "FN": 2223,
+      "no_answer": 0,
+      "FPR_pct": 5.2,
+      "accuracy_pct": 18.9,
+      "precision_pct": 84.3,
+      "recall_pct": 5.0
+    }
+  ],
+  "lead_category_signal": [
+    {
+      "lead_category": "listing",
+      "ips": 2,
+      "revenue_ips": 1,
+      "revenue_pct": 50.0,
+      "fraudlogix_tune_flag_pct": 0.0,
+      "ip2proxy_px12_flag_pct": null,
+      "proxycheck_io_flag_pct": 50.0,
+      "session_summary_flag_pct": 50.0
+    },
+    {
+      "lead_category": "meeting",
+      "ips": 67,
+      "revenue_ips": 57,
+      "revenue_pct": 85.1,
+      "fraudlogix_tune_flag_pct": 29.8,
+      "ip2proxy_px12_flag_pct": null,
+      "proxycheck_io_flag_pct": 40.3,
+      "session_summary_flag_pct": 44.8
+    },
+    {
+      "lead_category": "intro_qualified",
+      "ips": 739,
+      "revenue_ips": 369,
+      "revenue_pct": 49.9,
+      "fraudlogix_tune_flag_pct": 22.5,
+      "ip2proxy_px12_flag_pct": 100.0,
+      "proxycheck_io_flag_pct": 28.3,
+      "session_summary_flag_pct": 31.4
+    },
+    {
+      "lead_category": "below_intro",
+      "ips": 1960,
+      "revenue_ips": 0,
+      "revenue_pct": 0.0,
+      "fraudlogix_tune_flag_pct": 44.6,
+      "ip2proxy_px12_flag_pct": 100.0,
+      "proxycheck_io_flag_pct": 14.8,
+      "session_summary_flag_pct": 16.2
+    }
+  ],
+  "fraudlogix_wrong": 80,
+  "fraudlogix_wrong_by_reason": {
+    "PROXY": 77,
+    "MOBILE_PROXY_SIGNALS": 2,
+    "NON_HUMAN_SCRIPT": 1
+  },
+  "checks": {
+    "lead IPs equal a direct join count": true,
+    "leads equal a direct join count": true,
+    "every IP has one row per vendor": true,
+    "every IP has exactly one label": true,
+    "revenue IPs are all real_person": true,
+    "TP+FP+TN+FN+no_answer = lead IPs": true,
+    "FraudLogix list: every IP flagged and (revenue > 0 or meeting+)": true
+  }
+}

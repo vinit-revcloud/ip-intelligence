@@ -1,0 +1,140 @@
+{
+ "table": {
+  "Name": "vendor_overview_proxy",
+  "DatabaseName": "unified",
+  "Owner": "221490242148",
+  "CreateTime": "2026-09-11 17:14:53+05:30",
+  "UpdateTime": "2026-09-11 17:14:53+05:30",
+  "Retention": 0,
+  "StorageDescriptor": {
+   "Columns": [
+    {
+     "Name": "vendor",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "ips_tested",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "answered",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "fill_rate_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "flagged",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "bot_flagged",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "bot_identification_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "false_positive_rate_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "compromised_flagged",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "scraper_flagged",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "anonymous_flagged",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "precision_infra_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "recall_infra_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "precision_bot_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "recall_bot_pct",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "bot_metric_status",
+     "Type": "varchar(25)",
+     "Parameters": {}
+    },
+    {
+     "Name": "cost_per_1k",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "score",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "as_of_date",
+     "Type": "string",
+     "Parameters": {}
+    }
+   ],
+   "Location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/unified/vendor_overview_proxy/d=2026-09-11/",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "Compressed": false,
+   "NumberOfBuckets": 0,
+   "SerdeInfo": {
+    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+    "Parameters": {}
+   },
+   "SortColumns": [],
+   "Parameters": {},
+   "StoredAsSubDirectories": false
+  },
+  "PartitionKeys": [],
+  "TableType": "EXTERNAL_TABLE",
+  "Parameters": {
+   "trino_version": "0.215-24619-g93e00a8",
+   "totalSize": "-1",
+   "has_encrypted_data": "false",
+   "EXTERNAL": "TRUE",
+   "numFiles": "-1",
+   "trino_query_id": "20260911_114450_00025_r4s5w",
+   "auto.purge": "false",
+   "parquet.compression": "SNAPPY",
+   "transactional": "false"
+  },
+  "CreatedBy": "arn:aws:iam::221490242148:user/source_creation_tool_user",
+  "IsRegisteredWithLakeFormation": false,
+  "CatalogId": "221490242148",
+  "VersionId": "0",
+  "IsMultiDialectView": false,
+  "IsMaterializedView": false
+ }
+}

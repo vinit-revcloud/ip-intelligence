@@ -1,0 +1,4 @@
+label_detail,ips,with_proxy_answer,bot_click_session_ips,resolved_flagged_ips,fraudlogix_bot_ips,proxycheck_high_risk_ips,in_experiment_ips,with_proxy_answer_pct,bot_click_session_pct,resolved_flagged_pct,fraudlogix_bot_pct,proxycheck_high_risk_pct,in_experiment_pct
+real_person,427,427,22,139,1,136,387,100.0,5.2,32.6,0.2,31.9,90.6
+lead_no_revenue,2341,2341,118,389,4,333,1643,100.0,5.0,16.6,0.2,14.2,70.2
+no_lead,131186,130139,8741,9428,544,4009,24066,99.2,6.7,7.2,0.4,3.1,18.3

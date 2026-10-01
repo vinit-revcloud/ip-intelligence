@@ -1,0 +1,11 @@
+signal,ips_hit,paying_hit,paying_ips,FPR_pct,no_lead_hit,no_lead_hit_pct,testable,points_away_from_humans,strength
+ua_botlike,573,0,427,0.0,571,0.44,True,True,strong
+fraudlogix_bot,549,1,427,0.23,544,0.41,True,True,strong
+datacenter,723,0,427,0.0,709,0.54,True,True,strong
+tor,0,0,427,0.0,0,0.0,True,False,weak
+compromised,28,0,427,0.0,28,0.02,True,True,strong
+velocity,14,2,427,0.47,10,0.01,True,False,weak
+bot_click_all,8881,22,427,5.15,8741,6.66,True,True,weak
+bounce_repeat,14942,0,427,0.0,14942,11.39,False,True,weak
+tz_mismatch,28308,145,427,33.96,27581,21.02,True,False,weak
+vpn_proxy,45266,213,427,49.88,43878,33.45,True,False,weak

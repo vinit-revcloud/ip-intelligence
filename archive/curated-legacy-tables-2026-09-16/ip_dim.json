@@ -1,0 +1,146 @@
+{
+ "table": {
+  "Name": "ip_dim",
+  "DatabaseName": "ipintel_curated",
+  "Owner": "221490242148",
+  "CreateTime": "2026-09-03 00:20:54+05:30",
+  "UpdateTime": "2026-09-03 00:20:54+05:30",
+  "Retention": 0,
+  "StorageDescriptor": {
+   "Columns": [
+    {
+     "Name": "ip",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "ip_num",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "prefix16",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "db11_country",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "db11_state",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "db11_city",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "db11_zip",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "db11_lat",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "db11_lon",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "db11_timezone",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "in_db11",
+     "Type": "boolean",
+     "Parameters": {}
+    },
+    {
+     "Name": "px12_proxy_type",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "px12_usage_type",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "px12_isp",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "px12_asn",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "px12_as_name",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "px12_fraud_score",
+     "Type": "int",
+     "Parameters": {}
+    },
+    {
+     "Name": "px12_last_seen",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "px12_threat",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "in_px12",
+     "Type": "boolean",
+     "Parameters": {}
+    }
+   ],
+   "Location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/curated/ip_dim/snapshot_date=2026-09-03/",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "Compressed": false,
+   "NumberOfBuckets": 0,
+   "SerdeInfo": {
+    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+    "Parameters": {}
+   },
+   "SortColumns": [],
+   "Parameters": {},
+   "StoredAsSubDirectories": false
+  },
+  "PartitionKeys": [],
+  "TableType": "EXTERNAL_TABLE",
+  "Parameters": {
+   "trino_version": "0.215-24619-g93e00a8",
+   "totalSize": "-1",
+   "has_encrypted_data": "false",
+   "EXTERNAL": "TRUE",
+   "numFiles": "-1",
+   "trino_query_id": "20260902_185042_00421_vcg6e",
+   "auto.purge": "false",
+   "parquet.compression": "SNAPPY",
+   "transactional": "false"
+  },
+  "CreatedBy": "arn:aws:iam::221490242148:user/source_creation_tool_user",
+  "IsRegisteredWithLakeFormation": false,
+  "CatalogId": "221490242148",
+  "VersionId": "0",
+  "IsMultiDialectView": false,
+  "IsMaterializedView": false
+ },
+ "partitions": []
+}

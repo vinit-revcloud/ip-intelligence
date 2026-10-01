@@ -1,0 +1,290 @@
+-- ============================================================
+-- STEP 3 — Fix two measurement bugs, then build ip_verdicts
+-- Database: ip-database   Region: us-west-2
+--
+-- WHAT PASSED at Checkpoint D:
+--   ip_list          4,939,723   (profiling 4,936,386, +3,337 new traffic)  OK
+--   px12_hits           16,771   (profiling 16,751)                         OK
+--   px12 DCH share        96.5%  (profiling 96.5%)                          OK
+--   db11 explosion        1.009x                                            OK
+--   session_ips      1,990,844   (exact match)                              OK
+--
+-- WHAT IS WRONG:
+--   1. db11 fill shows 100.00% for state, city AND zip.
+--      Profiling said 99.97 / 99.97 / 99.83. It cannot be 100.
+--      Cause: IP2Location writes "-" for unknown values, not "".
+--      nullif(x,'') does not catch "-", so placeholders counted as data.
+--
+--   2. gap_filled_by_db11 = 0.  This is the headline number of the
+--      whole project, so it is not optional.
+--      Cause: missing geo in unified_session_summary is NULL, not ''.
+--      "x <> ''" is TRUE only for non-null non-empty, and "x = ''" is
+--      TRUE only for empty non-null — so with NULLs the complete count
+--      works (1,347,523) and the inverse count returns 0. Classic.
+-- ============================================================
+
+
+-- ------------------------------------------------------------
+-- 3.1  CONFIRM THE DIAGNOSIS before fixing anything
+-- ------------------------------------------------------------
+
+-- Expect a large count of '-' here. That is the placeholder.
+SELECT
+  sum(CASE WHEN db11_state = '-' THEN 1 ELSE 0 END) AS state_dash,
+  sum(CASE WHEN db11_city  = '-' THEN 1 ELSE 0 END) AS city_dash,
+  sum(CASE WHEN db11_zip   = '-' THEN 1 ELSE 0 END) AS zip_dash,
+  sum(CASE WHEN db11_state = ''  THEN 1 ELSE 0 END) AS state_empty,
+  sum(CASE WHEN db11_state IS NULL THEN 1 ELSE 0 END) AS state_null
+FROM "ip-database".ip_dim;
+-- #	state_dash	city_dash	zip_dash	state_empty	state_null
+-- 1	1388	1388	8326	0	0
+
+
+-- Expect null_* to be large and empty_* to be 0. That confirms NULL,
+-- not '', is how missing geo is stored on the session table.
+SELECT
+  count(*)                                                      AS rows_total,
+  sum(CASE WHEN ip_region_name IS NULL THEN 1 ELSE 0 END)       AS state_null,
+  sum(CASE WHEN ip_region_name = ''   THEN 1 ELSE 0 END)        AS state_empty,
+  sum(CASE WHEN ip_region_name = '-'  THEN 1 ELSE 0 END)        AS state_dash,
+  sum(CASE WHEN ip_zip_code    IS NULL THEN 1 ELSE 0 END)       AS zip_null,
+  sum(CASE WHEN ip_zip_code    = ''   THEN 1 ELSE 0 END)        AS zip_empty
+FROM unified.unified_session_summary;
+-- #	rows_total	state_null	state_empty	state_dash	zip_null	zip_empty
+-- 1	11331530	2653101	0	440	2653101	0
+
+
+-- ------------------------------------------------------------
+-- 3.2  CORRECTED DB11 FILL RATES
+-- One rule for "missing" everywhere from here on:
+--     NULL  or  ''  or  '-'   =  missing
+-- ------------------------------------------------------------
+
+SELECT
+  count(*)                                                                    AS total_ips,
+  round(100.0 * count(nullif(nullif(db11_state,''),'-')) / count(*), 2)       AS db11_state_pct,
+  round(100.0 * count(nullif(nullif(db11_city ,''),'-')) / count(*), 2)       AS db11_city_pct,
+  round(100.0 * count(nullif(nullif(db11_zip  ,''),'-')) / count(*), 2)       AS db11_zip_pct
+FROM "ip-database".ip_dim;
+-- #	total_ips	db11_state_pct	db11_city_pct	db11_zip_pct
+-- 1	4939723	99.97	99.97	99.83
+
+-- ------------------------------------------------------------
+-- 3.3  CORRECTED GEO GAP  — the headline number
+-- ------------------------------------------------------------
+
+WITH sess AS (
+  SELECT
+    session_ip,
+    nullif(nullif(ip_region_name,''),'-') AS state_v,
+    nullif(nullif(ip_city_name  ,''),'-') AS city_v,
+    nullif(nullif(ip_zip_code   ,''),'-') AS zip_v
+  FROM unified.unified_session_summary
+  WHERE session_ip IS NOT NULL
+),
+per_ip AS (
+  SELECT
+    session_ip,
+    max(CASE WHEN state_v IS NOT NULL AND city_v IS NOT NULL
+              AND zip_v IS NOT NULL THEN 1 ELSE 0 END) AS has_full_geo
+  FROM sess
+  GROUP BY session_ip
+)
+SELECT
+  count(*)                                                          AS session_ips,
+  sum(has_full_geo)                                                 AS geo_complete_today,
+  sum(1 - has_full_geo)                                             AS geo_missing_today,
+  sum(CASE WHEN has_full_geo = 0
+            AND nullif(nullif(d.db11_state,''),'-') IS NOT NULL
+           THEN 1 ELSE 0 END)                                       AS gap_filled_state_city,
+  sum(CASE WHEN has_full_geo = 0
+            AND nullif(nullif(d.db11_zip,''),'-') IS NOT NULL
+           THEN 1 ELSE 0 END)                                       AS gap_filled_zip
+FROM per_ip p
+LEFT JOIN "ip-database".ip_dim d ON p.session_ip = d.ip;
+-- #	session_ips	geo_complete_today	geo_missing_today	gap_filled_state_city	gap_filled_zip
+-- 1	1990844	1346120	644724	644539	642060
+
+-- Expect roughly:
+--   session_ips            1,990,844
+--   geo_complete_today     ~1,346,120
+--   geo_missing_today        ~644,724   (32.4%)
+--   gap_filled_state_city    ~644,600   (99.98% of the gap)
+--   gap_filled_zip           ~642,800   (99.7% of the gap)
+--
+-- NOTE: "per IP" is the right grain here. An IP can appear on many
+-- sessions, some with geo and some without — has_full_geo takes the
+-- best case, so the gap is not overstated.
+
+
+-- ------------------------------------------------------------
+-- 3.4  FRAUDLOGIX LABELS — look before you build
+-- ------------------------------------------------------------
+
+SELECT access_control_decision, count(*) AS clicks,
+       count(DISTINCT ip) AS unique_ips
+FROM raw.raw_tune_clicks
+GROUP BY access_control_decision
+ORDER BY clicks DESC;
+-- #	access_control_decision	clicks	unique_ips
+-- 1	ACCEPTED	12511422	4071093
+-- 2	FLAGGED	3585352	662732
+-- 3		213683	131875
+-- 4	IGNORED	522	413
+
+-- Confirms the exact spelling of the FLAGGED value before it is
+-- hardcoded below. Adjust 3.5 if yours differs.
+
+SELECT access_control_reason_code, count(DISTINCT ip) AS unique_ips
+FROM raw.raw_tune_clicks
+GROUP BY access_control_reason_code
+ORDER BY unique_ips DESC;
+-- #	access_control_reason_code	unique_ips
+-- 1	NOT_APPLICABLE	4071604
+-- 2	PROXY	337333
+-- 3	NON_HUMAN_SCRIPT	179013
+-- 4		131875
+-- 5	ABNORMAL_TRAFFIC_PATTERNS	105242
+-- 6	MASKED_DEVICES	89534
+-- 7	10	82092
+-- 8	BASIC_FRAUD	77599
+-- 9	9	27165
+-- 10	BOT_GENERATED	22433
+-- 11	OTHER_REASON	15072
+-- 12	VPN	4007
+-- 13	MOBILE_PROXY_SIGNALS	3922
+-- 14	DATA_CENTER	2711
+-- 15	SPOOFED	2685
+-- 16	NON_UNIQUE	413
+-- 17	8	110
+-- 18	TOR	29
+-- 19	TOR_EXIT_NODE	1
+
+-- Expect the 18 codes from your profiling, including the undocumented
+-- numeric ones: PROXY 336,011 · NON_HUMAN_SCRIPT 179,013 ·
+-- ABNORMAL_TRAFFIC_PATTERNS 105,199 · MASKED_DEVICES 89,409 ·
+-- "10" 82,092 · BASIC_FRAUD 77,599 · BOT_GENERATED 22,432 ·
+-- VPN 4,004 · DATA_CENTER 2,666 · TOR 29
+
+
+-- ------------------------------------------------------------
+-- 3.5  ip_flags — one row per IP, FraudLogix rolled up
+-- ------------------------------------------------------------
+
+CREATE TABLE "ip-database".ip_flags
+WITH (format = 'PARQUET', write_compression = 'SNAPPY') AS
+SELECT
+  ip,
+  count(*)                                                             AS clicks,
+  min(created_at)                                                      AS first_seen,
+  max(created_at)                                                      AS last_seen,
+  max(CASE WHEN access_control_decision = 'FLAGGED' THEN 1 ELSE 0 END) = 1
+                                                                       AS ever_flagged,
+  sum(CASE WHEN access_control_decision = 'FLAGGED' THEN 1 ELSE 0 END) AS flagged_clicks,
+  array_agg(DISTINCT access_control_reason_code)
+    FILTER (WHERE access_control_decision = 'FLAGGED')                 AS flag_reasons,
+  max(CASE WHEN access_control_reason_code IN
+        ('PROXY','VPN','TOR','TOR_EXIT_NODE','DATA_CENTER','MOBILE_PROXY_SIGNALS')
+       AND access_control_decision = 'FLAGGED' THEN 1 ELSE 0 END) = 1  AS flagged_proxy_family,
+  max(CASE WHEN access_control_reason_code IN
+        ('BOT_GENERATED','NON_HUMAN_SCRIPT','ABNORMAL_TRAFFIC_PATTERNS')
+       AND access_control_decision = 'FLAGGED' THEN 1 ELSE 0 END) = 1  AS flagged_bot_family
+FROM raw.raw_tune_clicks
+WHERE ip IS NOT NULL
+  AND regexp_like(ip, '^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
+GROUP BY ip;
+-- COLUMN_NOT_FOUND: line 9:7: Column 'created_at' cannot be resolved or requester is not authorized to access requested resources. You may need to manually clean the data at location 's3://vinit-cdp-experimentation/Unsaved/2026/09/02/tables/fed2dce7-7a8c-4405-aaf4-e78d826bb569' before retrying. Athena will not delete data in your account.
+-- This query ran against the "ip-database" database, unless qualified by the query. Please post the error message on our forum  or contact customer support  with Query Id: fed2dce7-7a8c-4405-aaf4-e78d826bb569
+
+-- CHECKPOINT E — the FraudLogix gate
+SELECT
+  count(*)                                                    AS tune_ips,
+  sum(CASE WHEN ever_flagged THEN 1 ELSE 0 END)               AS ever_flagged,
+  round(100.0 * sum(CASE WHEN ever_flagged THEN 1 ELSE 0 END) / count(*), 2) AS flagged_pct
+FROM "ip-database".ip_flags;
+-- TABLE_NOT_FOUND: line 5:6: Table 'awsdatacatalog."ip-database".ip_flags' does not exist
+-- This query ran against the "ip-database" database, unless qualified by the query. Please post the error message on our forum  or contact customer support  with Query Id: 2a8493e5-49ce-4f6b-bfac-df73296dfef8
+-- Expect ~4,528,275 TUNE IPs and ~661,316 flagged (14.6%).
+
+
+-- ------------------------------------------------------------
+-- 3.6  THE CENTRAL FINDING — can PX12 confirm FraudLogix?
+-- ------------------------------------------------------------
+
+SELECT
+  sum(CASE WHEN f.ever_flagged THEN 1 ELSE 0 END)                        AS flagged_ips,
+  sum(CASE WHEN f.ever_flagged AND d.in_px12 THEN 1 ELSE 0 END)          AS flagged_and_in_px12,
+  round(100.0 * sum(CASE WHEN f.ever_flagged AND d.in_px12 THEN 1 ELSE 0 END)
+              / nullif(sum(CASE WHEN f.ever_flagged THEN 1 ELSE 0 END),0), 2)
+                                                                          AS pct_confirmed
+FROM "ip-database".ip_flags f
+JOIN "ip-database".ip_dim d ON f.ip = d.ip;
+-- Expect ~661,316 flagged · ~6,457 in PX12 · ~0.98%.
+-- This one number is the argument for the whole product.
+
+
+-- Per reason code, how much does PX12 confirm?
+SELECT r.reason,
+       count(DISTINCT f.ip)                                              AS tune_ips,
+       count(DISTINCT CASE WHEN d.in_px12 THEN f.ip END)                 AS also_in_px12,
+       round(100.0 * count(DISTINCT CASE WHEN d.in_px12 THEN f.ip END)
+                   / nullif(count(DISTINCT f.ip),0), 2)                  AS pct
+FROM "ip-database".ip_flags f
+CROSS JOIN UNNEST(f.flag_reasons) AS r(reason)
+JOIN "ip-database".ip_dim d ON f.ip = d.ip
+GROUP BY r.reason
+ORDER BY tune_ips DESC;
+-- Expect PROXY 0.6% · DATA_CENTER 5.9% · VPN 1.8% · TOR 3 IPs, etc.
+
+
+-- ------------------------------------------------------------
+-- 3.7  ip_verdicts — long format, one row per (IP, source)
+-- This is what makes the UI's source list data-driven.
+-- ------------------------------------------------------------
+
+CREATE TABLE "ip-database".ip_verdicts
+WITH (format = 'PARQUET', write_compression = 'SNAPPY') AS
+SELECT ip, 'ip2location_db11' AS source_key,
+       (nullif(nullif(db11_state,''),'-') IS NOT NULL)          AS has_answer,
+       CAST(NULL AS boolean)                                     AS is_proxy,
+       CAST(NULL AS boolean)                                     AS is_datacenter,
+       nullif(nullif(db11_state,''),'-')                         AS state,
+       nullif(nullif(db11_city ,''),'-')                         AS city,
+       nullif(nullif(db11_zip  ,''),'-')                         AS zip,
+       CAST(NULL AS varchar)                                     AS verdict,
+       CAST(NULL AS integer)                                     AS risk_score
+FROM "ip-database".ip_dim
+
+UNION ALL
+SELECT ip, 'ip2proxy_px12',
+       in_px12,
+       CASE WHEN in_px12 THEN true ELSE NULL END,
+       CASE WHEN in_px12 THEN (px12_usage_type = 'DCH') ELSE NULL END,
+       NULL, NULL, NULL,
+       px12_proxy_type,
+       px12_fraud_score
+FROM "ip-database".ip_dim
+
+UNION ALL
+SELECT f.ip, 'fraudlogix_tune',
+       true,
+       CASE WHEN f.flagged_proxy_family THEN true
+            WHEN f.ever_flagged THEN false ELSE false END,
+       CAST(NULL AS boolean),
+       NULL, NULL, NULL,
+       CASE WHEN f.ever_flagged THEN 'FLAGGED' ELSE 'ACCEPTED' END,
+       CAST(NULL AS integer)
+FROM "ip-database".ip_flags f;
+
+-- proxycheck_io rows get appended later, once the sampler runs.
+
+
+-- CHECKPOINT F
+SELECT source_key,
+       count(*)                                            AS rows,
+       sum(CASE WHEN has_answer THEN 1 ELSE 0 END)         AS with_answer,
+       round(100.0 * sum(CASE WHEN has_answer THEN 1 ELSE 0 END) / count(*), 2) AS answer_pct
+FROM "ip-database".ip_verdicts
+GROUP BY source_key ORDER BY source_key;
+-- Expect: db11 ~99.97% · px12 ~0.34% · fraudlogix 100% (of TUNE IPs only).
+-- That spread IS the product's main chart.

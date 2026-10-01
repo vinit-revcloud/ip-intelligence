@@ -1,0 +1,1 @@
+{"Version":"2012-10-17","Statement":[{"Sid":"StartOnlyTheTwoJobs","Effect":"Allow","Action":"lambda:InvokeFunction","Resource":["arn:aws:lambda:us-west-2:221490242148:function:ipintel-free-daily","arn:aws:lambda:us-west-2:221490242148:function:ipintel-proxycheck-daily"]}]}

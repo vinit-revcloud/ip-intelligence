@@ -1,0 +1,34 @@
+WHAT THE LIVE API DOES TODAY, MUST STILL WORK
+  PASS serve the overview JSON                  s3:GetObject                   allowed
+  PASS vendor list page                         dynamodb:Scan                  allowed
+  PASS vendor list page                         dynamodb:GetItem               allowed
+  PASS vendor list page                         dynamodb:PutItem               allowed
+  PASS vendor list page                         dynamodb:UpdateItem            allowed
+  PASS vendor list page                         dynamodb:DeleteItem            allowed
+  PASS table pages and lookups                  athena:StartQueryExecution     allowed
+  PASS table pages and lookups                  athena:GetQueryResults         allowed
+  PASS read unified.ip_geo definition           glue:GetTable                  allowed
+  PASS read unified.ip_geo data                 s3:GetObject                   allowed
+  PASS write query results                      s3:PutObject                   allowed
+  PASS live proxycheck append                   s3:PutObject                   allowed
+  PASS read the paid key                        secretsmanager:GetSecretValue  allowed
+  PASS Athena bucket check                      s3:ListBucket                  allowed
+  FAIL write its own logs                       logs:PutLogEvents              implicitDeny
+NEW PAGES, MUST WORK
+  PASS Safety, Jobs, Budget pages               dynamodb:GetItem               allowed
+  PASS Safety, Jobs, Budget pages               dynamodb:UpdateItem            allowed
+  PASS Safety, Jobs, Budget pages               dynamodb:Query                 allowed
+  PASS Run now and base table checks            lambda:InvokeFunction          allowed
+  PASS job on/off switch                        scheduler:UpdateSchedule       allowed
+  PASS live append into the new table           glue:UpdateTable               allowed
+MUST BE REFUSED
+  PASS any write to a unified table             glue:BatchCreatePartition      explicitDeny
+  PASS any write to a unified table             glue:UpdateTable               explicitDeny
+  PASS any write to a unified table             glue:DeleteTable               explicitDeny
+  PASS the write it had on every unified table  glue:BatchCreatePartition      explicitDeny
+  PASS production data files                    s3:PutObject                   explicitDeny
+  PASS production data files                    s3:DeleteObject                explicitDeny
+  PASS workgroup primary                        athena:StartQueryExecution     explicitDeny
+  PASS a production Lambda                      lambda:InvokeFunction          explicitDeny
+
+1 FAILED

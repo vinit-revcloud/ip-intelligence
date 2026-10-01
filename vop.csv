@@ -1,0 +1,5 @@
+"vendor","ips_tested","answered","fill_rate_pct","flagged","detection_rate_pct","bot_flagged","bot_identification_pct","false_positive_rate_pct","true_positive","infra_in_scope","precision_infra_pct","recall_infra_pct","masked_device_flags","precision_bot_pct","recall_bot_pct","bot_metric_status","cost_per_1k","score","as_of_date"
+"authoritative_lists","2105","2105","100.0","540","25.7","0","0.0","0.0","540","540","100.0","100.0","0",,,"needs a bot-labelled pool","0.00","100.0","2026-09-10"
+"proxycheck_io","2105","2105","100.0","556","26.4","0","0.0","0.0","540","540","97.1","100.0","0",,,"needs a bot-labelled pool","0.00","99.2","2026-09-10"
+"fraudlogix_tune","2105","1686","80.1","392","23.3","10","0.6","0.6","2","540","0.5","0.4","52",,,"needs a bot-labelled pool","0.00","46.9","2026-09-10"
+"ip2proxy_px12","2105","5","0.2","5","100.0","0","0.0","0.0","0","540","0.0","0.0","0",,,"needs a bot-labelled pool","0.00","0.0","2026-09-10"

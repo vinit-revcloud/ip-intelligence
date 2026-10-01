@@ -1,0 +1,468 @@
+<title>IP Enrichment Analytics Briefing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #f5f7f8; --surface: #ffffff; --ink: #14212b; --ink-2: #3c4b55; --muted: #66757f;
+  --rule: #d8dfe3; --rule-soft: #e7ecef; --accent: #1d6a86; --accent-soft: #dcebf1; --code-bg: #eef3f5;
+  --good: #25734a; --good-soft: #e1f0e7; --warn: #9a6212; --warn-soft: #f7ecd9; --crit: #a8322a; --crit-soft: #f6e1df;
+  --mid: #7fb2c5; --neutral-bar: #b9c4ca;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --cond: "IBM Plex Sans Condensed", "IBM Plex Sans", "Arial Narrow", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0e151a; --surface: #151f26; --ink: #e3eaee; --ink-2: #bac6cd; --muted: #8d9ca5;
+    --rule: #2a3843; --rule-soft: #1f2b33; --accent: #5fb0cc; --accent-soft: #1b3440; --code-bg: #111b21;
+    --good: #6cc494; --good-soft: #17301f; --warn: #e0a64e; --warn-soft: #33270f; --crit: #ec8a80; --crit-soft: #3a1a17;
+    --mid: #2f6f86; --neutral-bar: #4a5963;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0e151a; --surface: #151f26; --ink: #e3eaee; --ink-2: #bac6cd; --muted: #8d9ca5;
+  --rule: #2a3843; --rule-soft: #1f2b33; --accent: #5fb0cc; --accent-soft: #1b3440; --code-bg: #111b21;
+  --good: #6cc494; --good-soft: #17301f; --warn: #e0a64e; --warn-soft: #33270f; --crit: #ec8a80; --crit-soft: #3a1a17;
+  --mid: #2f6f86; --neutral-bar: #4a5963;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink); font: 400 15.5px/1.62 var(--sans); padding-inline: 20px; padding-block: 0 80px; }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+@media (max-width: 900px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+nav.toc { position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto; padding-block: 44px 20px; font-size: 13.5px; }
+nav.toc b { display: block; font: 500 11.5px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+nav.toc a { display: block; color: var(--ink-2); text-decoration: none; padding: 5px 0 5px 10px; border-left: 2px solid var(--rule-soft); }
+nav.toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+@media (max-width: 900px) { nav.toc { position: static; max-height: none; padding-block: 20px 0; columns: 2; } nav.toc b { column-span: all; } }
+main { min-width: 0; }
+.mast { padding-block: 44px 26px; border-bottom: 1px solid var(--rule); display: grid; gap: 14px; }
+.eyebrow { font: 500 12px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 600 clamp(30px, 4.4vw, 42px)/1.08 var(--cond); margin: 0; text-wrap: balance; }
+.lede { font-size: 17px; color: var(--ink-2); margin: 0; max-width: 68ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 26px; font: 400 13px/1.4 var(--mono); color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 500; }
+section { padding-block: 38px 6px; border-top: 1px solid var(--rule-soft); scroll-margin-top: 12px; }
+section:first-of-type { border-top: 0; }
+h2 { font: 600 26px/1.2 var(--cond); margin: 0 0 8px; text-wrap: balance; }
+h3 { font: 600 18px/1.3 var(--cond); margin: 28px 0 8px; }
+p, ul, ol { margin: 0 0 14px; max-width: 74ch; }
+li { margin-bottom: 5px; }
+.answer { font-size: 17px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .88em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+.scroll { overflow-x: auto; margin: 8px 0 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { text-align: left; font: 500 11.5px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th.n { text-align: right; }
+td { padding: 8px 10px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+td.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.ours td { background: var(--accent-soft); }
+tr.total td { font-weight: 600; border-top: 1px solid var(--rule); }
+.note { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 16px; margin: 12px 0 18px; max-width: 76ch; }
+.note.warn { background: var(--warn-soft); border-color: transparent; }
+.note.good { background: var(--good-soft); border-color: transparent; }
+.note b:first-child { display: block; font: 600 13px/1.4 var(--sans); margin-bottom: 2px; }
+.chip { display: inline-block; font: 500 11.5px/1 var(--mono); padding: 4px 7px; border-radius: 99px; white-space: nowrap; }
+.chip.good { background: var(--good-soft); color: var(--good); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.neutral { background: var(--rule-soft); color: var(--ink-2); }
+.figs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 2px solid var(--ink); margin: 18px 0 8px; }
+.fig { padding: 14px 16px 6px 0; border-right: 1px solid var(--rule-soft); }
+.fig + .fig { padding-left: 16px; }
+.fig:last-child { border-right: 0; }
+.fig .v { font: 600 30px/1.1 var(--cond); font-variant-numeric: tabular-nums; }
+.fig .l { font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+.fig .s { font: 12px/1.4 var(--mono); color: var(--muted); margin-top: 6px; }
+@media (max-width: 760px) { .figs { grid-template-columns: repeat(2, minmax(0, 1fr)); } .fig:nth-child(2) { border-right: 0; } .fig:nth-child(3) { padding-left: 0; } }
+.stack { display: flex; height: 26px; border-radius: 4px; overflow: hidden; margin: 10px 0 6px; max-width: 760px; }
+.stack span { display: block; height: 100%; }
+.s-agree { background: var(--good); } .s-near { background: color-mix(in srgb, var(--good) 45%, var(--surface)); }
+.s-state { background: var(--neutral-bar); } .s-diff { background: var(--warn); } .s-one { background: var(--rule); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--ink-2); margin: 0 0 12px; }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.bar { display: inline-block; height: 8px; border-radius: 2px; background: var(--accent); vertical-align: middle; margin-right: 8px; }
+.bar.w { background: var(--warn); }
+.bar.m { background: var(--mid); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+@media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+ol.flow { padding-left: 22px; }
+dl.gloss { display: grid; grid-template-columns: minmax(9rem, 14rem) 1fr; margin: 12px 0 0; max-width: 860px; }
+dl.gloss dt, dl.gloss dd { padding: 9px 0; border-bottom: 1px solid var(--rule-soft); margin: 0; font-size: 14.5px; }
+dl.gloss dt { font-family: var(--mono); font-size: 13px; color: var(--accent); padding-right: 14px; }
+@media (max-width: 560px) { dl.gloss { grid-template-columns: 1fr; } dl.gloss dt { border-bottom: 0; padding-bottom: 0; } }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+@media print {
+  body { background: #fff; color: #000; padding: 0; font-size: 10.5pt; }
+  .wrap { display: block; max-width: none; }
+  nav.toc { display: none; }
+  section { break-inside: auto; padding-block: 16px 4px; }
+  h2, h3 { break-after: avoid; }
+  table, .note, .figs, .stack, tr { break-inside: avoid; }
+  .scroll { overflow: visible; }
+  a { color: inherit; text-decoration: none; }
+  .stack span, .bar, .chip, tr.ours td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <b>Contents</b>
+  <a href="#summary">Summary</a>
+  <a href="#question">What we set out to answer</a>
+  <a href="#data">Data and vendors</a>
+  <a href="#method">How enrichment works</a>
+  <a href="#volume">Rows added</a>
+  <a href="#coverage">30-day enrichment</a>
+  <a href="#proxy">Proxy and VPN findings</a>
+  <a href="#accuracy">Location accuracy</a>
+  <a href="#conflicts">Location conflicts and the fix</a>
+  <a href="#checks">How we know it works</a>
+  <a href="#limits">Limits and caveats</a>
+  <a href="#next">Decisions and next steps</a>
+  <a href="#find">Where to find everything</a>
+  <a href="#gloss">Glossary</a>
+</nav>
+
+<main>
+<header class="mast">
+  <div class="eyebrow">Team briefing · 16 Sep 2026</div>
+  <h1>IP Enrichment Analytics Briefing</h1>
+  <p class="lede">What we built to give every IP address in our click and session data a location and a proxy/VPN verdict, what the last 30 days look like now, how accurate each vendor is, and how location conflicts are now handled.</p>
+  <div class="meta"><span>Data as of <b>16 Sep 2026 10:42 UTC</b></span><span>Addresses <b>4,959,406</b></span><span>Window <b>last seen 17 Aug – 15 Sep</b></span></div>
+</header>
+
+<section id="summary">
+  <h2>Summary</h2>
+  <p class="answer">Every IP address seen in the last 30 days is now enriched: 42,768 of 42,769 have a proxycheck.io answer and a decided proxy verdict. On 15 Sep that was 45.6%.</p>
+  <div class="figs">
+    <div class="fig"><div class="v">42,769</div><div class="l">Addresses seen in the last 30 days</div><div class="s">20,205 sessions only · 4,156 clicks only · 18,408 both</div></div>
+    <div class="fig"><div class="v">100%</div><div class="l">Answered by proxycheck.io</div><div class="s">45.6% on 15 Sep</div></div>
+    <div class="fig"><div class="v">12.0%</div><div class="l">Flagged proxy, VPN or compromised</div><div class="s">5,126 addresses · 4,804 VPN</div></div>
+    <div class="fig"><div class="v">82.6%</div><div class="l">Location vendors agree on the state</div><div class="s">45.8% also agree on the city</div></div>
+  </div>
+  <ul>
+    <li><b>Daily and automatic.</b> A 07:30 UTC load adds new addresses from the two base tables. A proxycheck.io run then answers up to 50,000 addresses a day, recent ones first, and the results are copied to <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code>. 30,000 queries a day stay reserved for API lookups.</li>
+    <li><b>Location is right at state level about 6 times in 10</b> when checked against 2,105 customers' own postal addresses. It is right at city level about 1 time in 7. No vendor does much better, because an IP address shows where a connection enters the internet, not where someone lives.</li>
+    <li><b>Location conflicts are now sorted into kinds.</b> On 16 Sep, 22,583 of the 30-day addresses (53%) were labelled "vendors disagree". Most were the same state with a nearby or different city, so they are now labelled <code>nearby</code> or <code>same_state</code>. 7,448 (17%) remain with different states. Free vendors are now asked to break those ties first, about 1,000 a day.</li>
+    <li><b>Most flagged addresses are privacy relays.</b> Akamai, Google and Cloudflare are the networks behind Apple iCloud Private Relay, Google One VPN and Cloudflare WARP. Treat a VPN flag as "not a direct home connection", not as fraud.</li>
+  </ul>
+</section>
+
+<section id="question">
+  <h2>What we set out to answer</h2>
+  <ol>
+    <li>For any IP address the company sees, where is it, and is it a proxy, VPN, Tor exit, datacenter or bot?</li>
+    <li>Can the IP tables be the company's single lookup source, kept current every day, without touching the production tables they are built from?</li>
+    <li>Are the addresses from the last 30 days fully enriched?</li>
+    <li>How accurate is each location vendor, overall and by state, and what should we do when vendors disagree?</li>
+  </ol>
+</section>
+
+<section id="data">
+  <h2>Data and vendors</h2>
+  <div class="two">
+    <div>
+      <h3>Where addresses come from (read only)</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Base table</th><th>What it is</th><th class="n">Addresses</th></tr></thead>
+        <tbody>
+          <tr><td><code>raw.raw_tune_clicks</code></td><td>Ad clicks, loaded every 6 hours</td><td class="n">4,533,735</td></tr>
+          <tr><td><code>unified.unified_session_summary</code></td><td>Website sessions, rewritten daily</td><td class="n">2,012,979</td></tr>
+          <tr class="total"><td colspan="2">Distinct addresses across both (plus a few API lookups)</td><td class="n">4,959,406</td></tr>
+        </tbody>
+      </table></div>
+      <p>These two tables are never written to. AWS permissions make that impossible for the pipeline, and every run checks this before it starts.</p>
+    </div>
+    <div>
+      <h3>Who answers</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Vendor</th><th>Gives</th><th>Coverage</th></tr></thead>
+        <tbody>
+          <tr><td>IP2Location DB11</td><td>location</td><td>every address (downloaded database)</td></tr>
+          <tr><td>IP2Proxy PX12</td><td>proxy</td><td>every address; answers only for listed proxies</td></tr>
+          <tr><td>FraudLogix</td><td>proxy, VPN, bot</td><td>addresses with tune clicks</td></tr>
+          <tr><td>proxycheck.io (paid, 80,000/day)</td><td>location, proxy, VPN, risk, ISP</td><td>127,216 addresses so far</td></tr>
+          <tr><td>ipinfo.io, ipwho.is (free)</td><td>location</td><td>about 500 addresses each a day</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <p><b>Ground truth for location:</b> <code>qualified_lead_ips</code>. These are 2,105 customers who gave a full postal address (state, city, 5-digit ZIP) from the IP address they used. It is the only independent check we have.</p>
+</section>
+
+<section id="method">
+  <h2>How enrichment works</h2>
+  <ol class="flow">
+    <li><b>07:30 UTC, daily load.</b> It finds addresses in the base tables that are not in our tables yet and gives each one IP2Location, IP2Proxy and FraudLogix answers. It records where each address was seen, and rebuilds the resolved answers and the reports.</li>
+    <li><b>Queue.</b> Any new or changed address that needs a second opinion goes into a queue: no location, no proxy answer, vendors disagree, or an unconfirmed flag. The API uses the same rule when someone looks up an address.</li>
+    <li><b>Right after, proxycheck.io (up to 50,000 a day).</b> Order: queued addresses; then addresses first seen today; then <b>every address seen in the last 30 days without a proxycheck.io answer</b>; then undecided addresses from the last 90 days; then older ones. Each request carries 1,000 addresses, and every query is reserved on a shared counter first, so the daily limit cannot be exceeded.</li>
+    <li><b>Merge and check.</b> Answers are merged into the tables. The run passes only if every check passes: no duplicates, no table shrank, one resolved answer per address, every queued address answered, nothing outside the project touched.</li>
+    <li><b>Publish.</b> After a passed run, checked copies replace the files behind <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code>, which other teams' APIs read. The previous copy is kept for rollback.</li>
+    <li><b>22:00 UTC top-up.</b> It finishes the 50,000 only if the morning run stopped early. The 30,000 lookup queries are never used for this.</li>
+  </ol>
+  <p><b>The resolved answer.</b> Vendor rows are kept exactly as each vendor answered. <code>ip_resolved</code> holds one answer per address, worked out by fixed rules. The API applies the same rules, so Athena and the app always agree (1,500 of 1,500 addresses identical in today's check).</p>
+</section>
+
+<section id="volume">
+  <h2>Rows added</h2>
+  <p class="answer">New addresses arrive at about 450–1,100 a day. The two big days are the first full load (11 Sep) and the first proxycheck.io backfills (15–16 Sep).</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Day</th><th class="n">New addresses</th><th class="n">Location rows added</th><th class="n">Risk rows added</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>7 Sep</td><td class="n">786</td><td class="n">0</td><td class="n">231</td><td></td></tr>
+      <tr><td>8 Sep</td><td class="n">1,086</td><td class="n">4,055</td><td class="n">273</td><td></td></tr>
+      <tr><td>9 Sep</td><td class="n">994</td><td class="n">0</td><td class="n">204</td><td></td></tr>
+      <tr><td>10 Sep</td><td class="n">478</td><td class="n">150</td><td class="n">107</td><td></td></tr>
+      <tr><td>11 Sep</td><td class="n">583</td><td class="n">4,956,391</td><td class="n">4,956,472</td><td><span class="chip neutral">first full load</span></td></tr>
+      <tr><td>12 Sep</td><td class="n">486</td><td class="n">0</td><td class="n">101</td><td></td></tr>
+      <tr><td>13 Sep</td><td class="n">436</td><td class="n">0</td><td class="n">129</td><td></td></tr>
+      <tr><td>14 Sep</td><td class="n">642</td><td class="n">1,728</td><td class="n">1,339</td><td>daily load starts</td></tr>
+      <tr><td>15 Sep</td><td class="n">768</td><td class="n">77,217</td><td class="n">77,262</td><td><span class="chip neutral">first backfill</span></td></tr>
+      <tr><td>16 Sep</td><td class="n">—</td><td class="n">52,431</td><td class="n">52,062</td><td><span class="chip neutral">30-day backfill</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>New addresses are counted on the first day an address was seen. Location and risk rows are counted on the day they were added. The 16 Sep morning load added 2,490 new addresses, all first seen 11–15 Sep: the session table had been late and was rewritten on 15 Sep.</p>
+  <p><b>Table sizes now:</b> <code>ip_geo</code> 5,091,972 rows, <code>ip_intelligence</code> 9,620,351 rows, <code>ip_resolved</code> 4,959,406 rows. The unified copies match exactly.</p>
+</section>
+
+<section id="coverage">
+  <h2>30-day enrichment</h2>
+  <p class="answer">The window is addresses last seen in either base table between 17 Aug and 15 Sep.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Measure</th><th class="n">15 Sep 19:00</th><th class="n">16 Sep 10:42</th></tr></thead>
+    <tbody>
+      <tr><td>Addresses in the window</td><td class="n">39,508</td><td class="n">42,769</td></tr>
+      <tr><td>Answered by proxycheck.io</td><td class="n">18,034 (45.6%)</td><td class="n">42,768 (100%)</td></tr>
+      <tr><td>Proxy verdict decided</td><td class="n">30,208 (76.5%)</td><td class="n">42,768 (100%)</td></tr>
+      <tr><td>Proxy verdict undecided</td><td class="n">9,300</td><td class="n">1</td></tr>
+      <tr><td>Location: state agreed by 2+ vendors</td><td class="n">—</td><td class="n">35,318 (82.6%)</td></tr>
+      <tr><td>Location: state and city agreed</td><td class="n">8,443 (21.4%)</td><td class="n">19,596 (45.8%)</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>What changed overnight.</b> The 16 Sep run sent 49,512 queries: the 3,410 queued addresses first, then 12,769 addresses from the window that other vendors already called clean, then 33,325 without an answer. All 10 checks passed. The one remaining undecided address was last seen on 9 Sep.</p>
+  <p><b>All addresses, not just the window:</b> 127,216 answered by proxycheck.io (2.6%) and 814,185 still undecided (848,403 on 15 Sep). At 50,000 a day the undecided backlog takes about 16–17 more days. Most of it is addresses last seen months ago.</p>
+</section>
+
+<section id="proxy">
+  <h2>Proxy and VPN findings (last 30 days)</h2>
+  <div class="two">
+    <div>
+      <div class="scroll"><table>
+        <thead><tr><th>Signal</th><th class="n">Addresses</th><th class="n">Share</th></tr></thead>
+        <tbody>
+          <tr><td>Flagged (any)</td><td class="n">5,126</td><td class="n">12.0%</td></tr>
+          <tr><td>VPN</td><td class="n">4,804</td><td class="n">11.2%</td></tr>
+          <tr><td>Proxy</td><td class="n">334</td><td class="n">0.8%</td></tr>
+          <tr><td>Compromised server</td><td class="n">9</td><td class="n">0.02%</td></tr>
+          <tr><td>Tor, datacenter, bot</td><td class="n">0</td><td class="n">—</td></tr>
+        </tbody>
+      </table></div>
+      <div class="scroll"><table>
+        <thead><tr><th>proxycheck.io risk score</th><th class="n">Addresses</th></tr></thead>
+        <tbody>
+          <tr><td>Low (0–33)</td><td class="n">37,642</td></tr>
+          <tr><td>Medium (34–66)</td><td class="n">2,210</td></tr>
+          <tr><td>High (67–100)</td><td class="n">2,916</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="scroll"><table>
+        <thead><tr><th>Most flagged networks</th><th class="n">Flagged</th></tr></thead>
+        <tbody>
+          <tr><td>Akamai Technologies (Apple iCloud Private Relay)</td><td class="n">2,074</td></tr>
+          <tr><td>Google LLC (Google One VPN, Chrome IP protection)</td><td class="n">690</td></tr>
+          <tr><td>Cloudflare (WARP, iCloud Private Relay)</td><td class="n">668</td></tr>
+          <tr><td>Amazon.com</td><td class="n">355</td></tr>
+          <tr><td>HostRoyale Technologies</td><td class="n">157</td></tr>
+          <tr><td>Fastly</td><td class="n">123</td></tr>
+          <tr><td>M247 Europe</td><td class="n">108</td></tr>
+          <tr><td>Shenzhen Tencent</td><td class="n">97</td></tr>
+        </tbody>
+      </table></div>
+      <p>Flagged by source: 1,488 of 20,205 session-only addresses (7.4%), 696 of 4,156 click-only (16.7%), 2,942 of 18,408 in both (16.0%).</p>
+    </div>
+  </div>
+  <div class="note warn"><b>Read a VPN flag carefully</b>About 3,400 of the 5,126 flagged addresses (two in three) belong to Akamai, Google and Cloudflare. These carry privacy-relay traffic from ordinary iPhone and Chrome users. proxycheck.io also labels most datacenter traffic as VPN, which is why "datacenter" shows 0. For "not a direct home connection", use <code>is_vpn OR is_proxy OR is_datacenter</code>. For fraud, combine the flag with behaviour.</div>
+  <p><b>How the verdict was reached:</b> 10,550 confirmed (proxycheck.io and another vendor agree), 20,187 from proxycheck.io alone, 12,031 where proxycheck.io overrode the other vendors. The overrides are mostly VPN and relay addresses that IP2Proxy and FraudLogix call clean.</p>
+</section>
+
+<section id="accuracy">
+  <h2>Location accuracy</h2>
+  <p class="answer">Each vendor's location is compared with the postal address of the 2,105 customers. "Our answer" is the resolved location we serve.</p>
+  <p><b>Matching rules:</b></p>
+  <ul>
+    <li>State: same name.</li>
+    <li>City: same name, letters only, case ignored.</li>
+    <li>ZIP: same first five digits.</li>
+  </ul>
+  <p>Two views are shown:</p>
+  <ul>
+    <li><b>Same addresses:</b> the 1,049 addresses every vendor answered. This is the fair comparison.</li>
+    <li><b>Every address answered:</b> each vendor on all the addresses it answered.</li>
+  </ul>
+  <div class="scroll"><table>
+    <thead><tr><th>Vendor</th><th class="n">Tested</th><th class="n">State</th><th class="n">City</th><th class="n">ZIP</th><th class="n">Tested</th><th class="n">State</th><th class="n">City</th><th class="n">ZIP</th></tr>
+    <tr><th></th><th class="n" colspan="4">Same addresses</th><th class="n" colspan="4">Every address answered</th></tr></thead>
+    <tbody>
+      <tr><td>ipinfo.io</td><td class="n">1,049</td><td class="n"><b>54.2%</b></td><td class="n"><b>11.1%</b></td><td class="n"><b>4.0%</b></td><td class="n">1,050</td><td class="n">54.3%</td><td class="n">11.1%</td><td class="n">4.0%</td></tr>
+      <tr><td>ipwho.is</td><td class="n">1,049</td><td class="n">53.7%</td><td class="n">10.5%</td><td class="n">1.8%</td><td class="n">1,050</td><td class="n">53.7%</td><td class="n">10.5%</td><td class="n">1.8%</td></tr>
+      <tr><td>proxycheck.io</td><td class="n">1,049</td><td class="n">51.6%</td><td class="n">7.2%</td><td class="n">2.9%</td><td class="n">2,105</td><td class="n">59.7%</td><td class="n">11.9%</td><td class="n"><b>5.4%</b></td></tr>
+      <tr><td>IP2Location DB11</td><td class="n">1,049</td><td class="n">47.0%</td><td class="n">9.5%</td><td class="n">2.2%</td><td class="n">2,105</td><td class="n">59.0%</td><td class="n">14.5%</td><td class="n">3.4%</td></tr>
+      <tr class="ours"><td>Our answer (resolved)</td><td class="n">1,049</td><td class="n">54.1%</td><td class="n">11.0%</td><td class="n">3.6%</td><td class="n">2,105</td><td class="n"><b>62.5%</b></td><td class="n"><b>15.3%</b></td><td class="n">4.1%</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>What this means.</b> On all 2,105 customers, our combined answer is right on state more often than any single vendor (62.5%), and on city 15.3% of the time. The "same addresses" pool is harder: these are the customers the free vendors happened to answer, which is why every vendor scores lower there. ZIP is rarely right for anyone. Do not use IP ZIP codes for anything finer than a region.</p>
+  <h3>By customer state (our answer, ten largest states)</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>State</th><th class="n">Customers</th><th>State right</th><th class="n">City right</th></tr></thead>
+    <tbody>
+      <tr><td>California</td><td class="n">145</td><td><span class="bar" style="width:86px"></span>86.2%</td><td class="n">14.1%</td></tr>
+      <tr><td>Illinois</td><td class="n">66</td><td><span class="bar" style="width:79px"></span>78.8%</td><td class="n">14.3%</td></tr>
+      <tr><td>Georgia</td><td class="n">91</td><td><span class="bar" style="width:77px"></span>76.9%</td><td class="n">25.0%</td></tr>
+      <tr><td>Texas</td><td class="n">203</td><td><span class="bar" style="width:77px"></span>76.8%</td><td class="n">18.4%</td></tr>
+      <tr><td>Michigan</td><td class="n">86</td><td><span class="bar" style="width:77px"></span>76.7%</td><td class="n">11.0%</td></tr>
+      <tr><td>Florida</td><td class="n">203</td><td><span class="bar" style="width:75px"></span>74.9%</td><td class="n">19.6%</td></tr>
+      <tr><td>Arizona</td><td class="n">71</td><td><span class="bar" style="width:73px"></span>73.2%</td><td class="n">12.3%</td></tr>
+      <tr><td>New York</td><td class="n">65</td><td><span class="bar" style="width:69px"></span>69.2%</td><td class="n">6.8%</td></tr>
+      <tr><td>Ohio</td><td class="n">91</td><td><span class="bar w" style="width:60px"></span>60.4%</td><td class="n">17.9%</td></tr>
+      <tr><td>North Carolina</td><td class="n">75</td><td><span class="bar w" style="width:57px"></span>57.3%</td><td class="n">10.1%</td></tr>
+    </tbody>
+  </table></div>
+  <p>Large states with their own network hubs score well (California 86%). Smaller states, and states whose traffic is routed through a neighbour's hub, score lower. Every state and vendor is on the <b>Location Accuracy</b> page in the app.</p>
+</section>
+
+<section id="conflicts">
+  <h2>Location conflicts and the fix</h2>
+  <p class="answer">Before today, any two vendors naming different cities counted as "vendors disagree". That applied to 22,583 addresses (53%) in the 30-day window. We measured what those conflicts really were.</p>
+  <h3>What the conflicts were (IP2Location vs proxycheck.io)</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Kind</th><th class="n">Addresses</th><th class="n">Median distance</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>Same city, different spelling</td><td class="n">20</td><td class="n">5 km</td><td>LaGrange vs La Grange</td></tr>
+      <tr><td>Same state, within 25 km</td><td class="n">5,886</td><td class="n">12 km</td><td>Memphis vs Germantown</td></tr>
+      <tr><td>Same state, 25–50 km</td><td class="n">2,882</td><td class="n">36 km</td><td>Los Angeles vs Calabasas</td></tr>
+      <tr><td>Same state, 50–100 km</td><td class="n">2,181</td><td class="n">70 km</td><td>Atlanta vs Watkinsville</td></tr>
+      <tr><td>Same state, over 100 km</td><td class="n">4,077</td><td class="n">196 km</td><td>Charlotte vs Raleigh</td></tr>
+      <tr><td>Different state, within 50 km</td><td class="n">813</td><td class="n">19 km</td><td>New Hyde Park, NY vs Ridgefield, NJ</td></tr>
+      <tr><td>Different state, far apart</td><td class="n">6,580</td><td class="n">718 km</td><td>Russellville, AR vs Tyler, TX</td></tr>
+      <tr><td>A field missing</td><td class="n">143</td><td class="n">8 km</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Who is right when vendors disagree</h3>
+  <p>These are the same kinds of conflict on the 2,105 customer addresses, counting how often each side matched the customer's real state or city:</p>
+  <ul>
+    <li><b>States differ:</b> ipinfo.io beat IP2Location 80 to 4 and proxycheck.io 53 to 25. ipwho.is beat IP2Location 76 to 6 and proxycheck.io 47 to 25. Where only IP2Location and proxycheck.io answered, IP2Location was right 76 times to proxycheck.io's 42.</li>
+    <li><b>Same state, cities differ:</b> ipinfo.io was best, then IP2Location, then ipwho.is. Every vendor beat proxycheck.io on city; IP2Location, for example, won 90 to 47.</li>
+  </ul>
+  <h3>The fix (live since 16 Sep 10:42 UTC)</h3>
+  <ol>
+    <li><b>Spelling:</b> city names are compared without accents or punctuation. Saint/Mount/Fort count the same as St/Mt/Ft, and a trailing "City" or "Township" is ignored. "St. Louis" now equals "Saint Louis". The old rule compared only the first word, so "New York" wrongly matched "New Hyde Park".</li>
+    <li><b>New statuses</b> say how close the vendors are:
+      <ul>
+        <li><span class="chip good">agreed</span> Same state and city.</li>
+        <li><span class="chip good">nearby</span> Same state, within 25 km.</li>
+        <li><span class="chip neutral">same_state</span> Same state, further apart.</li>
+        <li><span class="chip warn">vendors_disagree</span> States differ.</li>
+      </ul>
+    </li>
+    <li><b>Evidence-based choice:</b> the answer shown comes from the vendor most often right for that kind of conflict. For state: ipinfo.io, ipwho.is, IP2Location, then proxycheck.io. For city within the agreed state: ipinfo.io, IP2Location, ipwho.is, then proxycheck.io. Before, the choice came from the vendor scorecard.</li>
+    <li><b>Tie-breakers:</b> ipinfo.io and ipwho.is now spend their daily requests on the 30-day conflicts first. States-differ comes first, then same-state, and the two vendors take different addresses, so about 1,000 conflicts a day get a third vote. New addresses come after.</li>
+  </ol>
+  <h3>Result for the 30-day window</h3>
+  <div class="stack" role="img" aria-label="Location status for 42,769 addresses: agreed 45.8%, nearby 15.3%, same state 21.5%, states differ 17.4%">
+    <span class="s-agree" style="width:45.8%"></span><span class="s-near" style="width:15.3%"></span><span class="s-state" style="width:21.5%"></span><span class="s-diff" style="width:17.4%"></span>
+  </div>
+  <div class="legend"><span><i class="s-agree"></i>Agreed 19,596 (45.8%)</span><span><i class="s-near"></i>Nearby 6,541 (15.3%)</span><span><i class="s-state"></i>Same state 9,181 (21.5%)</span><span><i class="s-diff"></i>States differ 7,448 (17.4%)</span><span><i class="s-one"></i>One source 3</span></div>
+  <div class="scroll"><table>
+    <thead><tr><th>Status</th><th class="n">Before</th><th class="n">After</th></tr></thead>
+    <tbody>
+      <tr><td>Agreed</td><td class="n">20,183</td><td class="n">19,596</td></tr>
+      <tr><td>Nearby</td><td class="n">—</td><td class="n">6,541</td></tr>
+      <tr><td>Same state</td><td class="n">—</td><td class="n">9,181</td></tr>
+      <tr><td>Vendors disagree (states differ)</td><td class="n">22,583</td><td class="n">7,448</td></tr>
+    </tbody>
+  </table></div>
+  <p>"Agreed" went down slightly, by 587. The stricter city match moved 764 addresses out (704 of them are now "nearby", for example "New York" vs "New Hyde Park"), and the spelling rules moved 177 in. Across all 4.96 million addresses, 73,205 resolved rows changed. The share of addresses that need proxycheck.io because of a location conflict fell by two thirds, since only states-differ counts now.</p>
+  <div class="note good"><b>Accuracy was not traded away</b>Replaying the 2,105 customer addresses through the old and new rules gives the same result on state: 1,316 right with both (62.5%). City and state together: 282 before, 283 after. A first version that preferred proxycheck.io over IP2Location on state conflicts lost 34 correct states. It was caught by this replay and corrected before this document was written.</div>
+  <p><b>Tie-break backlog:</b> 7,425 states-differ and 9,120 same-state addresses in the window have no free-vendor vote yet. At about 1,000 a day, states-differ is covered in about 8 days and both in about 17 days. Progress shows on the Enrichment Coverage page.</p>
+</section>
+
+<section id="checks">
+  <h2>How we know it works</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Check</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>16 Sep daily load: 14 checks (duplicates, shrinkage, every new address answered and located, one resolved answer each, queue complete, no activity outside the project)</td><td><span class="chip good">14 / 14</span></td></tr>
+      <tr><td>16 Sep proxycheck.io run: 10 checks, including "every queued address was sent"</td><td><span class="chip good">10 / 10</span></td></tr>
+      <tr><td>Unified refreshes (15 Sep 13:09, 22:05; 16 Sep 07:49, 10:01, 10:42): row counts, no duplicates, 200+ sample addresses identical</td><td><span class="chip good">all passed</span></td></tr>
+      <tr><td>Live API, 16 Sep 10:05: health, auth, bad input, answered address (no query), new address (one query, then free), private address (never asked), bulk, report endpoints</td><td><span class="chip good">16 / 16</span></td></tr>
+      <tr><td>API answer vs <code>ip_resolved</code> for the new location rules, 1,500 random addresses</td><td><span class="chip good">0 differences</span></td></tr>
+      <tr><td>Production tables: catalog changed only by their own jobs; <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> definitions untouched since 11 Sep</td><td><span class="chip good">untouched</span></td></tr>
+      <tr><td>Alarms, dead-letter queue, safety pause</td><td><span class="chip good">all clear</span></td></tr>
+      <tr><td>proxycheck.io use on 16 Sep: 49,999 by the pipeline + a few API lookups, of 80,000</td><td><span class="chip good">within budget</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="limits">
+  <h2>Limits and caveats</h2>
+  <ul>
+    <li><b>An IP location is not an address.</b> It points to where a connection joins the internet. State is right about 6 times in 10, city about 1 in 7, ZIP rarely. Use it for regional analysis only.</li>
+    <li><b>The truth set is small and specific.</b> 2,105 customers, and ipinfo.io and ipwho.is were tested on 1,050 of them. The vendor priorities were learned from the same addresses they are scored on, so small differences between vendors (a point or two) should not be over-read.</li>
+    <li><b>VPN is not fraud.</b> Two in three flagged addresses are privacy relays used by ordinary people.</li>
+    <li><b>Bot flags come from one vendor.</b> Only FraudLogix answers bot, and none of the 30-day addresses are flagged as bots.</li>
+    <li><b>Free vendors have limits.</b> Without an ipinfo.io token, requests are limited. The registry notes 50,000 a month with a free token. ipwho.is is listed as "fair use"; its terms for commercial use should be confirmed before relying on it more.</li>
+    <li><b>Other teams' API.</b> The ip-lookup API reads <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code> but picks its own vendor order: IP2Location for location; FraudLogix, then IP2Proxy for risk. It does not use the resolved answers or the new location statuses, and rarely uses the proxycheck.io rows now in the table.</li>
+    <li><b>Answers age.</b> proxycheck.io answers are not re-checked yet.</li>
+  </ul>
+</section>
+
+<section id="next">
+  <h2>Decisions and next steps</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Item</th><th>Why</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr><td>Create a free ipinfo.io token and store it in Secrets Manager</td><td>More tie-break votes a day; ipinfo.io is the most accurate location vendor we tested</td><td>Team (account sign-up)</td></tr>
+      <tr><td>Confirm ipwho.is terms for commercial use</td><td>It is now a daily tie-breaker</td><td>Team</td></tr>
+      <tr><td>Point the ip-lookup API at <code>ipintel_curated.ip_resolved</code>, or change its vendor order</td><td>It would then serve the checked, conflict-aware answer</td><td>API owner</td></tr>
+      <tr><td>Paste the Lovable prompts (final app, or the delta prompts)</td><td>Reports pages and the new location statuses in the app</td><td>Team</td></tr>
+      <tr><td>Decide a re-check policy for proxycheck.io answers</td><td>Answers age; once the backlog is done (about 16–17 days) the budget is free for re-checks</td><td>Team</td></tr>
+      <tr><td>Grow the truth set</td><td>More qualified leads with full addresses make the accuracy numbers firmer</td><td>Analytics</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="find">
+  <h2>Where to find everything</h2>
+  <ul>
+    <li><b>Athena:</b> <code>ipintel_curated.ip_resolved</code> (one answer per address), <code>ip_geo</code>, <code>ip_intelligence</code>, <code>ip_occurrences</code>, <code>proxycheck_queue</code>. The unified copies are <code>unified.ip_geo</code> and <code>unified.ip_intelligence</code>.</li>
+    <li><b>API:</b> <code>GET /lookup/{ip}</code>, <code>POST /lookup</code> (up to 1,000), <code>GET /coverage</code>, <code>GET /accuracy/geo</code>, <code>GET /publish</code>.</li>
+    <li><b>App (Lovable):</b> IP Lookup, Resolved IPs, Reports → Location Accuracy and Enrichment Coverage, Pipeline → Daily Jobs.</li>
+    <li><b>The queries behind this briefing:</b> <code>build/pipeline/sql/checks/</code>: <code>enrichment_30d_*.sql</code>, <code>rows_inserted_by_day.sql</code>, <code>proxy_30d_summary.sql</code>, <code>geo_disagree_30d.sql</code>, <code>geo_conflict_truth.sql</code>, <code>tiebreak_backlog.sql</code>, <code>health_2026_09_16.sql</code>.</li>
+    <li><b>Companion documents:</b> IP Intelligence User Manual, IP Intelligence System Guide, 30-Day IP Enrichment Rollout report.</li>
+  </ul>
+</section>
+
+<section id="gloss">
+  <h2>Glossary</h2>
+  <dl class="gloss">
+    <dt>base table</dt><dd>A production table addresses are collected from: ad clicks and website sessions. Only ever read.</dd>
+    <dt>enrichment</dt><dd>Adding vendor answers (location, proxy/VPN, risk, ISP) to an address.</dd>
+    <dt>resolved answer</dt><dd>The one answer per address, worked out from every vendor's answer by fixed rules. Served by Athena and the API alike.</dd>
+    <dt>decided / undecided</dt><dd>Decided: proxycheck.io answered, or every vendor says clean. Undecided: no answer, vendors disagree, or an unconfirmed flag.</dd>
+    <dt>agreed · nearby · same_state</dt><dd>Location statuses: same state and city; same state within 25 km; same state further apart.</dd>
+    <dt>vendors_disagree</dt><dd>For location: no two vendors name the same state.</dd>
+    <dt>accuracy</dt><dd>How often a vendor matches the customer's own postal address.</dd>
+    <dt>agreement</dt><dd>How often vendors match each other (vendor overview scorecards).</dd>
+    <dt>tie-breaker</dt><dd>A third vendor asked when two disagree, so the majority can decide.</dd>
+    <dt>publish</dt><dd>Replacing the files behind the two unified tables with a checked copy after each passed run.</dd>
+    <dt>privacy relay</dt><dd>A service (Apple iCloud Private Relay, Google One VPN, Cloudflare WARP) that routes ordinary users through shared addresses. Shows as VPN.</dd>
+  </dl>
+</section>
+
+<footer>Prepared from the live tables on 16 Sep 2026. Numbers change daily; the Enrichment Coverage and Location Accuracy pages always show the latest.</footer>
+</main>
+</div>

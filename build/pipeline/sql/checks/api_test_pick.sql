@@ -1,0 +1,4 @@
+SELECT 'recent_pc' k, ip_address FROM (SELECT r.ip_address FROM ipintel_curated.ip_resolved r JOIN ipintel_curated.ip_occurrences o ON o.ip_address=r.ip_address WHERE o.last_seen >= date '2026-09-10' AND r.proxy_decided_by='proxycheck_io' AND r.flagged LIMIT 1)
+UNION ALL SELECT 'old_undecided', ip_address FROM (SELECT ip_address FROM ipintel_curated.ip_resolved WHERE proxy_status='no_answer' AND last_seen < date '2026-05-01' LIMIT 1)
+UNION ALL SELECT 'new_today', ip_address FROM (SELECT ip_address FROM ipintel_curated.ip_occurrences WHERE first_seen >= date '2026-09-15' LIMIT 1)
+UNION ALL SELECT 'absent_check', ip FROM (VALUES '45.33.32.156','203.0.114.9','185.199.108.153','151.101.1.140','104.16.123.96') t(ip) WHERE ip NOT IN (SELECT ip_address FROM ipintel_curated.ip_resolved WHERE ip_address IN ('45.33.32.156','203.0.114.9','185.199.108.153','151.101.1.140','104.16.123.96'))

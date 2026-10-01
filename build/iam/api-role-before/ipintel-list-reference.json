@@ -1,0 +1,17 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::datalake-landingzone-221490242148-us-west-2",
+            "Condition": {
+                "StringLike": {
+                    "s3:prefix": [
+                        "ip-intelligence/*"
+                    ]
+                }
+            }
+        }
+    ]
+}

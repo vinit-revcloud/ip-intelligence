@@ -1,0 +1,96 @@
+{
+ "table": {
+  "Name": "db11_parquet",
+  "DatabaseName": "ip-database",
+  "Owner": "221490242148",
+  "CreateTime": "2026-09-02 21:16:18+05:30",
+  "UpdateTime": "2026-09-02 21:16:18+05:30",
+  "Retention": 0,
+  "StorageDescriptor": {
+   "Columns": [
+    {
+     "Name": "ip_from",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "ip_to",
+     "Type": "bigint",
+     "Parameters": {}
+    },
+    {
+     "Name": "country_code",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "country_name",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "region_name",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "city_name",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "latitude",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "longitude",
+     "Type": "double",
+     "Parameters": {}
+    },
+    {
+     "Name": "zip_code",
+     "Type": "string",
+     "Parameters": {}
+    },
+    {
+     "Name": "time_zone",
+     "Type": "string",
+     "Parameters": {}
+    }
+   ],
+   "Location": "s3://datalake-landingzone-221490242148-us-west-2/ip-intelligence/curated/db11/",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "Compressed": false,
+   "NumberOfBuckets": 0,
+   "SerdeInfo": {
+    "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+    "Parameters": {}
+   },
+   "SortColumns": [],
+   "Parameters": {},
+   "StoredAsSubDirectories": false
+  },
+  "PartitionKeys": [],
+  "TableType": "EXTERNAL_TABLE",
+  "Parameters": {
+   "trino_version": "0.215-24619-g93e00a8",
+   "totalSize": "-1",
+   "has_encrypted_data": "false",
+   "EXTERNAL": "TRUE",
+   "numFiles": "-1",
+   "trino_query_id": "20260902_154613_00070_4ztfs",
+   "auto.purge": "false",
+   "parquet.compression": "GZIP",
+   "transactional": "false"
+  },
+  "CreatedBy": "arn:aws:iam::221490242148:user/source_creation_tool_user",
+  "IsRegisteredWithLakeFormation": false,
+  "CatalogId": "221490242148",
+  "VersionId": "0",
+  "IsMultiDialectView": false,
+  "IsMaterializedView": false
+ },
+ "partitions": []
+}

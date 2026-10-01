@@ -1,0 +1,16 @@
+columns: signal | paying_ips | paying_hit | pct_paying_hit | fake_ips | fake_hit | pct_fake_hit | ips_with_signal_data
+FL ever ABNORMAL_TRAFFIC_PATTERNS | 1044 | 104 | 9.96 | 40 | 7 | 17.5 | 873
+FL ever BASIC_FRAUD | 1044 | 72 | 6.9 | 40 | 5 | 12.5 | 873
+FL ever BOT_GENERATED | 1044 | 23 | 2.2 | 40 | 3 | 7.5 | 873
+FL ever DATA_CENTER | 1044 | 1 | 0.1 | 40 | 0 | 0.0 | 873
+FL ever MASKED_DEVICES | 1044 | 122 | 11.69 | 40 | 10 | 25.0 | 873
+FL ever NON_HUMAN_SCRIPT | 1044 | 132 | 12.64 | 40 | 4 | 10.0 | 873
+FL ever PROXY | 1044 | 214 | 20.5 | 40 | 6 | 15.0 | 873
+FL ever SPOOFED | 1044 | 2 | 0.19 | 40 | 0 | 0.0 | 873
+FL ever code 10 | 1044 | 58 | 5.56 | 40 | 2 | 5.0 | 873
+FL ever code 9 | 1044 | 4 | 0.38 | 40 | 1 | 2.5 | 873
+FL latest = current bot rule | 1044 | 5 | 0.48 | 40 | 1 | 2.5 | 873
+proxycheck is_bot (current rule) | 1044 | 5 | 0.48 | 40 | 0 | 0.0 | 908
+proxycheck proxy or vpn | 1044 | 302 | 28.93 | 40 | 14 | 35.0 | 908
+router is_bot | 1044 | 3 | 0.29 | 40 | 0 | 0.0 | 613
+session is_bot_click | 1044 | 68 | 6.51 | 40 | 2 | 5.0 | 1074

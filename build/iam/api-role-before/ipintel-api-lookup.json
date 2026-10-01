@@ -1,0 +1,77 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AthenaInIpintelWorkgroupOnly",
+            "Effect": "Allow",
+            "Action": [
+                "athena:StartQueryExecution",
+                "athena:GetQueryExecution",
+                "athena:GetQueryResults",
+                "athena:StopQueryExecution",
+                "athena:GetWorkGroup"
+            ],
+            "Resource": "arn:aws:athena:us-west-2:221490242148:workgroup/ipintel"
+        },
+        {
+            "Sid": "GlueCatalogForServedDatabasesOnly",
+            "Effect": "Allow",
+            "Action": [
+                "glue:GetDatabase",
+                "glue:GetDatabases",
+                "glue:GetTable",
+                "glue:GetTables",
+                "glue:GetPartition",
+                "glue:GetPartitions",
+                "glue:BatchCreatePartition"
+            ],
+            "Resource": [
+                "arn:aws:glue:us-west-2:221490242148:catalog",
+                "arn:aws:glue:us-west-2:221490242148:database/unified",
+                "arn:aws:glue:us-west-2:221490242148:database/ipintel_curated",
+                "arn:aws:glue:us-west-2:221490242148:table/unified/*",
+                "arn:aws:glue:us-west-2:221490242148:table/ipintel_curated/*"
+            ]
+        },
+        {
+            "Sid": "ReadTableDataUnderIpIntelligencePrefix",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::datalake-landingzone-221490242148-us-west-2/ip-intelligence/*"
+        },
+        {
+            "Sid": "WriteAthenaResultsAndTheLiveProxycheckTableOnly",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:AbortMultipartUpload",
+                "s3:ListMultipartUploadParts"
+            ],
+            "Resource": [
+                "arn:aws:s3:::datalake-landingzone-221490242148-us-west-2/ip-intelligence/athena-results/*",
+                "arn:aws:s3:::datalake-landingzone-221490242148-us-west-2/ip-intelligence/curated/pc_live/*"
+            ]
+        },
+        {
+            "Sid": "BucketLevelChecksAthenaRequires",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetBucketLocation",
+                "s3:GetBucketAcl",
+                "s3:ListBucketMultipartUploads"
+            ],
+            "Resource": "arn:aws:s3:::datalake-landingzone-221490242148-us-west-2"
+        },
+        {
+            "Sid": "ReadTheProxycheckKeyOnly",
+            "Effect": "Allow",
+            "Action": "secretsmanager:GetSecretValue",
+            "Resource": "arn:aws:secretsmanager:us-west-2:221490242148:secret:ipintel/proxycheck*"
+        }
+    ]
+}
